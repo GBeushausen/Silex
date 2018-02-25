@@ -1,10 +1,16 @@
 Changelog
 =========
 
-2.2.3 (2018-XX-XX)
+2.3.0 (2018-XX-XX)
 ------------------
 
- * n/a
+ * added support for Symfony 4
+
+2.2.3 (2018-02-25)
+------------------
+
+ * fixed validator integration into the security provider (order of registration of the validator and security providers does not matter anymore)
+ * fixed compatibility issues with Symfony 3.4
 
 2.2.2 (2018-01-12)
 ------------------
