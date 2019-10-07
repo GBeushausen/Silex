@@ -149,7 +149,7 @@ Finally, configure your `security.firewalls` key to use this authenticator:
                 // 'entry_point' => 'app.token_authenticator',
             ),
             // configure where your users come from. Hardcode them, or load them from somewhere
-            // http://silex.sensiolabs.org/doc/providers/security.html#defining-a-custom-user-provider
+            // https://silex.symfony.com/doc/providers/security.html#defining-a-custom-user-provider
             'users' => array(
             //raw password = foo
                 'victoria' => array('ROLE_USER', '$2y$10$3i9/lVd8UOFIJ6PAMFt8gu3/r5g0qeCJvoSlLCsvMTythye19F77a'),
@@ -181,4 +181,4 @@ under different conditions:
     # the homepage controller is executed: the page loads normally
 
 For more details read the Symfony cookbook entry on
-`How to Create a Custom Authentication System with Guard <http://symfony.com/doc/current/cookbook/security/guard-authentication.html>`_.
+`How to Create a Custom Authentication System with Guard <https://symfony.com/doc/current/cookbook/security/guard-authentication.html>`_.

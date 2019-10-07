@@ -1,10 +1,25 @@
 Changelog
 =========
 
-2.3.0 (2018-XX-XX)
+2.3.1 (2018-XX-XX)
 ------------------
 
+ * n/a
+
+2.3.0 (2018-04-20)
+------------------
+
+ * added support for defining users provider as a service ID
+ * fixed error when HttpKernelRuntime is not available
+ * allow setting custom status code on exception response with Symfony 3.3+
+ * made CSRF extension work with Validator translations domain
+ * fixed Security provider context usage
+ * dropped support for Twig < 2.0
+ * dropped support for PHP < 7.1
+ * dropped support for Symfony 2.x and 3.x
  * added support for Symfony 4
+ * added support PSR-3 log levels in MonologServiceProvider
+ * exposed AuthenticationUtils in SecurityServiceProvider
 
 2.2.3 (2018-02-25)
 ------------------

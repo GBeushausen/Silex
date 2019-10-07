@@ -25,11 +25,8 @@ use Symfony\Bridge\Twig\Extension\HttpFoundationExtension;
 use Symfony\Bridge\Twig\Extension\HttpKernelExtension;
 use Symfony\Bridge\Twig\Extension\WebLinkExtension;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
-use Symfony\Bridge\Twig\Form\TwigRenderer;
 use Symfony\Bridge\Twig\Extension\HttpKernelRuntime;
 use Symfony\Component\Form\FormRenderer;
-use Symfony\Component\HttpKernel\Kernel;
-use Symfony\Component\WebLink\HttpHeaderSerializer;
 
 /**
  * Twig integration for Silex.
@@ -54,14 +51,6 @@ class TwigServiceProvider implements ServiceProviderInterface
         $app['twig.number_format.thousands_separator'] = ',';
 
         $app['twig'] = function ($app) {
-            $app['twig.options'] = array_replace(
-                [
-                    'charset' => $app['charset'],
-                    'debug' => $app['debug'],
-                    'strict_variables' => $app['debug'],
-                ], $app['twig.options']
-            );
-
             $twig = $app['twig.environment_factory']($app);
             // registered for BC, but should not be used anymore
             // deprecated and should probably be removed in Silex 3.0
@@ -100,6 +89,7 @@ class TwigServiceProvider implements ServiceProviderInterface
                 if (isset($app['request_stack'])) {
                     $twig->addExtension(new HttpFoundationExtension($app['request_stack']));
                     $twig->addExtension(new RoutingExtension($app['url_generator']));
+                    $twig->addExtension(new WebLinkExtension($app['request_stack']));
                 }
 
                 if (isset($app['translator'])) {
@@ -128,14 +118,10 @@ class TwigServiceProvider implements ServiceProviderInterface
                     $app['twig.form.renderer'] = function ($app) {
                         $csrfTokenManager = isset($app['csrf.token_manager']) ? $app['csrf.token_manager'] : null;
 
-                        if (Kernel::VERSION_ID < 30400) {
-                            return new TwigRenderer($app['twig.form.engine'], $csrfTokenManager);
-                        }
-
                         return new FormRenderer($app['twig.form.engine'], $csrfTokenManager);
                     };
 
-                    $twig->addExtension(new FormExtension(class_exists(HttpKernelRuntime::class) ? null : $app['twig.form.renderer']));
+                    $twig->addExtension(new FormExtension());
 
                     // add loader for Symfony built-in form templates
                     $reflected = new \ReflectionClass('Symfony\Bridge\Twig\Extension\FormExtension');
@@ -147,13 +133,7 @@ class TwigServiceProvider implements ServiceProviderInterface
                     $twig->addExtension(new DumpExtension($app['var_dumper.cloner']));
                 }
 
-                if (class_exists(HttpKernelRuntime::class)) {
-                    $twig->addRuntimeLoader($app['twig.runtime_loader']);
-                }
-
-                if (class_exists(HttpHeaderSerializer::class) && class_exists(WebLinkExtension::class)) {
-                    $twig->addExtension(new WebLinkExtension($app['request_stack']));
-                }
+                $twig->addRuntimeLoader($app['twig.runtime_loader']);
             }
 
             return $twig;
@@ -184,7 +164,11 @@ class TwigServiceProvider implements ServiceProviderInterface
         };
 
         $app['twig.environment_factory'] = $app->protect(function ($app) {
-            return new \Twig_Environment($app['twig.loader'], $app['twig.options']);
+            return new \Twig_Environment($app['twig.loader'], array_replace([
+                'charset' => $app['charset'],
+                'debug' => $app['debug'],
+                'strict_variables' => $app['debug'],
+            ], $app['twig.options']));
         });
 
         $app['twig.runtime.httpkernel'] = function ($app) {
@@ -192,17 +176,10 @@ class TwigServiceProvider implements ServiceProviderInterface
         };
 
         $app['twig.runtimes'] = function ($app) {
-            $runtimes = [
+            return [
                 HttpKernelRuntime::class => 'twig.runtime.httpkernel',
+                FormRenderer::class => 'twig.form.renderer',
             ];
-
-            if (Kernel::VERSION_ID < 30400) {
-                $runtimes[TwigRenderer::class] = 'twig.form.renderer';
-            } else {
-                $runtimes[FormRenderer::class] = 'twig.form.renderer';
-            }
-
-            return $runtimes;
         };
 
         $app['twig.runtime_loader'] = function ($app) {

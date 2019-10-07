@@ -2,7 +2,7 @@ Twig
 ====
 
 The *TwigServiceProvider* provides integration with the `Twig
-<http://twig.sensiolabs.org/>`_ template engine.
+<https://twig.symfony.com/>`_ template engine.
 
 Parameters
 ----------
@@ -14,7 +14,7 @@ Parameters
   template contents. Use this if you want to define your templates inline.
 
 * **twig.options** (optional): An associative array of twig
-  options. Check out the `twig documentation <http://twig.sensiolabs.org/doc/api.html#environment-options>`_
+  options. Check out the `twig documentation <https://twig.symfony.com/doc/api.html#environment-options>`_
   for more information.
 
 * **twig.form.templates** (optional): An array of templates used to render
@@ -26,15 +26,15 @@ Parameters
 
 * **twig.date.format** (optional): Default format used by the ``date``
   filter. The format string must conform to the format accepted by
-  `date() <http://www.php.net/date>`_.
+  `date() <https://secure.php.net/date>`_.
 
 * **twig.date.interval_format** (optional): Default format used by the
-  ``date`` filter when the filtered data is of type `DateInterval <http://www.php.net/DateInterval>`_.
+  ``date`` filter when the filtered data is of type `DateInterval <https://secure.php.net/DateInterval>`_.
   The format string must conform to the format accepted by
-  `DateInterval::format() <http://www.php.net/DateInterval.format>`_.
+  `DateInterval::format() <https://secure.php.net/DateInterval.format>`_.
 
 * **twig.date.timezone** (optional): Default timezone used when formatting
-  dates. If set to ``null`` the timezone returned by `date_default_timezone_get() <http://www.php.net/date_default_timezone_get>`_
+  dates. If set to ``null`` the timezone returned by `date_default_timezone_get() <https://secure.php.net/date_default_timezone_get>`_
   is used.
 
 * **twig.number_format.decimals** (optional): Default number of decimals
@@ -99,7 +99,7 @@ additional capabilities.
 
 * Access to the ``path()`` and ``url()`` functions. You can find more
   information in the `Symfony Routing documentation
-  <http://symfony.com/doc/current/book/routing.html#generating-urls-from-a-template>`_:
+  <https://symfony.com/doc/current/book/routing.html#generating-urls-from-a-template>`_:
 
   .. code-block:: jinja
 
@@ -116,7 +116,7 @@ Translations Support
 If you are using the ``TranslationServiceProvider``, you will get the
 ``trans()`` and ``transchoice()`` functions for translation in Twig templates.
 You can find more information in the `Symfony Translation documentation
-<http://symfony.com/doc/current/book/translation.html#twig-templates>`_.
+<https://symfony.com/doc/current/book/translation.html#twig-templates>`_.
 
 Form Support
 ~~~~~~~~~~~~
@@ -124,7 +124,7 @@ Form Support
 If you are using the ``FormServiceProvider``, you will get a set of helpers for
 working with forms in templates. You can find more information in the `Symfony
 Forms reference
-<http://symfony.com/doc/current/reference/forms/twig_reference.html>`_.
+<https://symfony.com/doc/current/reference/forms/twig_reference.html>`_.
 
 Security Support
 ~~~~~~~~~~~~~~~~
@@ -132,7 +132,7 @@ Security Support
 If you are using the ``SecurityServiceProvider``, you will have access to the
 ``is_granted()`` function in templates. You can find more information in the
 `Symfony Security documentation
-<http://symfony.com/doc/current/book/security.html#access-control-in-templates>`_.
+<https://symfony.com/doc/current/book/security.html#access-control-in-templates>`_.
 
 Web Link Support
 ~~~~~~~~~~~~~~~~
@@ -147,7 +147,7 @@ Global Variable
 ~~~~~~~~~~~~~~~
 
 When the Twig bridge is available, the ``global`` variable refers to an
-instance of `AppVariable <http://api.symfony.com/master/Symfony/Bridge/Twig/AppVariable.html>`_.
+instance of `AppVariable <https://api.symfony.com/master/Symfony/Bridge/Twig/AppVariable.html>`_.
 It gives access to the following methods:
 
 .. code-block:: jinja
@@ -235,6 +235,6 @@ You can configure the Twig environment before using it by extending the
     });
 
 For more information, check out the `official Twig documentation
-<http://twig.sensiolabs.org>`_.
+<https://twig.symfony.com>`_.
 
 .. _reference: https://symfony.com/doc/current/reference/twig_reference.html#controller

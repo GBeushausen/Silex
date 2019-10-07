@@ -12,8 +12,8 @@ Parameters
 ----------
 
 * **monolog.logfile**: File where logs are written to.
-* **monolog.bubble**: (optional) Whether the messages that are handled can bubble up the stack or not.
-* **monolog.permission**: (optional) File permissions default (null), nothing change.
+* **monolog.bubble** (optional): Whether the messages that are handled can bubble up the stack or not.
+* **monolog.permission** (optional): File permissions default (null), nothing change.
 
 * **monolog.level** (optional): Level of logging, defaults
   to ``DEBUG``. Must be one of ``Logger::DEBUG``, ``Logger::INFO``,
@@ -24,6 +24,8 @@ Parameters
   In addition to the ``Logger::`` constants, it is also possible to supply the
   level in string form, for example: ``"DEBUG"``, ``"INFO"``, ``"WARNING"``,
   ``"ERROR"``.
+
+  PSR-3 log levels from ``\Psr\Log\LogLevel::`` constants are also supported.
 
 * **monolog.name** (optional): Name of the monolog channel,
   defaults to ``myapp``.
