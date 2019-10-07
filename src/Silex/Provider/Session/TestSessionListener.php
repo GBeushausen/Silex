@@ -12,6 +12,7 @@
 namespace Silex\Provider\Session;
 
 use Pimple\Container;
+use Pimple\Psr11\Container as PsrContainer;
 use Symfony\Component\HttpKernel\EventListener\TestSessionListener as BaseTestSessionListener;
 
 /**
@@ -26,6 +27,7 @@ class TestSessionListener extends BaseTestSessionListener
     public function __construct(Container $app)
     {
         $this->app = $app;
+        parent::__construct(new PsrContainer($app));
     }
 
     protected function getSession()
