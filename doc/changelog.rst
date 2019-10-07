@@ -5,6 +5,7 @@ Changelog
 ------------------
 
  * fixed compatibility issue with Symfony 3.4
+ * fixed deprecation notices regarding Twig
 
 2.3.0 (2018-04-20)
 ------------------

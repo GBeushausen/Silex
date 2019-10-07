@@ -107,7 +107,7 @@ class TwigServiceProviderTest extends TestCase
         $app->register(new CsrfServiceProvider());
         $app->register(new TwigServiceProvider());
 
-        $this->assertInstanceOf('Twig_Environment', $app['twig']);
+        $this->assertInstanceOf('Twig\Environment', $app['twig']);
         $this->assertInstanceOf('Symfony\Bridge\Twig\Form\TwigRendererEngine', $app['twig.form.engine']);
         $this->assertInstanceOf('Symfony\Component\Form\FormRenderer', $app['twig.form.renderer']);
     }
@@ -118,7 +118,7 @@ class TwigServiceProviderTest extends TestCase
         $app->register(new FormServiceProvider());
         $app->register(new TwigServiceProvider());
 
-        $this->assertInstanceOf('Twig_Environment', $app['twig']);
+        $this->assertInstanceOf('Twig\Environment', $app['twig']);
     }
 
     public function testFormatParameters()

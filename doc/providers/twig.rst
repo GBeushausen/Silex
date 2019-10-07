@@ -49,7 +49,7 @@ Parameters
 Services
 --------
 
-* **twig**: The ``Twig_Environment`` instance. The main way of
+* **twig**: The ``Twig\Environment`` instance. The main way of
   interacting with Twig.
 
 * **twig.loader**: The loader for Twig templates which uses the ``twig.path``

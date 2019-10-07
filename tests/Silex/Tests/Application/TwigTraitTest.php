@@ -25,7 +25,7 @@ class TwigTraitTest extends TestCase
     {
         $app = $this->createApplication();
 
-        $app['twig'] = $mailer = $this->getMockBuilder('Twig_Environment')->disableOriginalConstructor()->getMock();
+        $app['twig'] = $mailer = $this->getMockBuilder('Twig\Environment')->disableOriginalConstructor()->getMock();
         $mailer->expects($this->once())->method('render')->will($this->returnValue('foo'));
 
         $response = $app->render('view');
@@ -37,7 +37,7 @@ class TwigTraitTest extends TestCase
     {
         $app = $this->createApplication();
 
-        $app['twig'] = $mailer = $this->getMockBuilder('Twig_Environment')->disableOriginalConstructor()->getMock();
+        $app['twig'] = $mailer = $this->getMockBuilder('Twig\Environment')->disableOriginalConstructor()->getMock();
         $mailer->expects($this->once())->method('render')->will($this->returnValue('foo'));
 
         $response = $app->render('view', [], new Response('', 404));
@@ -48,7 +48,7 @@ class TwigTraitTest extends TestCase
     {
         $app = $this->createApplication();
 
-        $app['twig'] = $mailer = $this->getMockBuilder('Twig_Environment')->disableOriginalConstructor()->getMock();
+        $app['twig'] = $mailer = $this->getMockBuilder('Twig\Environment')->disableOriginalConstructor()->getMock();
         $mailer->expects($this->once())->method('display')->will($this->returnCallback(function () { echo 'foo'; }));
 
         $response = $app->render('view', [], new StreamedResponse());
@@ -63,7 +63,7 @@ class TwigTraitTest extends TestCase
     {
         $app = $this->createApplication();
 
-        $app['twig'] = $mailer = $this->getMockBuilder('Twig_Environment')->disableOriginalConstructor()->getMock();
+        $app['twig'] = $mailer = $this->getMockBuilder('Twig\Environment')->disableOriginalConstructor()->getMock();
         $mailer->expects($this->once())->method('render');
 
         $app->renderView('view');
