@@ -28,6 +28,7 @@ use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Bridge\Twig\Extension\HttpKernelRuntime;
 use Symfony\Component\Form\FormRenderer;
 use Twig\Environment;
+use Twig\Extension\DebugExtension;
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\ChainLoader;
 use Twig\Loader\FilesystemLoader;
@@ -71,7 +72,7 @@ class TwigServiceProvider implements ServiceProviderInterface
             $coreExtension->setNumberFormat($app['twig.number_format.decimals'], $app['twig.number_format.decimal_point'], $app['twig.number_format.thousands_separator']);
 
             if ($app['debug']) {
-                $twig->addExtension(new \Twig_Extension_Debug());
+                $twig->addExtension(new DebugExtension());
             }
 
             if (class_exists('Symfony\Bridge\Twig\Extension\RoutingExtension')) {
@@ -91,7 +92,7 @@ class TwigServiceProvider implements ServiceProviderInterface
                 $twig->addGlobal('global', $app['twig.app_variable']);
 
                 if (isset($app['request_stack'])) {
-                    $twig->addExtension(new HttpFoundationExtension($app['request_stack']));
+                    $twig->addExtension(new HttpFoundationExtension($app['url_helper']));
                     $twig->addExtension(new RoutingExtension($app['url_generator']));
                     $twig->addExtension(new WebLinkExtension($app['request_stack']));
                 }

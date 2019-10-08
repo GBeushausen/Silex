@@ -4,8 +4,9 @@ Changelog
 2.3.1 (2019-10-07)
 ------------------
 
- * fixed compatibility issue with Symfony 3.4
+ * fixed compatibility issue with Symfony 4.3
  * fixed deprecation notices regarding Twig
+ * fixed all deprecation notices for Symfony 4.3
 
 2.3.0 (2018-04-20)
 ------------------

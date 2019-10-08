@@ -45,9 +45,9 @@ class LogListenerTest extends TestCase
 
         $kernel = $this->getMockBuilder('Symfony\\Component\\HttpKernel\\HttpKernelInterface')->getMock();
 
-        $dispatcher->dispatch(KernelEvents::REQUEST, new GetResponseEvent($kernel, Request::create('/subrequest'), HttpKernelInterface::SUB_REQUEST), 'Skip sub requests');
+        $dispatcher->dispatch(new GetResponseEvent($kernel, Request::create('/subrequest'), HttpKernelInterface::SUB_REQUEST), KernelEvents::REQUEST, 'Skip sub requests');
 
-        $dispatcher->dispatch(KernelEvents::REQUEST, new GetResponseEvent($kernel, Request::create('/foo'), HttpKernelInterface::MASTER_REQUEST), 'Log master requests');
+        $dispatcher->dispatch(new GetResponseEvent($kernel, Request::create('/foo'), HttpKernelInterface::MASTER_REQUEST), KernelEvents::REQUEST, 'Log master requests');
     }
 
     public function testResponseListener()
@@ -64,9 +64,9 @@ class LogListenerTest extends TestCase
 
         $kernel = $this->getMockBuilder('Symfony\\Component\\HttpKernel\\HttpKernelInterface')->getMock();
 
-        $dispatcher->dispatch(KernelEvents::RESPONSE, new FilterResponseEvent($kernel, Request::create('/foo'), HttpKernelInterface::SUB_REQUEST, Response::create('subrequest', 200)), 'Skip sub requests');
+        $dispatcher->dispatch(new FilterResponseEvent($kernel, Request::create('/foo'), HttpKernelInterface::SUB_REQUEST, Response::create('subrequest', 200)), KernelEvents::RESPONSE, 'Skip sub requests');
 
-        $dispatcher->dispatch(KernelEvents::RESPONSE, new FilterResponseEvent($kernel, Request::create('/foo'), HttpKernelInterface::MASTER_REQUEST, Response::create('bar', 301)), 'Log master requests');
+        $dispatcher->dispatch(new FilterResponseEvent($kernel, Request::create('/foo'), HttpKernelInterface::MASTER_REQUEST, Response::create('bar', 301)), KernelEvents::RESPONSE, 'Log master requests');
     }
 
     public function testExceptionListener()
@@ -88,7 +88,7 @@ class LogListenerTest extends TestCase
 
         $kernel = $this->getMockBuilder('Symfony\\Component\\HttpKernel\\HttpKernelInterface')->getMock();
 
-        $dispatcher->dispatch(KernelEvents::EXCEPTION, new GetResponseForExceptionEvent($kernel, Request::create('/foo'), HttpKernelInterface::SUB_REQUEST, new \RuntimeException('Fatal error')));
-        $dispatcher->dispatch(KernelEvents::EXCEPTION, new GetResponseForExceptionEvent($kernel, Request::create('/foo'), HttpKernelInterface::SUB_REQUEST, new HttpException(400, 'Http error')));
+        $dispatcher->dispatch(new GetResponseForExceptionEvent($kernel, Request::create('/foo'), HttpKernelInterface::SUB_REQUEST, new \RuntimeException('Fatal error')), KernelEvents::EXCEPTION);
+        $dispatcher->dispatch(new GetResponseForExceptionEvent($kernel, Request::create('/foo'), HttpKernelInterface::SUB_REQUEST, new HttpException(400, 'Http error')), KernelEvents::EXCEPTION);
     }
 }

@@ -10,7 +10,7 @@ Parameters
 * **security.hide_user_not_found** (optional): Defines whether to hide user not
   found exception or not. Defaults to ``true``.
 
-* **security.encoder.bcrypt.cost** (optional): Defines BCrypt password encoder cost. Defaults to 13.
+* **security.encoder.native.cost** (optional): Defines BCrypt password encoder cost. Defaults to 13.
 
 * **security.role_hierarchy**:(optional): Defines a map of roles including other roles.
 
@@ -634,7 +634,7 @@ Or you can define you own, fully customizable encoder::
 
 .. tip::
 
-    You can change the default BCrypt encoding cost by overriding ``security.encoder.bcrypt.cost``
+    You can change the default BCrypt encoding cost by overriding ``security.encoder.native.cost``
 
 Defining a custom Authentication Provider
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

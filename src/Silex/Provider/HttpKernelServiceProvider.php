@@ -12,6 +12,7 @@ use Silex\EventListener\MiddlewareListener;
 use Silex\EventListener\StringToResponseListener;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\UrlHelper;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -20,6 +21,7 @@ use Symfony\Component\HttpKernel\EventListener\ResponseListener;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\WebLink\EventListener\AddLinkHeaderListener;
 use Symfony\Component\WebLink\HttpHeaderSerializer;
+use function foo\func;
 
 class HttpKernelServiceProvider implements ServiceProviderInterface, EventListenerProviderInterface
 {
@@ -49,6 +51,10 @@ class HttpKernelServiceProvider implements ServiceProviderInterface, EventListen
 
         $app['request_stack'] = function () {
             return new RequestStack();
+        };
+
+        $app['url_helper'] = function ($app) {
+            return new UrlHelper($app['request_stack']);
         };
 
         $app['dispatcher'] = function () {

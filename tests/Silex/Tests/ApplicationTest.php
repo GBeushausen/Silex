@@ -24,6 +24,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
@@ -137,7 +139,7 @@ class ApplicationTest extends TestCase
             $app['pass'] = true;
         });
 
-        $app['dispatcher']->dispatch('test');
+        $app['dispatcher']->dispatch(new Event(), 'test');
 
         $this->assertTrue($app['pass']);
     }
