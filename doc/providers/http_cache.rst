@@ -33,14 +33,14 @@ Registering
 
 .. code-block:: php
 
-    $app->register(new Silex\Provider\HttpCacheServiceProvider(), array(
+    $app->register(new PrestoPHP\Provider\HttpCacheServiceProvider(), array(
         'http_cache.cache_dir' => __DIR__.'/cache/',
     ));
 
 Usage
 -----
 
-Silex already supports any reverse proxy like Varnish out of the box by
+PrestoPHP already supports any reverse proxy like Varnish out of the box by
 setting Response HTTP cache headers::
 
     use Symfony\Component\HttpFoundation\Response;
@@ -53,7 +53,7 @@ setting Response HTTP cache headers::
 
 .. tip::
 
-    If you want Silex to trust the ``X-Forwarded-For*`` headers from your
+    If you want PrestoPHP to trust the ``X-Forwarded-For*`` headers from your
     reverse proxy at address $ip, you will need to whitelist it as documented
     in `Trusting Proxies
     <https://symfony.com/doc/current/components/http_foundation/trusting_proxies.html>`_.
@@ -66,7 +66,7 @@ setting Response HTTP cache headers::
         $app->run();
 
 This provider allows you to use the Symfony reverse proxy natively with
-Silex applications by using the ``http_cache`` service. The Symfony reverse proxy
+PrestoPHP applications by using the ``http_cache`` service. The Symfony reverse proxy
 acts much like any other proxy would, so you will want to whitelist it::
 
     use Symfony\Component\HttpFoundation\Request;
@@ -107,7 +107,7 @@ The provider also provides ESI support::
 If your application doesn't use ESI, you can disable it to slightly improve the
 overall performance::
 
-    $app->register(new Silex\Provider\HttpCacheServiceProvider(), array(
+    $app->register(new PrestoPHP\Provider\HttpCacheServiceProvider(), array(
        'http_cache.cache_dir' => __DIR__.'/cache/',
        'http_cache.esi'       => null,
     ));

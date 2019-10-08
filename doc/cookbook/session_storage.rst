@@ -21,7 +21,7 @@ With a dedicated PDO service
 
     use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
 
-    $app->register(new Silex\Provider\SessionServiceProvider());
+    $app->register(new PrestoPHP\Provider\SessionServiceProvider());
 
     $app['pdo.dsn'] = 'mysql:dbname=mydatabase';
     $app['pdo.user'] = 'myuser';
@@ -59,7 +59,7 @@ have to make another database connection, simply pass the getWrappedConnection m
 
     use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
 
-    $app->register(new Silex\Provider\SessionServiceProvider());
+    $app->register(new PrestoPHP\Provider\SessionServiceProvider());
 
     $app['session.storage.handler'] = function () use ($app) {
         return new PdoSessionHandler(

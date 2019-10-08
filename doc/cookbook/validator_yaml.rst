@@ -1,7 +1,7 @@
 Using YAML to configure Validation
 ==================================
 
-Simplicity is at the heart of Silex so there is no out of the box solution to
+Simplicity is at the heart of PrestoPHP so there is no out of the box solution to
 use YAML files for validation. But this doesn't mean that this is not
 possible. Let's see how to do it.
 

@@ -60,7 +60,7 @@ Registering
 
 .. code-block:: php
 
-    $app->register(new Silex\Provider\SessionServiceProvider());
+    $app->register(new PrestoPHP\Provider\SessionServiceProvider());
 
 Using Handlers
 --------------

@@ -1,0 +1,31 @@
+{
+    "minimum-stability": "dev",
+    "name": "PrestoPHP/providers",
+    "description": "The PrestoPHP providers",
+    "keywords": ["microframework"],
+    "homepage": "https://PrestoPHP.symfony.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Fabien Potencier",
+            "email": "fabien@symfony.com"
+        },
+        {
+            "name": "Igor Wiedler",
+            "email": "igor@wiedler.ch"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.9",
+        "pimple/pimple": "~3.0",
+        "PrestoPHP/api": "~2.2"
+    },
+    "autoload": {
+        "psr-4": { "PrestoPHP\\Provider\\": "" }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.3.x-dev"
+        }
+    }
+}

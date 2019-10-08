@@ -30,7 +30,7 @@ Registering
 
 .. code-block:: php
 
-    $app->register(new Silex\Provider\HttpFragmentServiceProvider());
+    $app->register(new PrestoPHP\Provider\HttpFragmentServiceProvider());
 
 Usage
 -----
@@ -55,7 +55,7 @@ function:
     The main page content resumes here.
 
 The ``render()`` call is replaced by the content of the ``/foo`` URL
-(internally, a sub-request is handled by Silex to render the sub-page).
+(internally, a sub-request is handled by PrestoPHP to render the sub-page).
 
 Instead of making internal sub-requests, you can also use the ESI (the
 sub-request is handled by a reverse proxy) or the HInclude strategies (the

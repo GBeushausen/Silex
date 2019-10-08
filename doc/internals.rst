@@ -1,15 +1,15 @@
 Internals
 =========
 
-This chapter will tell you how Silex works internally.
+This chapter will tell you how PrestoPHP works internally.
 
-Silex
+PrestoPHP
 -----
 
 Application
 ~~~~~~~~~~~
 
-The application is the main interface to Silex. It implements Symfony's
+The application is the main interface to PrestoPHP. It implements Symfony's
 `HttpKernelInterface
 <https://api.symfony.com/master/Symfony/Component/HttpKernel/HttpKernelInterface.html>`_,
 so you can pass a `Request
@@ -71,7 +71,7 @@ The ``Application`` provides a shortcut ``flush`` method for flushing the
 Symfony
 -------
 
-Following Symfony components are used by Silex:
+Following Symfony components are used by PrestoPHP:
 
 * **HttpFoundation**: For ``Request`` and ``Response``.
 

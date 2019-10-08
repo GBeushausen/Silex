@@ -1,7 +1,7 @@
 Testing
 =======
 
-Because Silex is built on top of Symfony, it is very easy to write functional
+Because PrestoPHP is built on top of Symfony, it is very easy to write functional
 tests for your application. Functional tests are automated software tests that
 ensure that your code is working correctly. They go through the user interface,
 using a fake browser, and mimic the actions a user would do.
@@ -62,10 +62,10 @@ WebTestCase
 -----------
 
 Symfony provides a WebTestCase class that can be used to write functional
-tests. The Silex version of this class is ``Silex\WebTestCase``, and you can
+tests. The PrestoPHP version of this class is ``PrestoPHP\WebTestCase``, and you can
 use it by making your test extend it::
 
-    use Silex\WebTestCase;
+    use PrestoPHP\WebTestCase;
 
     class ContactFormTest extends WebTestCase
     {
@@ -75,7 +75,7 @@ use it by making your test extend it::
 .. caution::
 
     If you need to override the ``setUp()`` method, don't forget to call the
-    parent (``parent::setUp()``) to call the Silex default setup.
+    parent (``parent::setUp()``) to call the PrestoPHP default setup.
 
 .. note::
 
@@ -206,7 +206,7 @@ Your ``tests/YourApp/Tests/YourTest.php`` should look like this::
 
     namespace YourApp\Tests;
 
-    use Silex\WebTestCase;
+    use PrestoPHP\WebTestCase;
 
     class YourTest extends WebTestCase
     {

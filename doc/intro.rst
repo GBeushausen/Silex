@@ -1,17 +1,17 @@
 Introduction
 ============
 
-Silex is a PHP microframework. It is built on the shoulders of `Symfony`_ and
+PrestoPHP is a PHP microframework. It is built on the shoulders of `Symfony`_ and
 `Pimple`_ and also inspired by `Sinatra`_.
 
-Silex aims to be:
+PrestoPHP aims to be:
 
-* *Concise*: Silex exposes an intuitive and concise API.
+* *Concise*: PrestoPHP exposes an intuitive and concise API.
 
-* *Extensible*: Silex has an extension system based around the Pimple
+* *Extensible*: PrestoPHP has an extension system based around the Pimple
   service-container that makes it easy to tie in third party libraries.
 
-* *Testable*: Silex uses Symfony's HttpKernel which abstracts request and
+* *Testable*: PrestoPHP uses Symfony's HttpKernel which abstracts request and
   response. This makes it very easy to test apps and the framework itself. It
   also respects the HTTP specification and encourages its proper use.
 
@@ -27,7 +27,7 @@ Usage
     // web/index.php
     require_once __DIR__.'/../vendor/autoload.php';
 
-    $app = new Silex\Application();
+    $app = new PrestoPHP\Application();
 
     $app->get('/hello/{name}', function ($name) use ($app) {
         return 'Hello '.$app->escape($name);

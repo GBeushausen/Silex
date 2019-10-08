@@ -1,8 +1,8 @@
 Service Controllers
 ===================
 
-As your Silex application grows, you may wish to begin organizing your
-controllers in a more formal fashion. Silex can use controller classes out of
+As your PrestoPHP application grows, you may wish to begin organizing your
+controllers in a more formal fashion. PrestoPHP can use controller classes out of
 the box, but with a bit of work, your controllers can be created as services,
 giving you the full power of dependency injection and lazy loading.
 
@@ -24,7 +24,7 @@ Why would I want to do this?
   Using this method, your controllers start to become more independent of the
   framework you are using. Carefully crafted, your controllers will become
   reusable with multiple frameworks. By keeping careful control of your
-  dependencies, your controllers could easily become compatible with Silex,
+  dependencies, your controllers could easily become compatible with PrestoPHP,
   Symfony (full stack) and Drupal, to name just a few.
 
 Parameters
@@ -43,7 +43,7 @@ Registering
 
 .. code-block:: php
 
-    $app->register(new Silex\Provider\ServiceControllerServiceProvider());
+    $app->register(new PrestoPHP\Provider\ServiceControllerServiceProvider());
 
 Usage
 -----
@@ -53,7 +53,7 @@ In this slightly contrived example of a blog API, we're going to change the
 
 .. code-block:: php
 
-    use Silex\Application;
+    use PrestoPHP\Application;
     use Demo\Repository\PostRepository;
 
     $app = new Application();
@@ -70,7 +70,7 @@ Rewriting your controller as a service is pretty simple, create a Plain Ol' PHP
 Object with your ``PostRepository`` as a dependency, along with an
 ``indexJsonAction`` method to handle the request. Although not shown in the
 example below, you can use type hinting and parameter naming to get the
-parameters you need, just like with standard Silex routes.
+parameters you need, just like with standard PrestoPHP routes.
 
 If you are a TDD/BDD fan (and you should be), you may notice that this
 controller has well defined responsibilities and dependencies, and is easily

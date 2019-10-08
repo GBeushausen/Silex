@@ -54,7 +54,7 @@ Registering
 
 .. code-block:: php
 
-    $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
+    $app->register(new PrestoPHP\Provider\DoctrineServiceProvider(), array(
         'db.options' => array(
             'driver'   => 'pdo_sqlite',
             'path'     => __DIR__.'/app.db',
@@ -91,7 +91,7 @@ configure the data sources, replace the **db.options** with **dbs.options**.
 **dbs.options** is an array of configurations where keys are connection names
 and values are options::
 
-    $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
+    $app->register(new PrestoPHP\Provider\DoctrineServiceProvider(), array(
         'dbs.options' => array (
             'mysql_read' => array(
                 'driver'    => 'pdo_mysql',

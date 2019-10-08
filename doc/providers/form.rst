@@ -21,7 +21,7 @@ Registering
 
 .. code-block:: php
 
-    use Silex\Provider\FormServiceProvider;
+    use PrestoPHP\Provider\FormServiceProvider;
 
     $app->register(new FormServiceProvider());
 
@@ -31,7 +31,7 @@ Registering
     will be used. But you will have to register the :doc:`translation provider
     <translation>` as the default form layout requires it::
 
-        $app->register(new Silex\Provider\TranslationServiceProvider(), array(
+        $app->register(new PrestoPHP\Provider\TranslationServiceProvider(), array(
             'translator.domains' => array(),
         ));
 
@@ -125,8 +125,8 @@ form by adding constraints on the fields::
     use Symfony\Component\Form\Extension\Core\Type\TextType;
     use Symfony\Component\Validator\Constraints as Assert;
 
-    $app->register(new Silex\Provider\ValidatorServiceProvider());
-    $app->register(new Silex\Provider\TranslationServiceProvider(), array(
+    $app->register(new PrestoPHP\Provider\ValidatorServiceProvider());
+    $app->register(new PrestoPHP\Provider\TranslationServiceProvider(), array(
         'translator.domains' => array(),
     ));
 
@@ -200,7 +200,7 @@ You can register form type guessers by extending ``form.type.guessers``::
 Traits
 ------
 
-``Silex\Application\FormTrait`` adds the following shortcuts:
+``PrestoPHP\Application\FormTrait`` adds the following shortcuts:
 
 * **form**: Creates a FormBuilderInterface instance.
 

@@ -22,7 +22,7 @@ Registering
 
 .. code-block:: php
 
-    use Silex\Provider\CsrfServiceProvider;
+    use PrestoPHP\Provider\CsrfServiceProvider;
 
     $app->register(new CsrfServiceProvider());
 

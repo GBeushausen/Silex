@@ -2,7 +2,7 @@ Providers
 =========
 
 Providers allow the developer to reuse parts of an application into another
-one. Silex provides two types of providers defined by two interfaces:
+one. PrestoPHP provides two types of providers defined by two interfaces:
 ``ServiceProviderInterface`` for services and ``ControllerProviderInterface``
 for controllers.
 
@@ -15,7 +15,7 @@ Loading providers
 In order to load and use a service provider, you must register it on the
 application::
 
-    $app = new Silex\Application();
+    $app = new PrestoPHP\Application();
 
     $app->register(new Acme\DatabaseServiceProvider());
 
@@ -49,7 +49,7 @@ Included providers
 ~~~~~~~~~~~~~~~~~~
 
 There are a few providers that you get out of the box. All of these are within
-the ``Silex\Provider`` namespace:
+the ``PrestoPHP\Provider`` namespace:
 
 * :doc:`AssetServiceProvider <providers/asset>`
 * :doc:`CsrfServiceProvider <providers/csrf>`
@@ -72,8 +72,8 @@ the ``Silex\Provider`` namespace:
 
 .. note::
 
-    The Silex core team maintains a `WebProfiler
-    <https://github.com/silexphp/Silex-WebProfiler>`_ provider that helps debug
+    The PrestoPHP core team maintains a `WebProfiler
+    <https://github.com/PrestoPHPphp/PrestoPHP-WebProfiler>`_ provider that helps debug
     code in the development environment thanks to the Symfony web debug toolbar
     and the Symfony profiler.
 
@@ -81,8 +81,8 @@ Third party providers
 ~~~~~~~~~~~~~~~~~~~~~
 
 Some service providers are developed by the community. Those third-party
-providers are listed on `Silex' repository wiki
-<https://github.com/silexphp/Silex/wiki/Third-Party-ServiceProviders-for-Silex-2.x>`_.
+providers are listed on `PrestoPHP' repository wiki
+<https://github.com/PrestoPHPphp/PrestoPHP/wiki/Third-Party-ServiceProviders-for-PrestoPHP-2.x>`_.
 
 You are encouraged to share yours.
 
@@ -105,10 +105,10 @@ application which then may make use of other services and parameters.
     The ``Pimple\ServiceProviderInterface`` belongs to the Pimple package, so
     take care to only use the API of ``Pimple\Container`` within your
     ``register`` method. Not only is this a good practice due to the way Pimple
-    and Silex work, but may allow your provider to be used outside of Silex.
+    and PrestoPHP work, but may allow your provider to be used outside of PrestoPHP.
 
 Optionally, your service provider can implement the
-``Silex\Api\BootableProviderInterface``. A bootable provider must
+``PrestoPHP\Api\BootableProviderInterface``. A bootable provider must
 implement the ``boot()`` method, with which you can configure the application, just
 before it handles a request::
 
@@ -117,9 +117,9 @@ before it handles a request::
         function boot(Application $app);
     }
 
-Another optional interface, is the ``Silex\Api\EventListenerProviderInterface``.
+Another optional interface, is the ``PrestoPHP\Api\EventListenerProviderInterface``.
 This interface contains the ``subscribe()`` method, which allows your provider to
-subscribe event listener with Silex's EventDispatcher, just before it handles a
+subscribe event listener with PrestoPHP's EventDispatcher, just before it handles a
 request::
 
     interface EventListenerProviderInterface
@@ -133,9 +133,9 @@ Here is an example of such a provider::
 
     use Pimple\Container;
     use Pimple\ServiceProviderInterface;
-    use Silex\Application;
-    use Silex\Api\BootableProviderInterface;
-    use Silex\Api\EventListenerProviderInterface;
+    use PrestoPHP\Application;
+    use PrestoPHP\Api\BootableProviderInterface;
+    use PrestoPHP\Api\EventListenerProviderInterface;
     use Symfony\Component\EventDispatcher\EventDispatcherInterface;
     use Symfony\Component\HttpKernel\KernelEvents;
     use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
@@ -173,7 +173,7 @@ You can now use this provider as follows::
 
     use Symfony\Component\HttpFoundation\Request;
 
-    $app = new Silex\Application();
+    $app = new PrestoPHP\Application();
 
     $app->register(new Acme\HelloServiceProvider(), array(
         'hello.default_name' => 'Igor',
@@ -199,7 +199,7 @@ Loading providers
 In order to load and use a controller provider, you must "mount" its
 controllers under a path::
 
-    $app = new Silex\Application();
+    $app = new PrestoPHP\Application();
 
     $app->mount('/blog', new Acme\BlogControllerProvider());
 
@@ -209,7 +209,7 @@ All controllers defined by the provider will now be available under the
 Creating a provider
 ~~~~~~~~~~~~~~~~~~~
 
-Providers must implement the ``Silex\Api\ControllerProviderInterface``::
+Providers must implement the ``PrestoPHP\Api\ControllerProviderInterface``::
 
     interface ControllerProviderInterface
     {
@@ -220,8 +220,8 @@ Here is an example of such a provider::
 
     namespace Acme;
 
-    use Silex\Application;
-    use Silex\Api\ControllerProviderInterface;
+    use PrestoPHP\Application;
+    use PrestoPHP\Api\ControllerProviderInterface;
 
     class HelloControllerProvider implements ControllerProviderInterface
     {
@@ -248,7 +248,7 @@ defined (like ``get``, ``post``, ``match``, ...).
 
 You can use this provider as follows::
 
-    $app = new Silex\Application();
+    $app = new PrestoPHP\Application();
 
     $app->mount('/blog', new Acme\HelloControllerProvider());
 

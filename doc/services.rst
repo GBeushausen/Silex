@@ -1,7 +1,7 @@
 Services
 ========
 
-Silex is not only a framework, it is also a service container. It does this by
+PrestoPHP is not only a framework, it is also a service container. It does this by
 extending `Pimple <https://pimple.symfony.com>`_ which provides a very simple
 service container.
 
@@ -53,14 +53,14 @@ Pimple
 Pimple makes strong use of closures and implements the ArrayAccess interface.
 
 We will start off by creating a new instance of Pimple -- and because
-``Silex\Application`` extends ``Pimple\Container`` all of this applies to Silex
+``PrestoPHP\Application`` extends ``Pimple\Container`` all of this applies to PrestoPHP
 as well::
 
     $container = new Pimple\Container();
 
 or::
 
-    $app = new Silex\Application();
+    $app = new PrestoPHP\Application();
 
 Parameters
 ~~~~~~~~~~
@@ -194,7 +194,7 @@ example::
 Core services
 -------------
 
-Silex defines a range of services.
+PrestoPHP defines a range of services.
 
 * **request_stack**: Controls the lifecycle of requests, an instance of
   `RequestStack <https://api.symfony.com/master/Symfony/Component/HttpFoundation/RequestStack.html>`_.
@@ -220,13 +220,13 @@ Silex defines a range of services.
   method, which takes the route name as an argument, followed by an array of
   route parameters.
 
-* **controllers**: The ``Silex\ControllerCollection`` that is used internally.
+* **controllers**: The ``PrestoPHP\ControllerCollection`` that is used internally.
   Check the :doc:`Internals chapter <internals>` for more information.
 
 * **dispatcher**: The `EventDispatcher
   <https://api.symfony.com/master/Symfony/Component/EventDispatcher/EventDispatcher.html>`_
   that is used internally. It is the core of the Symfony system and is used
-  quite a bit by Silex.
+  quite a bit by PrestoPHP.
 
 * **resolver**: The `ControllerResolver
   <https://api.symfony.com/master/Symfony/Component/HttpKernel/Controller/ControllerResolver.html>`_
@@ -254,7 +254,7 @@ Silex defines a range of services.
 Core traits
 -----------
 
-* ``Silex\Application\UrlGeneratorTrait`` adds the following shortcuts:
+* ``PrestoPHP\Application\UrlGeneratorTrait`` adds the following shortcuts:
 
   * **path**: Generates a path.
 

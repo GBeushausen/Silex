@@ -12,8 +12,8 @@
          bootstrap="vendor/autoload.php"
 >
     <testsuites>
-        <testsuite name="Silex Test Suite">
-            <directory>./tests/Silex/</directory>
+        <testsuite name="PrestoPHP Test Suite">
+            <directory>./tests/PrestoPHP/</directory>
         </testsuite>
     </testsuites>
     <filter>

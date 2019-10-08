@@ -57,7 +57,7 @@ Registering
 
 .. code-block:: php
 
-    $app->register(new Silex\Provider\MonologServiceProvider(), array(
+    $app->register(new PrestoPHP\Provider\MonologServiceProvider(), array(
         'monolog.logfile' => __DIR__.'/development.log',
     ));
 
@@ -105,7 +105,7 @@ this service if you want to modify or disable the logged information.
 Traits
 ------
 
-``Silex\Application\MonologTrait`` adds the following shortcuts:
+``PrestoPHP\Application\MonologTrait`` adds the following shortcuts:
 
 * **log**: Logs a message.
 

@@ -119,7 +119,7 @@ this sample ``web.config`` file:
             </defaultDocument>
             <rewrite>
                 <rules>
-                    <rule name="Silex Front Controller" stopProcessing="true">
+                    <rule name="PrestoPHP Front Controller" stopProcessing="true">
                         <match url="^(.*)$" ignoreCase="false" />
                         <conditions logicalGrouping="MatchAll">
                             <add input="{REQUEST_FILENAME}" matchType="IsFile" ignoreCase="false" negate="true" />
@@ -155,7 +155,7 @@ PHP
 ---
 
 PHP ships with a built-in webserver for development. This server allows you to
-run silex without any configuration. However, in order to serve static files,
+run PrestoPHP without any configuration. However, in order to serve static files,
 you'll have to make sure your front controller returns false in that case::
 
     // web/index.php

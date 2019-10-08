@@ -61,7 +61,7 @@ Registering
 
 .. code-block:: php
 
-    $app->register(new Silex\Provider\TwigServiceProvider(), array(
+    $app->register(new PrestoPHP\Provider\TwigServiceProvider(), array(
         'twig.path' => __DIR__.'/views',
     ));
 
@@ -194,7 +194,7 @@ from a template (available when the :doc:`HttpFragment Service Provider
 Traits
 ------
 
-``Silex\Application\TwigTrait`` adds the following shortcuts:
+``PrestoPHP\Application\TwigTrait`` adds the following shortcuts:
 
 * **render**: Renders a view with the given parameters and returns a Response
   object.

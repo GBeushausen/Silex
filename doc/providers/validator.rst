@@ -37,7 +37,7 @@ Registering
 
 .. code-block:: php
 
-    $app->register(new Silex\Provider\ValidatorServiceProvider());
+    $app->register(new PrestoPHP\Provider\ValidatorServiceProvider());
 
 .. note::
 

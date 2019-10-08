@@ -4,17 +4,17 @@ Usage
 Installation
 ------------
 
-If you want to get started fast, use the `Silex Skeleton`_:
+If you want to get started fast, use the `PrestoPHP Skeleton`_:
 
 .. code-block:: bash
 
-    composer create-project fabpot/silex-skeleton path/to/install "~2.0"
+    composer create-project fabpot/PrestoPHP-skeleton path/to/install "~2.0"
 
 If you want more flexibility, use Composer_ instead:
 
 .. code-block:: bash
 
-    composer require silex/silex:~2.0
+    composer require PrestoPHP/PrestoPHP:~2.0
 
 Web Server
 ----------
@@ -25,14 +25,14 @@ the :doc:`webserver documentation<web_servers>` to check yours.
 Bootstrap
 ---------
 
-To bootstrap Silex, all you need to do is require the ``vendor/autoload.php``
-file and create an instance of ``Silex\Application``. After your controller
+To bootstrap PrestoPHP, all you need to do is require the ``vendor/autoload.php``
+file and create an instance of ``PrestoPHP\Application``. After your controller
 definitions, call the ``run`` method on your application::
 
     // web/index.php
     require_once __DIR__.'/../vendor/autoload.php';
 
-    $app = new Silex\Application();
+    $app = new PrestoPHP\Application();
 
     // ... definitions
 
@@ -48,7 +48,7 @@ definitions, call the ``run`` method on your application::
 .. tip::
 
     If your application is hosted behind a reverse proxy at address ``$ip``,
-    and you want Silex to trust the ``X-Forwarded-For*`` headers, you will
+    and you want PrestoPHP to trust the ``X-Forwarded-For*`` headers, you will
     need to run your application like this::
 
         use Symfony\Component\HttpFoundation\Request;
@@ -59,7 +59,7 @@ definitions, call the ``run`` method on your application::
 Routing
 -------
 
-In Silex you define a route and the controller that is called when that
+In PrestoPHP you define a route and the controller that is called when that
 route is matched. A route pattern consists of:
 
 * *Pattern*: The route pattern defines a path that points to a resource. The
@@ -87,7 +87,7 @@ Here is an example definition of a ``GET`` route::
         1 => array(
             'date'      => '2011-03-29',
             'author'    => 'igorw',
-            'title'     => 'Using Silex',
+            'title'     => 'Using PrestoPHP',
             'body'      => '...',
         ),
     );
@@ -112,7 +112,7 @@ Dynamic Routing
 
 Now, you can create another controller for viewing individual blog posts::
 
-    $app->get('/blog/{id}', function (Silex\Application $app, $id) use ($blogPosts) {
+    $app->get('/blog/{id}', function (PrestoPHP\Application $app, $id) use ($blogPosts) {
         if (!isset($blogPosts[$id])) {
             $app->abort(404, "Post $id does not exist.");
         }
@@ -126,7 +126,7 @@ Now, you can create another controller for viewing individual blog posts::
 This route definition has a variable ``{id}`` part which is passed to the
 closure.
 
-The current ``Application`` is automatically injected by Silex to the Closure
+The current ``Application`` is automatically injected by PrestoPHP to the Closure
 thanks to the type hinting.
 
 When the post does not exist, you are using ``abort()`` to stop the request
@@ -156,7 +156,7 @@ It is pretty straightforward.
     There is a :doc:`SwiftmailerServiceProvider <providers/swiftmailer>`
     included that you can use instead of ``mail()``.
 
-The current ``request`` is automatically injected by Silex to the Closure
+The current ``request`` is automatically injected by PrestoPHP to the Closure
 thanks to the type hinting. It is an instance of
 Request_, so you can fetch variables using the request ``get`` method.
 
@@ -166,7 +166,7 @@ This allows setting an HTTP status code, in this case it is set to
 
 .. note::
 
-    Silex always uses a ``Response`` internally, it converts strings to
+    PrestoPHP always uses a ``Response`` internally, it converts strings to
     responses with status code ``200``.
 
 Other methods
@@ -262,7 +262,7 @@ You can also ask for the current Request and Application objects::
 
 .. note::
 
-    Note for the Application and Request objects, Silex does the injection
+    Note for the Application and Request objects, PrestoPHP does the injection
     based on the type hinting and not on the variable name::
 
         $app->get('/blog/{id}', function (Application $foo, Request $bar, $id) {
@@ -397,7 +397,7 @@ have the value ``index``.
 Named Routes
 ~~~~~~~~~~~~
 
-Some providers can make use of named routes. By default Silex will generate an
+Some providers can make use of named routes. By default PrestoPHP will generate an
 internal route name for you but you can give an explicit route name by calling
 ``bind``::
 
@@ -416,11 +416,11 @@ Controllers as Classes
 
 Instead of anonymous functions, you can also define your controllers as
 methods. By using the ``ControllerClass::methodName`` syntax, you can tell
-Silex to lazily create the controller object for you::
+PrestoPHP to lazily create the controller object for you::
 
     $app->get('/', 'Acme\\Foo::bar');
 
-    use Silex\Application;
+    use PrestoPHP\Application;
     use Symfony\Component\HttpFoundation\Request;
 
     namespace Acme
@@ -436,7 +436,7 @@ Silex to lazily create the controller object for you::
 
 This will load the ``Acme\Foo`` class on demand, create an instance and call
 the ``bar`` method to get the response. You can use ``Request`` and
-``Silex\Application`` type hints to get ``$request`` and ``$app`` injected.
+``PrestoPHP\Application`` type hints to get ``$request`` and ``$app`` injected.
 
 It is also possible to :doc:`define your controllers as services
 <providers/service_controller>`.
@@ -514,7 +514,7 @@ setting a more specific type hint for the Closure argument::
 
 .. note::
 
-    As Silex ensures that the Response status code is set to the most
+    As PrestoPHP ensures that the Response status code is set to the most
     appropriate one depending on the exception, setting the status on the
     response alone won't work.
 
@@ -548,12 +548,12 @@ is returned, the following handlers are ignored.
 
 .. note::
 
-    Silex ships with a provider for Monolog_ which handles logging of errors.
+    PrestoPHP ships with a provider for Monolog_ which handles logging of errors.
     Check out the *Providers* :doc:`chapter <providers/monolog>` for details.
 
 .. tip::
 
-    Silex comes with a default error handler that displays a detailed error
+    PrestoPHP comes with a default error handler that displays a detailed error
     message with the stack trace when **debug** is true, and a simple error
     message otherwise. Error handlers registered via the ``error()`` method
     always take precedence but you can keep the nice error messages when debug
@@ -573,7 +573,7 @@ is returned, the following handlers are ignored.
 The error handlers are also called when you use ``abort`` to abort a request
 early::
 
-    $app->get('/blog/{id}', function (Silex\Application $app, $id) use ($blogPosts) {
+    $app->get('/blog/{id}', function (PrestoPHP\Application $app, $id) use ($blogPosts) {
         if (!isset($blogPosts[$id])) {
             $app->abort(404, "Post $id does not exist.");
         }
@@ -616,13 +616,13 @@ making them a good candidate for basic content negotiation::
     });
 
 View Handlers will be examined in the order they are added to the application
-and Silex will use type hints to determine if a view handler should be used for
+and PrestoPHP will use type hints to determine if a view handler should be used for
 the current result, continuously using the return value of the last view handler
 as the input for the next.
 
 .. note::
 
-    You must ensure that Silex receives a ``Response`` or a string as the result of
+    You must ensure that PrestoPHP receives a ``Response`` or a string as the result of
     the last view handler (or controller) to be run.
 
 Redirects
@@ -742,12 +742,12 @@ To further customize the response before returning it, check the API doc for
 Traits
 ------
 
-Silex comes with PHP traits that define shortcut methods.
+PrestoPHP comes with PHP traits that define shortcut methods.
 
 Almost all built-in service providers have some corresponding PHP traits. To
 use them, define your own Application class and include the traits you want::
 
-    use Silex\Application;
+    use PrestoPHP\Application;
 
     class MyApplication extends Application
     {
@@ -762,7 +762,7 @@ use them, define your own Application class and include the traits you want::
 
 You can also define your own Route class and use some traits::
 
-    use Silex\Route;
+    use PrestoPHP\Route;
 
     class MyRoute extends Route
     {
@@ -788,11 +788,11 @@ When outputting any user input, make sure to escape it correctly to prevent
 Cross-Site-Scripting attacks.
 
 * **Escaping HTML**: PHP provides the ``htmlspecialchars`` function for this.
-  Silex provides a shortcut ``escape`` method::
+  PrestoPHP provides a shortcut ``escape`` method::
 
       use Symfony\Component\HttpFoundation\Request;
 
-      $app->get('/name', function (Request $request, Silex\Application $app) {
+      $app->get('/name', function (Request $request, PrestoPHP\Application $app) {
           $name = $request->get('name');
 
           return "You provided the name {$app->escape($name)}.";
@@ -802,17 +802,17 @@ Cross-Site-Scripting attacks.
   auto-escaping mechanisms. Check out the *Providers* :doc:`chapter <providers/twig>` for details.
 
 * **Escaping JSON**: If you want to provide data in JSON format you should
-  use the Silex ``json`` function::
+  use the PrestoPHP ``json`` function::
 
       use Symfony\Component\HttpFoundation\Request;
 
-      $app->get('/name.json', function (Request $request, Silex\Application $app) {
+      $app->get('/name.json', function (Request $request, PrestoPHP\Application $app) {
           $name = $request->get('name');
 
           return $app->json(array('name' => $name));
       });
 
-.. _Silex Skeleton: https://github.com/silexphp/Silex-Skeleton
+.. _PrestoPHP Skeleton: https://github.com/PrestoPHPphp/PrestoPHP-Skeleton
 .. _Composer:       https://getcomposer.org/
 .. _Request:        https://api.symfony.com/master/Symfony/Component/HttpFoundation/Request.html
 .. _Response:       https://api.symfony.com/master/Symfony/Component/HttpFoundation/Response.html

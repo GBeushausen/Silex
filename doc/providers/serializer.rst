@@ -29,7 +29,7 @@ Registering
 
 .. code-block:: php
 
-    $app->register(new Silex\Provider\SerializerServiceProvider());
+    $app->register(new PrestoPHP\Provider\SerializerServiceProvider());
     
 .. note::
 
@@ -46,8 +46,8 @@ Usage
 
 The ``SerializerServiceProvider`` provider provides a ``serializer`` service::
 
-    use Silex\Application;
-    use Silex\Provider\SerializerServiceProvider;
+    use PrestoPHP\Application;
+    use PrestoPHP\Provider\SerializerServiceProvider;
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\Response;
 
@@ -77,7 +77,7 @@ Using a Cache
 
 To use a cache, register a class implementing ``Doctrine\Common\Cache\Cache``::
 
-    $app->register(new Silex\Provider\SerializerServiceProvider());
+    $app->register(new PrestoPHP\Provider\SerializerServiceProvider());
     $app['serializer.normalizers'] = function () use ($app) {
         return [new \Symfony\Component\Serializer\Normalizer\CustomNormalizer(),
             new \Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer(new ClassMetadataFactory(new  AnnotationLoader(new AnnotationReader()), $app['my_custom_cache']))

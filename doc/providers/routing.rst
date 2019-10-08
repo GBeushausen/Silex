@@ -8,7 +8,7 @@ Parameters
 ----------
 
 * **route_class**: (optional): The default route class used by the route
-  factory (defaults to ``Silex\Route``).
+  factory (defaults to ``PrestoPHP\Route``).
 
 Services
 --------
@@ -26,7 +26,7 @@ Registering
 
 .. code-block:: php
 
-    $app->register(new Silex\Provider\RoutingServiceProvider());
+    $app->register(new PrestoPHP\Provider\RoutingServiceProvider());
 
 Usage
 -----
@@ -68,7 +68,7 @@ to the ``path()`` and ``url()`` functions:
 Traits
 ------
 
-``Silex\Application\UrlGeneratorTrait`` adds the following shortcuts:
+``PrestoPHP\Application\UrlGeneratorTrait`` adds the following shortcuts:
 
 * **path**: Generates a path.
 

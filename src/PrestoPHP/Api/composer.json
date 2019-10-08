@@ -1,0 +1,34 @@
+{
+    "minimum-stability": "dev",
+    "name": "PrestoPHP/api",
+    "description": "The PrestoPHP interfaces",
+    "keywords": ["microframework"],
+    "homepage": "https://PrestoPHP.symfony.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Fabien Potencier",
+            "email": "fabien@symfony.com"
+        },
+        {
+            "name": "Igor Wiedler",
+            "email": "igor@wiedler.ch"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.9",
+        "pimple/pimple": "~3.0"
+    },
+    "suggest": {
+        "symfony/event-dispatcher": "For EventListenerProviderInterface",
+        "PrestoPHP/PrestoPHP": "For BootableProviderInterface and ControllerProviderInterface"
+    },
+    "autoload": {
+        "psr-4": { "PrestoPHP\\Api\\": "" }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.3.x-dev"
+        }
+    }
+}

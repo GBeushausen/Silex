@@ -20,7 +20,7 @@ Registering
 
 .. code-block:: php
 
-    $app->register(new Silex\Provider\VarDumperServiceProvider());
+    $app->register(new PrestoPHP\Provider\VarDumperServiceProvider());
 
 .. note::
 
@@ -39,6 +39,6 @@ Adding the VarDumper component as a Composer dependency gives you access to the
 If you are using Twig, it also provides a ``dump()`` Twig function and a
 ``dump`` Twig tag.
 
-The VarDumperServiceProvider is also useful when used with the Silex
+The VarDumperServiceProvider is also useful when used with the PrestoPHP
 WebProfiler as the dumps are made available in the web debug toolbar and in the
 web profiler.

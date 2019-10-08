@@ -1,7 +1,7 @@
 Making sub-Requests
 ===================
 
-Since Silex is based on the ``HttpKernelInterface``, it allows you to simulate
+Since PrestoPHP is based on the ``HttpKernelInterface``, it allows you to simulate
 requests against your application. This means that you can embed a page within
 another, it also allows you to forward a request which is essentially an
 internal redirect that does not change the URL.
@@ -51,7 +51,7 @@ holds the master request)::
 To forward this response to the client, you can simply return it from a
 controller::
 
-    use Silex\Application;
+    use PrestoPHP\Application;
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpKernel\HttpKernelInterface;
 
@@ -108,7 +108,7 @@ One thing to watch out for is the base URL. If your application is not
 hosted at the webroot of your web server, then you may have an URL like
 ``http://example.org/foo/index.php/articles/42``.
 
-In this case, ``/foo/index.php`` is your request base path. Silex accounts for
+In this case, ``/foo/index.php`` is your request base path. PrestoPHP accounts for
 this path prefix in the routing process, it reads it from
 ``$request->server``. In the context of sub-requests this can lead to issues,
 because if you do not prepend the base path the request could mistake a part
@@ -125,7 +125,7 @@ This is something to be aware of when making sub-requests by hand.
 Services depending on the Request
 ---------------------------------
 
-The container is a concept that is global to a Silex application, since the
+The container is a concept that is global to a PrestoPHP application, since the
 application object **is** the container. Any request that is run against an
 application will re-use the same set of services. Since these services are
 mutable, code in a master request can affect the sub-requests and vice versa.

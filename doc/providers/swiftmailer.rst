@@ -88,7 +88,7 @@ Registering
 
 .. code-block:: php
 
-    $app->register(new Silex\Provider\SwiftmailerServiceProvider());
+    $app->register(new PrestoPHP\Provider\SwiftmailerServiceProvider());
 
 .. note::
 
@@ -140,7 +140,7 @@ ending the command execution. To do so, use the following code::
 Traits
 ------
 
-``Silex\Application\SwiftmailerTrait`` adds the following shortcuts:
+``PrestoPHP\Application\SwiftmailerTrait`` adds the following shortcuts:
 
 * **mail**: Sends an email.
 

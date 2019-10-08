@@ -1,8 +1,8 @@
 {
-    "name": "silex/silex",
+    "name": "gbeushausen/prestophp",
     "description": "The PHP micro-framework based on the Symfony Components",
     "keywords": ["microframework"],
-    "homepage": "https://silex.symfony.com",
+    "homepage": "https://PrestoPHP.symfony.com",
     "license": "MIT",
     "authors": [
         {
@@ -51,14 +51,14 @@
         "symfony/web-link": "^4.0"
     },
     "replace": {
-        "silex/api": "self.version",
-        "silex/providers": "self.version"
+        "prestophp/api": "self.version",
+        "prestophp/providers": "self.version"
     },
     "autoload": {
-        "psr-4": { "Silex\\": "src/Silex" }
+        "psr-4": { "PrestoPHP\\": "src/PrestoPHP" }
     },
     "autoload-dev" : {
-        "psr-4": { "Silex\\Tests\\" : "tests/Silex/Tests" }
+        "psr-4": { "PrestoPHP\\Tests\\" : "tests/PrestoPHP/Tests" }
     },
     "extra": {
         "branch-alias": {

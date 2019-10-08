@@ -34,7 +34,7 @@ Registering
 
 .. code-block:: php
 
-    $app->register(new Silex\Provider\AssetServiceProvider(), array(
+    $app->register(new PrestoPHP\Provider\AssetServiceProvider(), array(
         'assets.version' => 'v1',
         'assets.version_format' => '%s?version=%s',
         'assets.named_packages' => array(

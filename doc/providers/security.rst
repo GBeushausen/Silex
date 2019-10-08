@@ -68,7 +68,7 @@ Registering
 
 .. code-block:: php
 
-    $app->register(new Silex\Provider\SecurityServiceProvider(), array(
+    $app->register(new PrestoPHP\Provider\SecurityServiceProvider(), array(
         'security.firewalls' => // see below
     ));
 
@@ -267,7 +267,7 @@ Create the associated template:
 
 .. note::
 
-    The ``admin_login_check`` route is automatically defined by Silex and its
+    The ``admin_login_check`` route is automatically defined by PrestoPHP and its
     name is derived from the ``check_path`` value (all ``/`` are replaced with
     ``_`` and the leading ``/`` is stripped).
 
@@ -606,7 +606,7 @@ sample users::
 Defining a custom Encoder
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-By default, Silex uses the ``BCrypt`` algorithm to encode passwords.
+By default, PrestoPHP uses the ``BCrypt`` algorithm to encode passwords.
 Additionally, the password is encoded multiple times.
 You can change these defaults by overriding ``security.default_encoder``
 service to return one of the predefined encoders:
@@ -671,7 +671,7 @@ want to use in your configuration::
 You can now use it in your configuration like any other built-in
 authentication provider::
 
-    $app->register(new Silex\Provider\SecurityServiceProvider(), array(
+    $app->register(new PrestoPHP\Provider\SecurityServiceProvider(), array(
         'security.firewalls' => array(
             'default' => array(
                 'wsse' => true,
@@ -715,7 +715,7 @@ persistence by activating the ``stateless`` authentication flag::
 Traits
 ------
 
-``Silex\Application\SecurityTrait`` adds the following shortcuts:
+``PrestoPHP\Application\SecurityTrait`` adds the following shortcuts:
 
 * **encodePassword**: Encode a given password.
 
@@ -723,7 +723,7 @@ Traits
 
     $encoded = $app->encodePassword($app['user'], 'foo');
 
-``Silex\Route\SecurityTrait`` adds the following methods to the controllers:
+``PrestoPHP\Route\SecurityTrait`` adds the following methods to the controllers:
 
 * **secure**: Secures a controller for the given roles.
 
@@ -735,12 +735,12 @@ Traits
 
 .. caution::
 
-    The ``Silex\Route\SecurityTrait`` must be used with a user defined
+    The ``PrestoPHP\Route\SecurityTrait`` must be used with a user defined
     ``Route`` class, not the application.
 
     .. code-block:: php
 
-        use Silex\Route;
+        use PrestoPHP\Route;
 
         class MyRoute extends Route
         {
