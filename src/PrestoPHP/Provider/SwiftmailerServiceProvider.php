@@ -22,6 +22,7 @@ use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 /**
  * Swiftmailer Provider.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class SwiftmailerServiceProvider implements ServiceProviderInterface, EventListenerProviderInterface

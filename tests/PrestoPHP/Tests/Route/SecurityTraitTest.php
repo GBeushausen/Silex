@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * SecurityTrait test cases.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class SecurityTraitTest extends TestCase

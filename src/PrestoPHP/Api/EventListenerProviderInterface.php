@@ -17,6 +17,7 @@ use Pimple\Container;
 /**
  * Interface for event listener providers.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 interface EventListenerProviderInterface

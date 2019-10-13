@@ -22,6 +22,7 @@ use Symfony\Component\Validator\Validation;
 /**
  * Symfony Validator component Provider.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class ValidatorServiceProvider implements ServiceProviderInterface

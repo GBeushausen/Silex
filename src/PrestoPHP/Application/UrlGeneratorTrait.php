@@ -16,6 +16,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 /**
  * UrlGenerator trait.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 trait UrlGeneratorTrait

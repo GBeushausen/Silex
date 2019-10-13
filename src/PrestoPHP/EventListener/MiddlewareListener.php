@@ -21,6 +21,7 @@ use PrestoPHP\Application;
 /**
  * Manages the route middlewares.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class MiddlewareListener implements EventSubscriberInterface

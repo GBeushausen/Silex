@@ -22,6 +22,7 @@ use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 /**
  * Symfony Serializer component Provider.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Marijn Huizendveld <marijn@pink-tie.com>
  */

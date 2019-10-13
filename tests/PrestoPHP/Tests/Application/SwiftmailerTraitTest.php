@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use PrestoPHP\Provider\SwiftmailerServiceProvider;
 
 /**
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class SwiftmailerTraitTest extends TestCase

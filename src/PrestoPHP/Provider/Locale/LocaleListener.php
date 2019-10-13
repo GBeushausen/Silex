@@ -23,6 +23,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 /**
  * Initializes the locale based on the current request.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Jérôme Tamarelle <jerome@tamarelle.net>
  */

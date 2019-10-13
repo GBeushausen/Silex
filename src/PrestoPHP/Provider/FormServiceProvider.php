@@ -23,6 +23,7 @@ use Symfony\Component\Form\ResolvedFormTypeFactory;
 /**
  * Symfony Form component Provider.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class FormServiceProvider implements ServiceProviderInterface

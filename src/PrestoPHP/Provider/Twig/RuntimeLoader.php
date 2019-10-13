@@ -17,6 +17,7 @@ use Twig\RuntimeLoader\RuntimeLoaderInterface;
 /**
  * Loads Twig extension runtimes via Pimple.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class RuntimeLoader implements RuntimeLoaderInterface

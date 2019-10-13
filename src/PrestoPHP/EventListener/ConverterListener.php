@@ -20,6 +20,7 @@ use Symfony\Component\Routing\RouteCollection;
 /**
  * Handles converters.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class ConverterListener implements EventSubscriberInterface

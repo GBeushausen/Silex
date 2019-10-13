@@ -23,6 +23,7 @@ use Symfony\Component\HttpKernel\EventListener\SurrogateListener;
 /**
  * Symfony HttpKernel component Provider for HTTP cache.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class HttpCacheServiceProvider implements ServiceProviderInterface, EventListenerProviderInterface

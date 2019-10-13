@@ -22,6 +22,7 @@ use Symfony\Component\Security\Http\SecurityEvents;
 /**
  * SecurityServiceProvider.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class RememberMeServiceProviderTest extends WebTestCase

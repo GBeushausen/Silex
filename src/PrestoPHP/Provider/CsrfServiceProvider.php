@@ -21,6 +21,7 @@ use Symfony\Component\Security\Csrf\TokenStorage\NativeSessionTokenStorage;
 /**
  * Symfony CSRF Security component Provider.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class CsrfServiceProvider implements ServiceProviderInterface

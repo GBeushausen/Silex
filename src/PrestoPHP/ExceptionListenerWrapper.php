@@ -20,6 +20,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 /**
  * Wraps exception listeners.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class ExceptionListenerWrapper

@@ -36,6 +36,7 @@ use Twig\Loader\FilesystemLoader;
 /**
  * Twig integration for PrestoPHP.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class TwigServiceProvider implements ServiceProviderInterface

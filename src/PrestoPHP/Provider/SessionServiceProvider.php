@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 /**
  * Symfony HttpFoundation component Provider for sessions.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class SessionServiceProvider implements ServiceProviderInterface, EventListenerProviderInterface

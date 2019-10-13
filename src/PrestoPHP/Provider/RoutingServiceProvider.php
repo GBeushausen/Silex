@@ -26,6 +26,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 /**
  * Symfony Routing component Provider.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class RoutingServiceProvider implements ServiceProviderInterface, EventListenerProviderInterface

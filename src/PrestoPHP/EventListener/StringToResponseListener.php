@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Converts string responses to proper Response instances.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class StringToResponseListener implements EventSubscriberInterface

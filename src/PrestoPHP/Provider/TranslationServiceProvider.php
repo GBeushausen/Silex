@@ -24,6 +24,7 @@ use PrestoPHP\Api\EventListenerProviderInterface;
 /**
  * Symfony Translation component Provider.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class TranslationServiceProvider implements ServiceProviderInterface, EventListenerProviderInterface

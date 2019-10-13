@@ -16,6 +16,7 @@ use Monolog\Logger;
 /**
  * Monolog trait.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 trait MonologTrait

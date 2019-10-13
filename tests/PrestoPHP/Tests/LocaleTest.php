@@ -20,6 +20,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 /**
  * Locale test cases.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class LocaleTest extends TestCase

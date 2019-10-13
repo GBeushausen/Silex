@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * HTTP Cache extension to allow using the run() shortcut.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class HttpCache extends BaseHttpCache

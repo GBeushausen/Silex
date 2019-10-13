@@ -19,6 +19,7 @@ use PrestoPHP\Provider\ServiceControllerServiceProvider;
 /**
  * Callback as services test cases.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class CallbackServicesTest extends TestCase

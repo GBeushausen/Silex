@@ -17,6 +17,7 @@ use Symfony\Component\HttpKernel\EventListener\SessionListener as BaseSessionLis
 /**
  * Sets the session in the request.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class SessionListener extends BaseSessionListener

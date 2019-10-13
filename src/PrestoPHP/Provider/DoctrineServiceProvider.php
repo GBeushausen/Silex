@@ -21,6 +21,7 @@ use Symfony\Bridge\Doctrine\Logger\DbalLogger;
 /**
  * Doctrine DBAL Provider.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class DoctrineServiceProvider implements ServiceProviderInterface

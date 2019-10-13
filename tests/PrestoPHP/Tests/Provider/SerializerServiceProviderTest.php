@@ -18,6 +18,7 @@ use PrestoPHP\Provider\SerializerServiceProvider;
 /**
  * SerializerServiceProvider test cases.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class SerializerServiceProviderTest extends TestCase

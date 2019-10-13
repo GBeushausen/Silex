@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 /**
  * Twig trait.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 trait TwigTrait

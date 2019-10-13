@@ -22,6 +22,7 @@ use Symfony\Component\VarDumper\Dumper\CliDumper;
 /**
  * Symfony Var Dumper component Provider.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class VarDumperServiceProvider implements ServiceProviderInterface, BootableProviderInterface

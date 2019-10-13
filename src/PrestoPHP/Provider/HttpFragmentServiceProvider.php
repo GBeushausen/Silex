@@ -26,6 +26,7 @@ use Symfony\Component\HttpKernel\UriSigner;
 /**
  * HttpKernel Fragment integration for PrestoPHP.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class HttpFragmentServiceProvider implements ServiceProviderInterface, EventListenerProviderInterface

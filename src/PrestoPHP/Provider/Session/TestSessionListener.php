@@ -18,6 +18,7 @@ use Symfony\Component\HttpKernel\EventListener\TestSessionListener as BaseTestSe
 /**
  * Simulates sessions for testing purpose.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class TestSessionListener extends BaseTestSessionListener

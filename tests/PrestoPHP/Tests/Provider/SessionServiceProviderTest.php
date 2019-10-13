@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\Session;
  * SessionProvider test cases.
  *
  * @author Igor Wiedler <igor@wiedler.ch>
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class SessionServiceProviderTest extends WebTestCase

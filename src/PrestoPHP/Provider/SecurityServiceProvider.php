@@ -67,6 +67,7 @@ use Symfony\Component\Security\Guard\Provider\GuardAuthenticationProvider;
 /**
  * Symfony Security component Provider.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class SecurityServiceProvider implements ServiceProviderInterface, EventListenerProviderInterface, ControllerProviderInterface, BootableProviderInterface

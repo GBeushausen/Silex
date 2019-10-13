@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use PrestoPHP\Provider\TranslationServiceProvider;
 
 /**
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class TranslationTraitTest extends TestCase

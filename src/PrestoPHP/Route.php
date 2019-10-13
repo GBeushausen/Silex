@@ -16,6 +16,7 @@ use Symfony\Component\Routing\Route as BaseRoute;
 /**
  * A wrapper for a controller, mapped to a route.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class Route extends BaseRoute

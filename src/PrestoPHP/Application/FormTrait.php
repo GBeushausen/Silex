@@ -18,6 +18,7 @@ use Symfony\Component\Form\FormTypeInterface;
 /**
  * Form trait.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  * @author David Berlioz <berliozdavid@gmail.com>
  */

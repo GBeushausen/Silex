@@ -21,6 +21,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 /**
  * Default exception handler.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class ExceptionHandler implements EventSubscriberInterface

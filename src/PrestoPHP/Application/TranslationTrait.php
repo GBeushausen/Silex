@@ -14,6 +14,7 @@ namespace PrestoPHP\Application;
 /**
  * Translation trait.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 trait TranslationTrait

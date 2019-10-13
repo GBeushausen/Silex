@@ -18,6 +18,7 @@ use Symfony\Component\Form\FormBuilder;
 /**
  * FormTrait test cases.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class FormTraitTest extends TestCase

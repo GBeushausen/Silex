@@ -17,6 +17,7 @@ use PrestoPHP\ControllerCollection;
 /**
  * Interface for controller providers.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 interface ControllerProviderInterface

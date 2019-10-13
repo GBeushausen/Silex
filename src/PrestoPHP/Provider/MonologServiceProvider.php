@@ -28,6 +28,7 @@ use PrestoPHP\EventListener\LogListener;
 /**
  * Monolog Provider.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class MonologServiceProvider implements ServiceProviderInterface, BootableProviderInterface, EventListenerProviderInterface

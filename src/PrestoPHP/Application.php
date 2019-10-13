@@ -37,6 +37,7 @@ use PrestoPHP\Provider\HttpKernelServiceProvider;
 /**
  * The PrestoPHP framework class.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class Application extends Container implements HttpKernelInterface, TerminableInterface

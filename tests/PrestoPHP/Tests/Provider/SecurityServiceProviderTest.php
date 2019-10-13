@@ -24,6 +24,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * SecurityServiceProvider.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class SecurityServiceProviderTest extends WebTestCase

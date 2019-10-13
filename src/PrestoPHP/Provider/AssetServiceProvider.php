@@ -25,6 +25,7 @@ use Symfony\Component\Asset\VersionStrategy\StaticVersionStrategy;
 /**
  * Symfony Asset component Provider.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class AssetServiceProvider implements ServiceProviderInterface

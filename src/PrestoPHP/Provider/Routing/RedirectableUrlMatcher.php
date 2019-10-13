@@ -17,6 +17,7 @@ use Symfony\Component\Routing\Matcher\RedirectableUrlMatcher as BaseRedirectable
 /**
  * Implements the RedirectableUrlMatcherInterface for PrestoPHP.
  *
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class RedirectableUrlMatcher extends BaseRedirectableUrlMatcher

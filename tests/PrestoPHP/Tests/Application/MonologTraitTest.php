@@ -17,6 +17,7 @@ use Monolog\Handler\TestHandler;
 use Monolog\Logger;
 
 /**
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class MonologTraitTest extends TestCase

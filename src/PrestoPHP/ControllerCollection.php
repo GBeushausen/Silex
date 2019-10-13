@@ -35,6 +35,7 @@ use Symfony\Component\HttpFoundation\Request;
  * @method ControllerCollection when(string $condition)
  *
  * @author Igor Wiedler <igor@wiedler.ch>
+ * @author Gunnar Beushausen <gunnar@prestophp.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class ControllerCollection
