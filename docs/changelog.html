@@ -1,0 +1,568 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Changelog &#8212; PrestoPHP 0.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Webserver Configuration" href="web_servers.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="changelog">
+<h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2>2.3.1 (2019-10-07)<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><p>fixed compatibility issue with Symfony 4.3</p></li>
+<li><p>fixed deprecation notices regarding Twig</p></li>
+<li><p>fixed all deprecation notices for Symfony 4.3</p></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="id2">
+<h2>2.3.0 (2018-04-20)<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><p>added support for defining users provider as a service ID</p></li>
+<li><p>fixed error when HttpKernelRuntime is not available</p></li>
+<li><p>allow setting custom status code on exception response with Symfony 3.3+</p></li>
+<li><p>made CSRF extension work with Validator translations domain</p></li>
+<li><p>fixed Security provider context usage</p></li>
+<li><p>dropped support for Twig &lt; 2.0</p></li>
+<li><p>dropped support for PHP &lt; 7.1</p></li>
+<li><p>dropped support for Symfony 2.x and 3.x</p></li>
+<li><p>added support for Symfony 4</p></li>
+<li><p>added support PSR-3 log levels in MonologServiceProvider</p></li>
+<li><p>exposed AuthenticationUtils in SecurityServiceProvider</p></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="id3">
+<h2>2.2.3 (2018-02-25)<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><p>fixed validator integration into the security provider (order of registration of the validator and security providers does not matter anymore)</p></li>
+<li><p>fixed compatibility issues with Symfony 3.4</p></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="id4">
+<h2>2.2.2 (2018-01-12)<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>[SECURITY] fixed before handlers not executed under mounts</p></li>
+</ul>
+</div>
+<div class="section" id="id5">
+<h2>2.2.1 (2017-12-14)<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>added support for Swiftmailer SSL stream_context_options option</p></li>
+<li><p>fixed usage of namespaces for Twig paths</p></li>
+</ul>
+</div>
+<div class="section" id="id6">
+<h2>2.2.0 (2017-07-23)<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>added json manifest version strategy support</p></li>
+<li><p>fixed EsiFragment constructor</p></li>
+<li><p>fixed RedirectableUrlMatcher compatibility with Symfony</p></li>
+<li><p>fixed compatibility with Pimple 3.2</p></li>
+<li><p>fixed WebTestCase compatibility with PHPUnit 6+</p></li>
+</ul>
+</div>
+<div class="section" id="id7">
+<h2>2.1.0 (2017-05-03)<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>added more options to security.firewalls</p></li>
+<li><p>added WebLink component integration</p></li>
+<li><p>added parameters to configure the Twig core extension behavior</p></li>
+<li><p>fixed deprecation notices with symfony/twig-bridge 3.2+ in TwigServiceProvider</p></li>
+<li><p>added FormRegistry as a service to enable the extension point</p></li>
+<li><p>removed the build scripts</p></li>
+<li><p>fixed some deprecation warnings</p></li>
+<li><p>added support for registering Swiftmailer plugins</p></li>
+</ul>
+</div>
+<div class="section" id="id8">
+<h2>2.0.4 (2016-11-06)<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>fixed twig.app_variable definition</p></li>
+<li><p>added support for latest versions of Twig 1.x and 2.0 (Twig runtime loaders)</p></li>
+<li><p>added support for Symfony 2.3</p></li>
+</ul>
+</div>
+<div class="section" id="id9">
+<h2>2.0.3 (2016-08-22)<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>fixed lazy evaluation of ‘monolog.use_error_handler’</p></li>
+<li><p>fixed PHP7 type hint on controllers</p></li>
+</ul>
+</div>
+<div class="section" id="id10">
+<h2>2.0.2 (2016-06-14)<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>fixed Symfony 3.1 deprecations</p></li>
+</ul>
+</div>
+<div class="section" id="id11">
+<h2>2.0.1 (2016-05-27)<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>fixed the PrestoPHP form extension registration to allow overriding default ones</p></li>
+<li><p>removed support for the obsolete Locale Symfony component (uses the Intl one now)</p></li>
+<li><p>added support for Symfony 3.1</p></li>
+</ul>
+</div>
+<div class="section" id="id12">
+<h2>2.0.0 (2016-05-18)<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>decoupled the exception handler from HttpKernelServiceProvider</p></li>
+<li><p>Switched to BCrypt as the default encoder in the security provider</p></li>
+<li><p>added full support for RequestMatcher</p></li>
+<li><p>added support for Symfony Guard</p></li>
+<li><p>added support for callables in CallbackResolver</p></li>
+<li><p>added FormTrait::namedForm()</p></li>
+<li><p>added support for delivery_addresses, delivery_whitelist, and sender_address</p></li>
+<li><p>added support to register form types / form types extensions / form types guessers as services</p></li>
+<li><p>added support for callable in mounts (allow nested route collection to be built easily)</p></li>
+<li><p>added support for conditions on routes</p></li>
+<li><p>added support for the Symfony VarDumper Component</p></li>
+<li><p>added a global Twig variable (an AppVariable instance)</p></li>
+<li><p>[BC BREAK] CSRF has been moved to a standalone provider (<code class="docutils literal notranslate"><span class="pre">form.secret</span></code> is not available anymore)</p></li>
+<li><p>added support for the Symfony HttpFoundation Twig bridge extension</p></li>
+<li><p>added support for the Symfony Asset Component</p></li>
+<li><p>bumped minimum version of Symfony to 2.8</p></li>
+<li><p>bumped minimum version of PHP to 5.5.0</p></li>
+<li><p>Updated Pimple to 3.0</p></li>
+<li><p>Updated session listeners to extends HttpKernel ones</p></li>
+<li><p>[BC BREAK] Locale management has been moved to LocaleServiceProvider which must be registered
+if you want PrestoPHP to manage your locale (must also be registered for the translation service provider)</p></li>
+<li><p>[BC BREAK] Provider interfaces moved to PrestoPHPApi namespace, published as
+separate package via subtree split</p></li>
+<li><p>[BC BREAK] ServiceProviderInterface split in to EventListenerProviderInterface
+and BootableProviderInterface</p></li>
+<li><p>[BC BREAK] Service Provider support files moved under PrestoPHPProvider
+namespace, allowing publishing as separate package via sub-tree split</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">monolog.exception.logger_filter</span></code> option added to Monolog service provider</p></li>
+<li><p>[BC BREAK] <code class="docutils literal notranslate"><span class="pre">$app['request']</span></code> service removed, use <code class="docutils literal notranslate"><span class="pre">$app['request_stack']</span></code> instead</p></li>
+</ul>
+</div>
+<div class="section" id="xx-xx">
+<h2>1.3.6 (2016-XX-XX)<a class="headerlink" href="#xx-xx" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>n/a</p></li>
+</ul>
+</div>
+<div class="section" id="id13">
+<h2>1.3.5 (2016-01-06)<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>fixed typo in SecurityServiceProvider</p></li>
+</ul>
+</div>
+<div class="section" id="id14">
+<h2>1.3.4 (2015-09-15)<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>fixed some new deprecations</p></li>
+<li><p>fixed translation registration for the validators</p></li>
+</ul>
+</div>
+<div class="section" id="id15">
+<h2>1.3.3 (2015-09-08)<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>added support for Symfony 3.0 and Twig 2.0</p></li>
+<li><p>fixed some Form deprecations</p></li>
+<li><p>removed deprecated method call in the exception handler</p></li>
+<li><p>fixed Swiftmailer spool flushing when spool is not enabled</p></li>
+</ul>
+</div>
+<div class="section" id="id16">
+<h2>1.3.2 (2015-08-24)<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>no changes</p></li>
+</ul>
+</div>
+<div class="section" id="id17">
+<h2>1.3.1 (2015-08-04)<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>added missing support for the Expression constraint</p></li>
+<li><p>fixed the possibility to override translations for validator error messages</p></li>
+<li><p>fixed sub-mounts with same name clash</p></li>
+<li><p>fixed session logout handler when a firewall is stateless</p></li>
+</ul>
+</div>
+<div class="section" id="id18">
+<h2>1.3.0 (2015-06-05)<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>added a <cite>$app[‘user’]</cite> to get the current user (security provider)</p></li>
+<li><p>added view handlers</p></li>
+<li><p>added support for the OPTIONS HTTP method</p></li>
+<li><p>added caching for the Translator provider</p></li>
+<li><p>deprecated <cite>$app[‘exception_handler’]-&gt;disable()</cite> in favor of <cite>unset($app[‘exception_handler’])</cite></p></li>
+<li><p>made PrestoPHP compatible with Symfony 2.7 an 2.8 (and keep compatibility with Symfony 2.3, 2.5, and 2.6)</p></li>
+<li><p>removed deprecated TwigCoreExtension class (register the new HttpFragmentServiceProvider instead)</p></li>
+<li><p>bumped minimum version of PHP to 5.3.9</p></li>
+</ul>
+</div>
+<div class="section" id="id19">
+<h2>1.2.5 (2015-06-04)<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>no code changes (last version of the 1.2 branch)</p></li>
+</ul>
+</div>
+<div class="section" id="id20">
+<h2>1.2.4 (2015-04-11)<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>fixed the exception message when mounting a collection that doesn’t return a ControllerCollection</p></li>
+<li><p>fixed Symfony dependencies (PrestoPHP 1.2 is not compatible with Symfony 2.7)</p></li>
+</ul>
+</div>
+<div class="section" id="id21">
+<h2>1.2.3 (2015-01-20)<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>fixed remember me listener</p></li>
+<li><p>fixed translation files loading when they do not exist</p></li>
+<li><p>allowed global after middlewares to return responses like route specific ones</p></li>
+</ul>
+</div>
+<div class="section" id="id22">
+<h2>1.2.2 (2014-09-26)<a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>fixed Translator locale management</p></li>
+<li><p>added support for the $app argument in application middlewares (to make it consistent with route middlewares)</p></li>
+<li><p>added form.types to the Form provider</p></li>
+</ul>
+</div>
+<div class="section" id="id23">
+<h2>1.2.1 (2014-07-01)<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>added support permissions in the Monolog provider</p></li>
+<li><p>fixed Switfmailer spool where the event dispatcher is different from the other ones</p></li>
+<li><p>fixed locale when changing it on the translator itself</p></li>
+</ul>
+</div>
+<div class="section" id="id24">
+<h2>1.2.0 (2014-03-29)<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Allowed disabling the boot logic of MonologServiceProvider</p></li>
+<li><p>Reverted “convert attributes on the request that actually exist”</p></li>
+<li><p>[BC BREAK] Routes are now always added in the order of their registration (even for mounted routes)</p></li>
+<li><p>Added run() on Route to be able to define the controller code</p></li>
+<li><p>Deprecated TwigCoreExtension (register the new HttpFragmentServiceProvider instead)</p></li>
+<li><p>Added HttpFragmentServiceProvider</p></li>
+<li><p>Allowed a callback to be a method call on a service (before, after, finish, error, on Application; convert, before, after on Controller)</p></li>
+</ul>
+</div>
+<div class="section" id="id25">
+<h2>1.1.3 (2013-XX-XX)<a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Fixed translator locale management</p></li>
+</ul>
+</div>
+<div class="section" id="id26">
+<h2>1.1.2 (2013-10-30)<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Added missing “security.hide_user_not_found” support in SecurityServiceProvider</p></li>
+<li><p>Fixed event listeners that are registered after the boot via the on() method</p></li>
+</ul>
+</div>
+<div class="section" id="id27">
+<h2>1.0.2 (2013-10-30)<a class="headerlink" href="#id27" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Fixed SecurityServiceProvider to use null as a fake controller so that routes can be dumped</p></li>
+</ul>
+</div>
+<div class="section" id="id28">
+<h2>1.1.1 (2013-10-11)<a class="headerlink" href="#id28" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Removed or replaced deprecated Symfony code</p></li>
+<li><p>Updated code to take advantages of 2.3 new features</p></li>
+<li><p>Only convert attributes on the request that actually exist.</p></li>
+</ul>
+</div>
+<div class="section" id="id29">
+<h2>1.1.0 (2013-07-04)<a class="headerlink" href="#id29" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Support for any <code class="docutils literal notranslate"><span class="pre">Psr\Log\LoggerInterface</span></code> as opposed to the monolog-bridge
+one.</p></li>
+<li><p>Made dispatcher proxy methods <code class="docutils literal notranslate"><span class="pre">on</span></code>, <code class="docutils literal notranslate"><span class="pre">before</span></code>, <code class="docutils literal notranslate"><span class="pre">after</span></code> and <code class="docutils literal notranslate"><span class="pre">error</span></code>
+lazy, so that they will not instantiate the dispatcher early.</p></li>
+<li><p>Dropped support for 2.1 and 2.2 versions of Symfony.</p></li>
+</ul>
+</div>
+<div class="section" id="id30">
+<h2>1.0.1 (2013-07-04)<a class="headerlink" href="#id30" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Fixed RedirectableUrlMatcher::redirect() when PrestoPHP is configured to use a logger</p></li>
+<li><p>Make <code class="docutils literal notranslate"><span class="pre">DoctrineServiceProvider</span></code> multi-db support lazy.</p></li>
+</ul>
+</div>
+<div class="section" id="id31">
+<h2>1.0.0 (2013-05-03)<a class="headerlink" href="#id31" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p><strong>2013-04-12</strong>: Added support for validators as services.</p></li>
+<li><p><strong>2013-04-01</strong>: Added support for host matching with symfony 2.2:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">match</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// app-specific action</span>
+<span class="p">})</span><span class="o">-&gt;</span><span class="na">host</span><span class="p">(</span><span class="s1">&#39;example.com&#39;</span><span class="p">);</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">match</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$user</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// user-specific action</span>
+<span class="p">})</span><span class="o">-&gt;</span><span class="na">host</span><span class="p">(</span><span class="s1">&#39;{user}.example.com&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>2013-03-08</strong>: Added support for form type extensions and guessers as
+services.</p></li>
+<li><p><strong>2013-03-08</strong>: Added support for remember-me via the
+<code class="docutils literal notranslate"><span class="pre">RememberMeServiceProvider</span></code>.</p></li>
+<li><p><strong>2013-02-07</strong>: Added <code class="docutils literal notranslate"><span class="pre">Application::sendFile()</span></code> to ease sending
+<code class="docutils literal notranslate"><span class="pre">BinaryFileResponse</span></code>.</p></li>
+<li><p><strong>2012-11-05</strong>: Filters have been renamed to application middlewares in the
+documentation.</p></li>
+<li><p><strong>2012-11-05</strong>: The <code class="docutils literal notranslate"><span class="pre">before()</span></code>, <code class="docutils literal notranslate"><span class="pre">after()</span></code>, <code class="docutils literal notranslate"><span class="pre">error()</span></code>, and <code class="docutils literal notranslate"><span class="pre">finish()</span></code>
+listener priorities now set the priority of the underlying Symfony event
+instead of a custom one before.</p></li>
+<li><p><strong>2012-11-05</strong>: Removing the default exception handler should now be done
+via its <code class="docutils literal notranslate"><span class="pre">disable()</span></code> method:</p>
+<blockquote>
+<div><p>Before:</p>
+<blockquote>
+<div><p>unset($app[‘exception_handler’]);</p>
+</div></blockquote>
+<p>After:</p>
+<blockquote>
+<div><p>$app[‘exception_handler’]-&gt;disable();</p>
+</div></blockquote>
+</div></blockquote>
+</li>
+<li><p><strong>2012-07-15</strong>: removed the <code class="docutils literal notranslate"><span class="pre">monolog.configure</span></code> service. Use the
+<code class="docutils literal notranslate"><span class="pre">extend</span></code> method instead:</p>
+<blockquote>
+<div><p>Before:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;monolog.configure&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">protect</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nv">$monolog</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// do something</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>After:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;monolog&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">share</span><span class="p">(</span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">extend</span><span class="p">(</span><span class="s1">&#39;monolog&#39;</span><span class="p">,</span> <span class="k">function</span><span class="p">(</span><span class="nv">$monolog</span><span class="p">,</span> <span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// do something</span>
+
+    <span class="k">return</span> <span class="nv">$monolog</span><span class="p">;</span>
+<span class="p">}));</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p><strong>2012-06-17</strong>: <code class="docutils literal notranslate"><span class="pre">ControllerCollection</span></code> now takes a required route instance
+as a constructor argument.</p>
+<blockquote>
+<div><p>Before:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$controllers</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ControllerCollection</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>After:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$controllers</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ControllerCollection</span><span class="p">(</span><span class="k">new</span> <span class="nx">Route</span><span class="p">());</span>
+
+<span class="c1">// or even better</span>
+<span class="nv">$controllers</span> <span class="o">=</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;controllers_factory&#39;</span><span class="p">];</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p><strong>2012-06-17</strong>: added application traits for PHP 5.4</p></li>
+<li><p><strong>2012-06-16</strong>: renamed <code class="docutils literal notranslate"><span class="pre">request.default_locale</span></code> to <code class="docutils literal notranslate"><span class="pre">locale</span></code></p></li>
+<li><p><strong>2012-06-16</strong>: Removed the <code class="docutils literal notranslate"><span class="pre">translator.loader</span></code> service. See documentation
+for how to use XLIFF or YAML-based translation files.</p></li>
+<li><p><strong>2012-06-15</strong>: removed the <code class="docutils literal notranslate"><span class="pre">twig.configure</span></code> service. Use the <code class="docutils literal notranslate"><span class="pre">extend</span></code>
+method instead:</p>
+<blockquote>
+<div><p>Before:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;twig.configure&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">protect</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nv">$twig</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// do something</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>After:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;twig&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">share</span><span class="p">(</span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">extend</span><span class="p">(</span><span class="s1">&#39;twig&#39;</span><span class="p">,</span> <span class="k">function</span><span class="p">(</span><span class="nv">$twig</span><span class="p">,</span> <span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// do something</span>
+
+    <span class="k">return</span> <span class="nv">$twig</span><span class="p">;</span>
+<span class="p">}));</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p><strong>2012-06-13</strong>: Added a route <code class="docutils literal notranslate"><span class="pre">before</span></code> middleware</p></li>
+<li><p><strong>2012-06-13</strong>: Renamed the route <code class="docutils literal notranslate"><span class="pre">middleware</span></code> to <code class="docutils literal notranslate"><span class="pre">before</span></code></p></li>
+<li><p><strong>2012-06-13</strong>: Added an extension for the Symfony Security component</p></li>
+<li><p><strong>2012-05-31</strong>: Made the <code class="docutils literal notranslate"><span class="pre">BrowserKit</span></code>, <code class="docutils literal notranslate"><span class="pre">CssSelector</span></code>, <code class="docutils literal notranslate"><span class="pre">DomCrawler</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Finder</span></code> and <code class="docutils literal notranslate"><span class="pre">Process</span></code> components optional dependencies. Projects that
+depend on them (e.g. through functional tests) should add those dependencies
+to their <code class="docutils literal notranslate"><span class="pre">composer.json</span></code>.</p></li>
+<li><p><strong>2012-05-26</strong>: added <code class="docutils literal notranslate"><span class="pre">boot()</span></code> to <code class="docutils literal notranslate"><span class="pre">ServiceProviderInterface</span></code>.</p></li>
+<li><p><strong>2012-05-26</strong>: Removed <code class="docutils literal notranslate"><span class="pre">SymfonyBridgesServiceProvider</span></code>. It is now implicit
+by checking the existence of the bridge.</p></li>
+<li><p><strong>2012-05-26</strong>: Removed the <code class="docutils literal notranslate"><span class="pre">translator.messages</span></code> parameter (use
+<code class="docutils literal notranslate"><span class="pre">translator.domains</span></code> instead).</p></li>
+<li><p><strong>2012-05-24</strong>: Removed the <code class="docutils literal notranslate"><span class="pre">autoloader</span></code> service (use composer instead).
+The <code class="docutils literal notranslate"><span class="pre">*.class_path</span></code> settings on all the built-in providers have also been
+removed in favor of Composer.</p></li>
+<li><p><strong>2012-05-21</strong>: Changed error() to allow handling specific exceptions.</p></li>
+<li><p><strong>2012-05-20</strong>: Added a way to define settings on a controller collection.</p></li>
+<li><p><strong>2012-05-20</strong>: The Request instance is not available anymore from the
+Application after it has been handled.</p></li>
+<li><p><strong>2012-04-01</strong>: Added <code class="docutils literal notranslate"><span class="pre">finish</span></code> filters.</p></li>
+<li><p><strong>2012-03-20</strong>: Added <code class="docutils literal notranslate"><span class="pre">json</span></code> helper:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$data</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;some&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;data&#39;</span><span class="p">);</span>
+<span class="nv">$response</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">json</span><span class="p">(</span><span class="nv">$data</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>2012-03-11</strong>: Added route middlewares.</p></li>
+<li><p><strong>2012-03-02</strong>: Switched to use Composer for dependency management.</p></li>
+<li><p><strong>2012-02-27</strong>: Updated to Symfony 2.1 session handling.</p></li>
+<li><p><strong>2012-01-02</strong>: Introduced support for streaming responses.</p></li>
+<li><p><strong>2011-09-22</strong>: <code class="docutils literal notranslate"><span class="pre">ExtensionInterface</span></code> has been renamed to
+<code class="docutils literal notranslate"><span class="pre">ServiceProviderInterface</span></code>. All built-in extensions have been renamed
+accordingly (for instance, <code class="docutils literal notranslate"><span class="pre">PrestoPHP\Extension\TwigExtension</span></code> has been
+renamed to <code class="docutils literal notranslate"><span class="pre">PrestoPHP\Provider\TwigServiceProvider</span></code>).</p></li>
+<li><p><strong>2011-09-22</strong>: The way reusable applications work has changed. The
+<code class="docutils literal notranslate"><span class="pre">mount()</span></code> method now takes an instance of <code class="docutils literal notranslate"><span class="pre">ControllerCollection</span></code> instead
+of an <code class="docutils literal notranslate"><span class="pre">Application</span></code> one.</p>
+<blockquote>
+<div><p>Before:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Application</span><span class="p">();</span>
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/bar&#39;</span><span class="p">,</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="s1">&#39;foo&#39;</span><span class="p">;</span> <span class="p">});</span>
+
+<span class="k">return</span> <span class="nv">$app</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>After:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ControllerCollection</span><span class="p">();</span>
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/bar&#39;</span><span class="p">,</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="s1">&#39;foo&#39;</span><span class="p">;</span> <span class="p">});</span>
+
+<span class="k">return</span> <span class="nv">$app</span><span class="p">;</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p><strong>2011-08-08</strong>: The controller method configuration is now done on the Controller itself</p>
+<blockquote>
+<div><p>Before:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">match</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">()</span> <span class="p">{</span> <span class="k">echo</span> <span class="s1">&#39;foo&#39;</span><span class="p">;</span> <span class="p">},</span> <span class="s1">&#39;GET|POST&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>After:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">match</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">()</span> <span class="p">{</span> <span class="k">echo</span> <span class="s1">&#39;foo&#39;</span><span class="p">;</span> <span class="p">})</span><span class="o">-&gt;</span><span class="na">method</span><span class="p">(</span><span class="s1">&#39;GET|POST&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">PrestoPHP</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="middlewares.html">Middleware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="organizing_controllers.html">Organizing Controllers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="services.html">Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="providers.html">Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cookbook/index.html">Cookbook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="internals.html">Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html#writing-documentation">Writing Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="providers/index.html">Built-in Service Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web_servers.html">Webserver Configuration</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="web_servers.html" title="previous chapter">Webserver Configuration</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2010 Fabien Potencier.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/changelog.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,194 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Serializer &#8212; PrestoPHP 0.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Service Controllers" href="service_controller.html" />
+    <link rel="prev" title="Remember Me" href="remember_me.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="serializer">
+<h1>Serializer<a class="headerlink" href="#serializer" title="Permalink to this headline">¶</a></h1>
+<p>The <em>SerializerServiceProvider</em> provides a service for serializing objects.</p>
+<div class="section" id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
+<p>None.</p>
+</div>
+<div class="section" id="services">
+<h2>Services<a class="headerlink" href="#services" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>serializer</strong>: An instance of <a class="reference external" href="https://api.symfony.com/master/Symfony/Component/Serializer/Serializer.html">Symfony\Component\Serializer\Serializer</a>.</p></li>
+<li><p><strong>serializer.encoders</strong>: <a class="reference external" href="https://api.symfony.com/master/Symfony/Component/Serializer/Encoder/JsonEncoder.html">Symfony\Component\Serializer\Encoder\JsonEncoder</a>
+and <a class="reference external" href="https://api.symfony.com/master/Symfony/Component/Serializer/Encoder/XmlEncoder.html">Symfony\Component\Serializer\Encoder\XmlEncoder</a>.</p></li>
+<li><p><strong>serializer.normalizers</strong>: <a class="reference external" href="https://api.symfony.com/master/Symfony/Component/Serializer/Normalizer/CustomNormalizer.html">Symfony\Component\Serializer\Normalizer\CustomNormalizer</a>
+and <a class="reference external" href="https://api.symfony.com/master/Symfony/Component/Serializer/Normalizer/GetSetMethodNormalizer.html">Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer</a>.</p></li>
+</ul>
+</div>
+<div class="section" id="registering">
+<h2>Registering<a class="headerlink" href="#registering" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">PrestoPHP\Provider\SerializerServiceProvider</span><span class="p">());</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Add the Symfony’s <a class="reference external" href="https://symfony.com/doc/current/components/serializer.html">Serializer Component</a> as a
+dependency:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>composer require symfony/serializer
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">SerializerServiceProvider</span></code> provider provides a <code class="docutils literal notranslate"><span class="pre">serializer</span></code> service:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">use</span> <span class="nx">PrestoPHP\Application</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">PrestoPHP\Provider\SerializerServiceProvider</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Request</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Response</span><span class="p">;</span>
+
+<span class="nv">$app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Application</span><span class="p">();</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">SerializerServiceProvider</span><span class="p">());</span>
+
+<span class="c1">// only accept content types supported by the serializer via the assert method.</span>
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s2">&quot;/pages/{id}.{_format}&quot;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nx">Request</span> <span class="nv">$request</span><span class="p">,</span> <span class="nv">$id</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// assume a page_repository service exists that returns Page objects. The</span>
+    <span class="c1">// object returned has getters and setters exposing the state.</span>
+    <span class="nv">$page</span> <span class="o">=</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;page_repository&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">find</span><span class="p">(</span><span class="nv">$id</span><span class="p">);</span>
+    <span class="nv">$format</span> <span class="o">=</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">getRequestFormat</span><span class="p">();</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$page</span> <span class="nx">instanceof</span> <span class="nx">Page</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">abort</span><span class="p">(</span><span class="s2">&quot;No page found for id: </span><span class="si">$id</span><span class="s2">&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">Response</span><span class="p">(</span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;serializer&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">serialize</span><span class="p">(</span><span class="nv">$page</span><span class="p">,</span> <span class="nv">$format</span><span class="p">),</span> <span class="mi">200</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s2">&quot;Content-Type&quot;</span> <span class="o">=&gt;</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">getMimeType</span><span class="p">(</span><span class="nv">$format</span><span class="p">)</span>
+    <span class="p">));</span>
+<span class="p">})</span><span class="o">-&gt;</span><span class="na">assert</span><span class="p">(</span><span class="s2">&quot;_format&quot;</span><span class="p">,</span> <span class="s2">&quot;xml|json&quot;</span><span class="p">)</span>
+  <span class="o">-&gt;</span><span class="na">assert</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;\d+&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="using-a-cache">
+<h2>Using a Cache<a class="headerlink" href="#using-a-cache" title="Permalink to this headline">¶</a></h2>
+<p>To use a cache, register a class implementing <code class="docutils literal notranslate"><span class="pre">Doctrine\Common\Cache\Cache</span></code>:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">PrestoPHP\Provider\SerializerServiceProvider</span><span class="p">());</span>
+<span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;serializer.normalizers&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">function</span> <span class="p">()</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">[</span><span class="k">new</span> <span class="nx">\Symfony\Component\Serializer\Normalizer\CustomNormalizer</span><span class="p">(),</span>
+        <span class="k">new</span> <span class="nx">\Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer</span><span class="p">(</span><span class="k">new</span> <span class="nx">ClassMetadataFactory</span><span class="p">(</span><span class="k">new</span>  <span class="nx">AnnotationLoader</span><span class="p">(</span><span class="k">new</span> <span class="nx">AnnotationReader</span><span class="p">()),</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;my_custom_cache&#39;</span><span class="p">]))</span>
+    <span class="p">];</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">PrestoPHP</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../middlewares.html">Middleware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../organizing_controllers.html">Organizing Controllers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../services.html">Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../providers.html">Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cookbook/index.html">Cookbook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internals.html">Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html#writing-documentation">Writing Documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Built-in Service Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../web_servers.html">Webserver Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Built-in Service Providers</a><ul>
+      <li>Previous: <a href="remember_me.html" title="previous chapter">Remember Me</a></li>
+      <li>Next: <a href="service_controller.html" title="next chapter">Service Controllers</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2010 Fabien Potencier.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/providers/serializer.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

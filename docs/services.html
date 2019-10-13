@@ -1,0 +1,380 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Services &#8212; PrestoPHP 0.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Providers" href="providers.html" />
+    <link rel="prev" title="Organizing Controllers" href="organizing_controllers.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="services">
+<h1>Services<a class="headerlink" href="#services" title="Permalink to this headline">¶</a></h1>
+<p>PrestoPHP is not only a framework, it is also a service container. It does this by
+extending <a class="reference external" href="https://pimple.symfony.com">Pimple</a> which provides a very simple
+service container.</p>
+<div class="section" id="dependency-injection">
+<h2>Dependency Injection<a class="headerlink" href="#dependency-injection" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can skip this if you already know what Dependency Injection is.</p>
+</div>
+<p>Dependency Injection is a design pattern where you pass dependencies to
+services instead of creating them from within the service or relying on
+globals. This generally leads to code that is decoupled, re-usable, flexible
+and testable.</p>
+<p>Here is an example of a class that takes a <code class="docutils literal notranslate"><span class="pre">User</span></code> object and stores it as a
+file in JSON format:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">JsonUserPersister</span>
+<span class="p">{</span>
+    <span class="k">private</span> <span class="nv">$basePath</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nv">$basePath</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">basePath</span> <span class="o">=</span> <span class="nv">$basePath</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">persist</span><span class="p">(</span><span class="nx">User</span> <span class="nv">$user</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$data</span> <span class="o">=</span> <span class="nv">$user</span><span class="o">-&gt;</span><span class="na">getAttributes</span><span class="p">();</span>
+        <span class="nv">$json</span> <span class="o">=</span> <span class="nb">json_encode</span><span class="p">(</span><span class="nv">$data</span><span class="p">);</span>
+        <span class="nv">$filename</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">basePath</span><span class="o">.</span><span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="nv">$user</span><span class="o">-&gt;</span><span class="na">id</span><span class="o">.</span><span class="s1">&#39;.json&#39;</span><span class="p">;</span>
+        <span class="nb">file_put_contents</span><span class="p">(</span><span class="nv">$filename</span><span class="p">,</span> <span class="nv">$json</span><span class="p">,</span> <span class="nx">LOCK_EX</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>In this simple example the dependency is the <code class="docutils literal notranslate"><span class="pre">basePath</span></code> property. It is
+passed to the constructor. This means you can create several independent
+instances with different base paths. Of course dependencies do not have to be
+simple strings. More often they are in fact other services.</p>
+<p>A service container is responsible for creating and storing services. It can
+recursively create dependencies of the requested services and inject them. It
+does so lazily, which means a service is only created when you actually need it.</p>
+</div>
+<div class="section" id="id1">
+<h2>Pimple<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>Pimple makes strong use of closures and implements the ArrayAccess interface.</p>
+<p>We will start off by creating a new instance of Pimple – and because
+<code class="docutils literal notranslate"><span class="pre">PrestoPHP\Application</span></code> extends <code class="docutils literal notranslate"><span class="pre">Pimple\Container</span></code> all of this applies to PrestoPHP
+as well:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$container</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Pimple\Container</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>or:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PrestoPHP\Application</span><span class="p">();</span>
+</pre></div>
+</div>
+<div class="section" id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h3>
+<p>You can set parameters (which are usually strings) by setting an array key on
+the container:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;some_parameter&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;value&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The array key can be any value. By convention dots are used for namespacing:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;asset.host&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;http://cdn.mysite.com/&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Reading parameter values is possible with the same syntax:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">echo</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;some_parameter&#39;</span><span class="p">];</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="service-definitions">
+<h3>Service definitions<a class="headerlink" href="#service-definitions" title="Permalink to this headline">¶</a></h3>
+<p>Defining services is no different than defining parameters. You just set an
+array key on the container to be a closure. However, when you retrieve the
+service, the closure is executed. This allows for lazy service creation:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;some_service&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">Service</span><span class="p">();</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>And to retrieve the service, use:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$service</span> <span class="o">=</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;some_service&#39;</span><span class="p">];</span>
+</pre></div>
+</div>
+<p>On first invocation, this will create the service; the same instance will then
+be returned on any subsequent access.</p>
+</div>
+<div class="section" id="factory-services">
+<h3>Factory services<a class="headerlink" href="#factory-services" title="Permalink to this headline">¶</a></h3>
+<p>If you want a different instance to be returned for each service access, wrap
+the service definition with the <code class="docutils literal notranslate"><span class="pre">factory()</span></code> method:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;some_service&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">factory</span><span class="p">(</span><span class="k">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">Service</span><span class="p">();</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>Every time you call <code class="docutils literal notranslate"><span class="pre">$app['some_service']</span></code>, a new instance of the service is
+created.</p>
+</div>
+<div class="section" id="access-container-from-closure">
+<h3>Access container from closure<a class="headerlink" href="#access-container-from-closure" title="Permalink to this headline">¶</a></h3>
+<p>In many cases you will want to access the service container from within a
+service definition closure. For example when fetching services the current
+service depends on.</p>
+<p>Because of this, the container is passed to the closure as an argument:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;some_service&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">Service</span><span class="p">(</span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;some_other_service&#39;</span><span class="p">],</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;some_service.config&#39;</span><span class="p">]);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Here you can see an example of Dependency Injection. <code class="docutils literal notranslate"><span class="pre">some_service</span></code> depends
+on <code class="docutils literal notranslate"><span class="pre">some_other_service</span></code> and takes <code class="docutils literal notranslate"><span class="pre">some_service.config</span></code> as configuration
+options. The dependency is only created when <code class="docutils literal notranslate"><span class="pre">some_service</span></code> is accessed, and
+it is possible to replace either of the dependencies by simply overriding
+those definitions.</p>
+<p>Going back to our initial example, here’s how we could use the container
+to manage its dependencies:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;user.persist_path&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;/tmp/users&#39;</span><span class="p">;</span>
+<span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;user.persister&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">JsonUserPersister</span><span class="p">(</span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;user.persist_path&#39;</span><span class="p">]);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="protected-closures">
+<h3>Protected closures<a class="headerlink" href="#protected-closures" title="Permalink to this headline">¶</a></h3>
+<p>Because the container sees closures as factories for services, it will always
+execute them when reading them.</p>
+<p>In some cases you will however want to store a closure as a parameter, so that
+you can fetch it and execute it yourself – with your own arguments.</p>
+<p>This is why Pimple allows you to protect your closures from being executed, by
+using the <code class="docutils literal notranslate"><span class="pre">protect</span></code> method:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;closure_parameter&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">protect</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nv">$a</span><span class="p">,</span> <span class="nv">$b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nv">$a</span> <span class="o">+</span> <span class="nv">$b</span><span class="p">;</span>
+<span class="p">});</span>
+
+<span class="c1">// will not execute the closure</span>
+<span class="nv">$add</span> <span class="o">=</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;closure_parameter&#39;</span><span class="p">];</span>
+
+<span class="c1">// calling it now</span>
+<span class="k">echo</span> <span class="nv">$add</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Note that the container is not provided as an argument to protected closures.
+However, you can inject it via <cite>use($app)</cite>:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;closure_parameter&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">protect</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nv">$a</span><span class="p">,</span> <span class="nv">$b</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="modify-services-after-definition">
+<h3>Modify services after definition<a class="headerlink" href="#modify-services-after-definition" title="Permalink to this headline">¶</a></h3>
+<p>Sometimes you want to alter a service after its definition. Pimple facilitates
+this by extending the already defined service.</p>
+<p>First argument of the <code class="docutils literal notranslate"><span class="pre">extend</span></code> method is the name of the service you want to
+modify. Second argument is a callable. This callable is executed with the service
+you want to alter as its first argument, the service container itself is provided
+in the second argument.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Be sure to return the modified service in the callable.</p>
+</div>
+<p>You can use this pattern to add functionality to :doc:Twig &lt;providers/twig&gt; for
+example:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">extend</span><span class="p">(</span><span class="s1">&#39;twig&#39;</span><span class="p">,</span> <span class="k">function</span><span class="p">(</span><span class="nv">$twig</span><span class="p">,</span> <span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$twig</span><span class="o">-&gt;</span><span class="na">addGlobal</span><span class="p">(</span><span class="s1">&#39;pi&#39;</span><span class="p">,</span> <span class="mf">3.14</span><span class="p">);</span>
+    <span class="nv">$twig</span><span class="o">-&gt;</span><span class="na">addFilter</span><span class="p">(</span><span class="s1">&#39;levenshtein&#39;</span><span class="p">,</span> <span class="k">new</span> <span class="nx">\Twig_Filter_Function</span><span class="p">(</span><span class="s1">&#39;levenshtein&#39;</span><span class="p">));</span>
+
+    <span class="k">return</span> <span class="nv">$twig</span><span class="p">;</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="core-services">
+<h2>Core services<a class="headerlink" href="#core-services" title="Permalink to this headline">¶</a></h2>
+<p>PrestoPHP defines a range of services.</p>
+<ul>
+<li><p><strong>request_stack</strong>: Controls the lifecycle of requests, an instance of
+<a class="reference external" href="https://api.symfony.com/master/Symfony/Component/HttpFoundation/RequestStack.html">RequestStack</a>.
+It gives you access to <code class="docutils literal notranslate"><span class="pre">GET</span></code>, <code class="docutils literal notranslate"><span class="pre">POST</span></code> parameters and lots more!</p>
+<p>Example usage:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$id</span> <span class="o">=</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;request_stack&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">getCurrentRequest</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>A request is only available when a request is being served; you can only
+access it from within a controller, an application before/after middlewares,
+or an error handler.</p>
+</li>
+<li><p><strong>routes</strong>: The <a class="reference external" href="https://api.symfony.com/master/Symfony/Component/Routing/RouteCollection.html">RouteCollection</a>
+that is used internally. You can add, modify, read routes.</p></li>
+<li><p><strong>url_generator</strong>: An instance of <a class="reference external" href="https://api.symfony.com/master/Symfony/Component/Routing/Generator/UrlGenerator.html">UrlGenerator</a>,
+using the <a class="reference external" href="https://api.symfony.com/master/Symfony/Component/Routing/RouteCollection.html">RouteCollection</a>
+that is provided through the <code class="docutils literal notranslate"><span class="pre">routes</span></code> service. It has a <code class="docutils literal notranslate"><span class="pre">generate</span></code>
+method, which takes the route name as an argument, followed by an array of
+route parameters.</p></li>
+<li><p><strong>controllers</strong>: The <code class="docutils literal notranslate"><span class="pre">PrestoPHP\ControllerCollection</span></code> that is used internally.
+Check the <a class="reference internal" href="internals.html"><span class="doc">Internals chapter</span></a> for more information.</p></li>
+<li><p><strong>dispatcher</strong>: The <a class="reference external" href="https://api.symfony.com/master/Symfony/Component/EventDispatcher/EventDispatcher.html">EventDispatcher</a>
+that is used internally. It is the core of the Symfony system and is used
+quite a bit by PrestoPHP.</p></li>
+<li><p><strong>resolver</strong>: The <a class="reference external" href="https://api.symfony.com/master/Symfony/Component/HttpKernel/Controller/ControllerResolver.html">ControllerResolver</a>
+that is used internally. It takes care of executing the controller with the
+right arguments.</p></li>
+<li><p><strong>kernel</strong>: The <a class="reference external" href="https://api.symfony.com/master/Symfony/Component/HttpKernel/HttpKernel.html">HttpKernel</a>
+that is used internally. The HttpKernel is the heart of Symfony, it takes a
+Request as input and returns a Response as output.</p></li>
+<li><p><strong>request_context</strong>: The request context is a simplified representation of
+the request that is used by the router and the URL generator.</p></li>
+<li><p><strong>exception_handler</strong>: The Exception handler is the default handler that is
+used when you don’t register one via the <code class="docutils literal notranslate"><span class="pre">error()</span></code> method or if your
+handler does not return a Response. Disable it with
+<code class="docutils literal notranslate"><span class="pre">unset($app['exception_handler'])</span></code>.</p></li>
+<li><p><strong>logger</strong>: A <a class="reference external" href="https://github.com/php-fig/log/blob/master/Psr/Log/LoggerInterface.php">LoggerInterface</a> instance. By default, logging is
+disabled as the value is set to <code class="docutils literal notranslate"><span class="pre">null</span></code>. To enable logging you can either use
+the <a class="reference internal" href="providers/monolog.html"><span class="doc">MonologServiceProvider</span></a> or define your own <code class="docutils literal notranslate"><span class="pre">logger</span></code> service that
+conforms to the PSR logger interface.</p></li>
+</ul>
+</div>
+<div class="section" id="core-traits">
+<h2>Core traits<a class="headerlink" href="#core-traits" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">PrestoPHP\Application\UrlGeneratorTrait</span></code> adds the following shortcuts:</p>
+<ul class="simple">
+<li><p><strong>path</strong>: Generates a path.</p></li>
+<li><p><strong>url</strong>: Generates an absolute URL.</p></li>
+</ul>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">path</span><span class="p">(</span><span class="s1">&#39;homepage&#39;</span><span class="p">);</span>
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">url</span><span class="p">(</span><span class="s1">&#39;homepage&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="core-parameters">
+<h2>Core parameters<a class="headerlink" href="#core-parameters" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p><strong>request.http_port</strong> (optional): Allows you to override the default port
+for non-HTTPS URLs. If the current request is HTTP, it will always use the
+current port.</p>
+<p>Defaults to 80.</p>
+<p>This parameter can be used when generating URLs.</p>
+</li>
+<li><p><strong>request.https_port</strong> (optional): Allows you to override the default port
+for HTTPS URLs. If the current request is HTTPS, it will always use the
+current port.</p>
+<p>Defaults to 443.</p>
+<p>This parameter can be used when generating URLs.</p>
+</li>
+<li><p><strong>debug</strong> (optional): Returns whether or not the application is running in
+debug mode.</p>
+<p>Defaults to false.</p>
+</li>
+<li><p><strong>charset</strong> (optional): The charset to use for Responses.</p>
+<p>Defaults to UTF-8.</p>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">PrestoPHP</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="middlewares.html">Middleware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="organizing_controllers.html">Organizing Controllers</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="providers.html">Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cookbook/index.html">Cookbook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="internals.html">Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html#writing-documentation">Writing Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="providers/index.html">Built-in Service Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web_servers.html">Webserver Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="organizing_controllers.html" title="previous chapter">Organizing Controllers</a></li>
+      <li>Next: <a href="providers.html" title="next chapter">Providers</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2010 Fabien Potencier.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/services.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

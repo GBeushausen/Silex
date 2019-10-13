@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Accepting a JSON Request Body &#8212; PrestoPHP 0.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Using PdoSessionStorage to store Sessions in the Database" href="session_storage.html" />
+    <link rel="prev" title="Cookbook" href="index.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="accepting-a-json-request-body">
+<h1>Accepting a JSON Request Body<a class="headerlink" href="#accepting-a-json-request-body" title="Permalink to this headline">¶</a></h1>
+<p>A common need when building a restful API is the ability to accept a JSON
+encoded entity from the request body.</p>
+<p>An example for such an API could be a blog post creation.</p>
+<div class="section" id="example-api">
+<h2>Example API<a class="headerlink" href="#example-api" title="Permalink to this headline">¶</a></h2>
+<p>In this example we will create an API for creating a blog post. The following
+is a spec of how we want it to work.</p>
+<div class="section" id="request">
+<h3>Request<a class="headerlink" href="#request" title="Permalink to this headline">¶</a></h3>
+<p>In the request we send the data for the blog post as a JSON object. We also
+indicate that using the <code class="docutils literal notranslate"><span class="pre">Content-Type</span></code> header:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>POST /blog/posts
+Accept: application/json
+Content-Type: application/json
+Content-Length: 57
+
+{&quot;title&quot;:&quot;Hello World!&quot;,&quot;body&quot;:&quot;This is my first post!&quot;}
+</pre></div>
+</div>
+</div>
+<div class="section" id="response">
+<h3>Response<a class="headerlink" href="#response" title="Permalink to this headline">¶</a></h3>
+<p>The server responds with a 201 status code, telling us that the post was
+created. It tells us the <code class="docutils literal notranslate"><span class="pre">Content-Type</span></code> of the response, which is also
+JSON:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>HTTP/1.1 201 Created
+Content-Type: application/json
+Content-Length: 65
+Connection: close
+
+{&quot;id&quot;:&quot;1&quot;,&quot;title&quot;:&quot;Hello World!&quot;,&quot;body&quot;:&quot;This is my first post!&quot;}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="parsing-the-request-body">
+<h2>Parsing the request body<a class="headerlink" href="#parsing-the-request-body" title="Permalink to this headline">¶</a></h2>
+<p>The request body should only be parsed as JSON if the <code class="docutils literal notranslate"><span class="pre">Content-Type</span></code> header
+begins with <code class="docutils literal notranslate"><span class="pre">application/json</span></code>. Since we want to do this for every request,
+the easiest solution is to use an application before middleware.</p>
+<p>We simply use <code class="docutils literal notranslate"><span class="pre">json_decode</span></code> to parse the content of the request and then
+replace the request data on the <code class="docutils literal notranslate"><span class="pre">$request</span></code> object:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Request</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\ParameterBag</span><span class="p">;</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">before</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nx">Request</span> <span class="nv">$request</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="mi">0</span> <span class="o">===</span> <span class="nb">strpos</span><span class="p">(</span><span class="nv">$request</span><span class="o">-&gt;</span><span class="na">headers</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">),</span> <span class="s1">&#39;application/json&#39;</span><span class="p">))</span> <span class="p">{</span>
+        <span class="nv">$data</span> <span class="o">=</span> <span class="nb">json_decode</span><span class="p">(</span><span class="nv">$request</span><span class="o">-&gt;</span><span class="na">getContent</span><span class="p">(),</span> <span class="k">true</span><span class="p">);</span>
+        <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">request</span><span class="o">-&gt;</span><span class="na">replace</span><span class="p">(</span><span class="nb">is_array</span><span class="p">(</span><span class="nv">$data</span><span class="p">)</span> <span class="o">?</span> <span class="nv">$data</span> <span class="o">:</span> <span class="k">array</span><span class="p">());</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="controller-implementation">
+<h2>Controller implementation<a class="headerlink" href="#controller-implementation" title="Permalink to this headline">¶</a></h2>
+<p>Our controller will create a new blog post from the data provided and will
+return the post object, including its <code class="docutils literal notranslate"><span class="pre">id</span></code>, as JSON:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Request</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Response</span><span class="p">;</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">post</span><span class="p">(</span><span class="s1">&#39;/blog/posts&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nx">Request</span> <span class="nv">$request</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$post</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;title&#39;</span> <span class="o">=&gt;</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">request</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">),</span>
+        <span class="s1">&#39;body&#39;</span>  <span class="o">=&gt;</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">request</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">),</span>
+    <span class="p">);</span>
+
+    <span class="nv">$post</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nx">createPost</span><span class="p">(</span><span class="nv">$post</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">json</span><span class="p">(</span><span class="nv">$post</span><span class="p">,</span> <span class="mi">201</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="manual-testing">
+<h2>Manual testing<a class="headerlink" href="#manual-testing" title="Permalink to this headline">¶</a></h2>
+<p>In order to manually test our API, we can use the <code class="docutils literal notranslate"><span class="pre">curl</span></code> command line
+utility, which allows sending HTTP requests:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ curl http://blog.lo/blog/posts -d <span class="s1">&#39;{&quot;title&quot;:&quot;Hello World!&quot;,&quot;body&quot;:&quot;This is my first post!&quot;}&#39;</span> -H <span class="s1">&#39;Content-Type: application/json&#39;</span>
+<span class="o">{</span><span class="s2">&quot;id&quot;</span>:<span class="s2">&quot;1&quot;</span>,<span class="s2">&quot;title&quot;</span>:<span class="s2">&quot;Hello World!&quot;</span>,<span class="s2">&quot;body&quot;</span>:<span class="s2">&quot;This is my first post!&quot;</span><span class="o">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">PrestoPHP</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../middlewares.html">Middleware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../organizing_controllers.html">Organizing Controllers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../services.html">Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../providers.html">Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing.html">Testing</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Cookbook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internals.html">Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html#writing-documentation">Writing Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../providers/index.html">Built-in Service Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../web_servers.html">Webserver Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Cookbook</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Cookbook</a></li>
+      <li>Next: <a href="session_storage.html" title="next chapter">Using PdoSessionStorage to store Sessions in the Database</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2010 Fabien Potencier.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/cookbook/json_request_body.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

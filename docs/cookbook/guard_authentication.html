@@ -1,0 +1,291 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>How to Create a Custom Authentication System with Guard &#8212; PrestoPHP 0.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Internals" href="../internals.html" />
+    <link rel="prev" title="Using multiple Monolog Loggers" href="multiple_loggers.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="how-to-create-a-custom-authentication-system-with-guard">
+<h1>How to Create a Custom Authentication System with Guard<a class="headerlink" href="#how-to-create-a-custom-authentication-system-with-guard" title="Permalink to this headline">¶</a></h1>
+<p>Whether you need to build a traditional login form, an API token
+authentication system or you need to integrate with some proprietary
+single-sign-on system, the Guard component can make it easy… and fun!</p>
+<p>In this example, you’ll build an API token authentication system and
+learn how to work with Guard.</p>
+<div class="section" id="step-1-create-the-authenticator-class">
+<h2>Step 1) Create the Authenticator Class<a class="headerlink" href="#step-1-create-the-authenticator-class" title="Permalink to this headline">¶</a></h2>
+<p>Suppose you have an API where your clients will send an X-AUTH-TOKEN
+header on each request. This token is composed of the username followed
+by a password, separated by a colon (e.g. <code class="docutils literal notranslate"><span class="pre">X-AUTH-TOKEN:</span> <span class="pre">coolguy:awesomepassword</span></code>).
+Your job is to read this, find the associated user (if any) and check
+the password.</p>
+<p>To create a custom authentication system, just create a class and make
+it implement GuardAuthenticatorInterface. Or, extend the simpler
+AbstractGuardAuthenticator. This requires you to implement six methods:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;?</span><span class="nx">php</span>
+
+<span class="k">namespace</span> <span class="nx">App\Security</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Request</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\JsonResponse</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\Security\Core\User\UserInterface</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\Security\Core\User\UserProviderInterface</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\Security\Guard\AbstractGuardAuthenticator</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\Security\Core\Authentication\Token\TokenInterface</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\Security\Core\Exception\AuthenticationException</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">TokenAuthenticator</span> <span class="k">extends</span> <span class="nx">AbstractGuardAuthenticator</span>
+<span class="p">{</span>
+    <span class="k">private</span> <span class="nv">$encoderFactory</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">EncoderFactoryInterface</span> <span class="nv">$encoderFactory</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">encoderFactory</span> <span class="o">=</span> <span class="nv">$encoderFactory</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">getCredentials</span><span class="p">(</span><span class="nx">Request</span> <span class="nv">$request</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// Checks if the credential header is provided</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$token</span> <span class="o">=</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">headers</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;X-AUTH-TOKEN&#39;</span><span class="p">))</span> <span class="p">{</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="c1">// Parse the header or ignore it if the format is incorrect.</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">false</span> <span class="o">===</span> <span class="nb">strpos</span><span class="p">(</span><span class="nv">$token</span><span class="p">,</span> <span class="s1">&#39;:&#39;</span><span class="p">))</span> <span class="p">{</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">list</span><span class="p">(</span><span class="nv">$username</span><span class="p">,</span> <span class="nv">$secret</span><span class="p">)</span> <span class="o">=</span> <span class="nb">explode</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="nv">$token</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+
+        <span class="k">return</span> <span class="k">array</span><span class="p">(</span>
+            <span class="s1">&#39;username&#39;</span> <span class="o">=&gt;</span> <span class="nv">$username</span><span class="p">,</span>
+            <span class="s1">&#39;secret&#39;</span> <span class="o">=&gt;</span> <span class="nv">$secret</span><span class="p">,</span>
+        <span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">getUser</span><span class="p">(</span><span class="nv">$credentials</span><span class="p">,</span> <span class="nx">UserProviderInterface</span> <span class="nv">$userProvider</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nv">$userProvider</span><span class="o">-&gt;</span><span class="na">loadUserByUsername</span><span class="p">(</span><span class="nv">$credentials</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">]);</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">checkCredentials</span><span class="p">(</span><span class="nv">$credentials</span><span class="p">,</span> <span class="nx">UserInterface</span> <span class="nv">$user</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// check credentials - e.g. make sure the password is valid</span>
+        <span class="c1">// return true to cause authentication success</span>
+
+        <span class="nv">$encoder</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">encoderFactory</span><span class="o">-&gt;</span><span class="na">getEncoder</span><span class="p">(</span><span class="nv">$user</span><span class="p">);</span>
+
+        <span class="k">return</span> <span class="nv">$encoder</span><span class="o">-&gt;</span><span class="na">isPasswordValid</span><span class="p">(</span>
+            <span class="nv">$user</span><span class="o">-&gt;</span><span class="na">getPassword</span><span class="p">(),</span>
+            <span class="nv">$credentials</span><span class="p">[</span><span class="s1">&#39;secret&#39;</span><span class="p">],</span>
+            <span class="nv">$user</span><span class="o">-&gt;</span><span class="na">getSalt</span><span class="p">()</span>
+        <span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">onAuthenticationSuccess</span><span class="p">(</span><span class="nx">Request</span> <span class="nv">$request</span><span class="p">,</span> <span class="nx">TokenInterface</span> <span class="nv">$token</span><span class="p">,</span> <span class="nv">$providerKey</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// on success, let the request continue</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">onAuthenticationFailure</span><span class="p">(</span><span class="nx">Request</span> <span class="nv">$request</span><span class="p">,</span> <span class="nx">AuthenticationException</span> <span class="nv">$exception</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$data</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+            <span class="s1">&#39;message&#39;</span> <span class="o">=&gt;</span> <span class="nb">strtr</span><span class="p">(</span><span class="nv">$exception</span><span class="o">-&gt;</span><span class="na">getMessageKey</span><span class="p">(),</span> <span class="nv">$exception</span><span class="o">-&gt;</span><span class="na">getMessageData</span><span class="p">()),</span>
+
+            <span class="c1">// or to translate this message</span>
+            <span class="c1">// $this-&gt;translator-&gt;trans($exception-&gt;getMessageKey(), $exception-&gt;getMessageData())</span>
+        <span class="p">);</span>
+
+        <span class="k">return</span> <span class="k">new</span> <span class="nx">JsonResponse</span><span class="p">(</span><span class="nv">$data</span><span class="p">,</span> <span class="mi">403</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Called when authentication is needed, but it&#39;s not sent</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">start</span><span class="p">(</span><span class="nx">Request</span> <span class="nv">$request</span><span class="p">,</span> <span class="nx">AuthenticationException</span> <span class="nv">$authException</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$data</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+            <span class="c1">// you might translate this message</span>
+            <span class="s1">&#39;message&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Authentication Required&#39;</span><span class="p">,</span>
+        <span class="p">);</span>
+
+        <span class="k">return</span> <span class="k">new</span> <span class="nx">JsonResponse</span><span class="p">(</span><span class="nv">$data</span><span class="p">,</span> <span class="mi">401</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">supportsRememberMe</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="k">false</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="step-2-configure-the-authenticator">
+<h2>Step 2) Configure the Authenticator<a class="headerlink" href="#step-2-configure-the-authenticator" title="Permalink to this headline">¶</a></h2>
+<p>To finish this, register the class as a service:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;app.token_authenticator&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">App\Security\TokenAuthenticator</span><span class="p">(</span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.encoder_factory&#39;</span><span class="p">]);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Finally, configure your <cite>security.firewalls</cite> key to use this authenticator:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.firewalls&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;main&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;guard&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+            <span class="s1">&#39;authenticators&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+                <span class="s1">&#39;app.token_authenticator&#39;</span>
+            <span class="p">),</span>
+
+            <span class="c1">// Using more than 1 authenticator, you must specify</span>
+            <span class="c1">// which one is used as entry point.</span>
+            <span class="c1">// &#39;entry_point&#39; =&gt; &#39;app.token_authenticator&#39;,</span>
+        <span class="p">),</span>
+        <span class="c1">// configure where your users come from. Hardcode them, or load them from somewhere</span>
+        <span class="c1">// https://PrestoPHP.symfony.com/doc/providers/security.html#defining-a-custom-user-provider</span>
+        <span class="s1">&#39;users&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+        <span class="c1">//raw password = foo</span>
+            <span class="s1">&#39;victoria&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;ROLE_USER&#39;</span><span class="p">,</span> <span class="s1">&#39;$2y$10$3i9/lVd8UOFIJ6PAMFt8gu3/r5g0qeCJvoSlLCsvMTythye19F77a&#39;</span><span class="p">),</span>
+        <span class="p">),</span>
+        <span class="c1">// &#39;anonymous&#39; =&gt; true</span>
+    <span class="p">),</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can use many authenticators, they are executed by the order
+they are configured.</p>
+</div>
+<p>You did it! You now have a fully-working API token authentication
+system. If your homepage required ROLE_USER, then you could test it
+under different conditions:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># test with no token</span>
+curl http://localhost:8000/
+<span class="c1"># {&quot;message&quot;:&quot;Authentication Required&quot;}</span>
+
+<span class="c1"># test with a bad token</span>
+curl -H <span class="s2">&quot;X-AUTH-TOKEN: alan&quot;</span> http://localhost:8000/
+<span class="c1"># {&quot;message&quot;:&quot;Username could not be found.&quot;}</span>
+
+<span class="c1"># test with a working token</span>
+curl -H <span class="s2">&quot;X-AUTH-TOKEN: victoria:foo&quot;</span> http://localhost:8000/
+<span class="c1"># the homepage controller is executed: the page loads normally</span>
+</pre></div>
+</div>
+<p>For more details read the Symfony cookbook entry on
+<a class="reference external" href="https://symfony.com/doc/current/cookbook/security/guard-authentication.html">How to Create a Custom Authentication System with Guard</a>.</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">PrestoPHP</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../middlewares.html">Middleware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../organizing_controllers.html">Organizing Controllers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../services.html">Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../providers.html">Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing.html">Testing</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Cookbook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internals.html">Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html#writing-documentation">Writing Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../providers/index.html">Built-in Service Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../web_servers.html">Webserver Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Cookbook</a><ul>
+      <li>Previous: <a href="multiple_loggers.html" title="previous chapter">Using multiple Monolog Loggers</a></li>
+      <li>Next: <a href="../internals.html" title="next chapter">Internals</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2010 Fabien Potencier.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/cookbook/guard_authentication.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

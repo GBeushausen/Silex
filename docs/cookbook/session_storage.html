@@ -1,0 +1,200 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Using PdoSessionStorage to store Sessions in the Database &#8212; PrestoPHP 0.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Disabling CSRF Protection on a Form using the FormExtension" href="form_no_csrf.html" />
+    <link rel="prev" title="Accepting a JSON Request Body" href="json_request_body.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="using-pdosessionstorage-to-store-sessions-in-the-database">
+<h1>Using PdoSessionStorage to store Sessions in the Database<a class="headerlink" href="#using-pdosessionstorage-to-store-sessions-in-the-database" title="Permalink to this headline">¶</a></h1>
+<p>By default, the <a class="reference internal" href="../providers/session.html"><span class="doc">SessionServiceProvider</span></a> writes
+session information in files using Symfony NativeFileSessionStorage. Most
+medium to large websites use a database to store sessions instead of files,
+because databases are easier to use and scale in a multi-webserver environment.</p>
+<p>Symfony’s <a class="reference external" href="https://api.symfony.com/master/Symfony/Component/HttpFoundation/Session/Storage/NativeSessionStorage.html">NativeSessionStorage</a>
+has multiple storage handlers and one of them uses PDO to store sessions,
+<a class="reference external" href="https://api.symfony.com/master/Symfony/Component/HttpFoundation/Session/Storage/Handler/PdoSessionHandler.html">PdoSessionHandler</a>.
+To use it, replace the <code class="docutils literal notranslate"><span class="pre">session.storage.handler</span></code> service in your application
+like explained below.</p>
+<div class="section" id="with-a-dedicated-pdo-service">
+<h2>With a dedicated PDO service<a class="headerlink" href="#with-a-dedicated-pdo-service" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler</span><span class="p">;</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">PrestoPHP\Provider\SessionServiceProvider</span><span class="p">());</span>
+
+<span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;pdo.dsn&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;mysql:dbname=mydatabase&#39;</span><span class="p">;</span>
+<span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;pdo.user&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;myuser&#39;</span><span class="p">;</span>
+<span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;pdo.password&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;mypassword&#39;</span><span class="p">;</span>
+
+<span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;session.db_options&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;db_table&#39;</span>    <span class="o">=&gt;</span> <span class="s1">&#39;session&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;db_id_col&#39;</span>   <span class="o">=&gt;</span> <span class="s1">&#39;session_id&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;db_data_col&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;session_value&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;db_time_col&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;session_time&#39;</span><span class="p">,</span>
+<span class="p">);</span>
+
+<span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;pdo&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">function</span> <span class="p">()</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">PDO</span><span class="p">(</span>
+        <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;pdo.dsn&#39;</span><span class="p">],</span>
+        <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;pdo.user&#39;</span><span class="p">],</span>
+        <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;pdo.password&#39;</span><span class="p">]</span>
+    <span class="p">);</span>
+<span class="p">};</span>
+
+<span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;session.storage.handler&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">function</span> <span class="p">()</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">PdoSessionHandler</span><span class="p">(</span>
+        <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;pdo&#39;</span><span class="p">],</span>
+        <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;session.db_options&#39;</span><span class="p">]</span>
+    <span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="using-the-doctrineserviceprovider">
+<h2>Using the DoctrineServiceProvider<a class="headerlink" href="#using-the-doctrineserviceprovider" title="Permalink to this headline">¶</a></h2>
+<p>When using the <a class="reference internal" href="../providers/doctrine.html"><span class="doc">DoctrineServiceProvider</span></a> You don’t
+have to make another database connection, simply pass the getWrappedConnection method.</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler</span><span class="p">;</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">PrestoPHP\Provider\SessionServiceProvider</span><span class="p">());</span>
+
+<span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;session.storage.handler&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">function</span> <span class="p">()</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">PdoSessionHandler</span><span class="p">(</span>
+        <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;db&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">getWrappedConnection</span><span class="p">(),</span>
+        <span class="k">array</span><span class="p">(</span>
+            <span class="s1">&#39;db_table&#39;</span>        <span class="o">=&gt;</span> <span class="s1">&#39;session&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;db_id_col&#39;</span>       <span class="o">=&gt;</span> <span class="s1">&#39;session_id&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;db_data_col&#39;</span>     <span class="o">=&gt;</span> <span class="s1">&#39;session_value&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;db_lifetime_col&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;session_lifetime&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;db_time_col&#39;</span>     <span class="o">=&gt;</span> <span class="s1">&#39;session_time&#39;</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="database-structure">
+<h2>Database structure<a class="headerlink" href="#database-structure" title="Permalink to this headline">¶</a></h2>
+<p>PdoSessionStorage needs a database table with 3 columns:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">session_id</span></code>: ID column (VARCHAR(255) or larger)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">session_value</span></code>: Value column (TEXT or CLOB)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">session_lifetime</span></code>: Lifetime column (INTEGER)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">session_time</span></code>: Time column (INTEGER)</p></li>
+</ul>
+<p>You can find examples of SQL statements to create the session table in the
+<a class="reference external" href="https://symfony.com/doc/current/cookbook/configuration/pdo_session_storage.html#example-sql-statements">Symfony cookbook</a></p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">PrestoPHP</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../middlewares.html">Middleware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../organizing_controllers.html">Organizing Controllers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../services.html">Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../providers.html">Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing.html">Testing</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Cookbook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internals.html">Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html#writing-documentation">Writing Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../providers/index.html">Built-in Service Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../web_servers.html">Webserver Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Cookbook</a><ul>
+      <li>Previous: <a href="json_request_body.html" title="previous chapter">Accepting a JSON Request Body</a></li>
+      <li>Next: <a href="form_no_csrf.html" title="next chapter">Disabling CSRF Protection on a Form using the FormExtension</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2010 Fabien Potencier.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/cookbook/session_storage.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

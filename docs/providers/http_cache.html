@@ -1,0 +1,236 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>HTTP Cache &#8212; PrestoPHP 0.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="HTTP Fragment" href="http_fragment.html" />
+    <link rel="prev" title="CSRF" href="csrf.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="http-cache">
+<h1>HTTP Cache<a class="headerlink" href="#http-cache" title="Permalink to this headline">¶</a></h1>
+<p>The <em>HttpCacheServiceProvider</em> provides support for the Symfony Reverse
+Proxy.</p>
+<div class="section" id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>http_cache.cache_dir</strong>: The cache directory to store the HTTP cache data.</p></li>
+<li><p><strong>http_cache.options</strong> (optional): An array of options for the <a class="reference external" href="https://api.symfony.com/master/Symfony/Component/HttpKernel/HttpCache/HttpCache.html">HttpCache</a>
+constructor.</p></li>
+</ul>
+</div>
+<div class="section" id="services">
+<h2>Services<a class="headerlink" href="#services" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>http_cache</strong>: An instance of <a class="reference external" href="https://api.symfony.com/master/Symfony/Component/HttpKernel/HttpCache/HttpCache.html">HttpCache</a>.</p></li>
+<li><p><strong>http_cache.esi</strong>: An instance of <a class="reference external" href="https://api.symfony.com/master/Symfony/Component/HttpKernel/HttpCache/Esi.html">Esi</a>,
+that implements the ESI capabilities to Request and Response instances.</p></li>
+<li><p><strong>http_cache.store</strong>: An instance of <a class="reference external" href="https://api.symfony.com/master/Symfony/Component/HttpKernel/HttpCache/Store.html">Store</a>,
+that implements all the logic for storing cache metadata (Request and Response
+headers).</p></li>
+</ul>
+</div>
+<div class="section" id="registering">
+<h2>Registering<a class="headerlink" href="#registering" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">PrestoPHP\Provider\HttpCacheServiceProvider</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;http_cache.cache_dir&#39;</span> <span class="o">=&gt;</span> <span class="no">__DIR__</span><span class="o">.</span><span class="s1">&#39;/cache/&#39;</span><span class="p">,</span>
+<span class="p">));</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<p>PrestoPHP already supports any reverse proxy like Varnish out of the box by
+setting Response HTTP cache headers:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Response</span><span class="p">;</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">Response</span><span class="p">(</span><span class="s1">&#39;Foo&#39;</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;Cache-Control&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;s-maxage=5&#39;</span><span class="p">,</span>
+    <span class="p">));</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If you want PrestoPHP to trust the <code class="docutils literal notranslate"><span class="pre">X-Forwarded-For*</span></code> headers from your
+reverse proxy at address $ip, you will need to whitelist it as documented
+in <a class="reference external" href="https://symfony.com/doc/current/components/http_foundation/trusting_proxies.html">Trusting Proxies</a>.</p>
+<p>If you would be running Varnish in front of your application on the same machine:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Request</span><span class="p">;</span>
+
+<span class="nx">Request</span><span class="o">::</span><span class="na">setTrustedProxies</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="s1">&#39;::1&#39;</span><span class="p">));</span>
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">run</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<p>This provider allows you to use the Symfony reverse proxy natively with
+PrestoPHP applications by using the <code class="docutils literal notranslate"><span class="pre">http_cache</span></code> service. The Symfony reverse proxy
+acts much like any other proxy would, so you will want to whitelist it:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Request</span><span class="p">;</span>
+
+<span class="nx">Request</span><span class="o">::</span><span class="na">setTrustedProxies</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">));</span>
+<span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;http_cache&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">run</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>The provider also provides ESI support:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nv">$response</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Response</span><span class="p">(</span><span class="s">&lt;&lt;&lt;</span><span class="dl">EOF</span><span class="s"></span>
+<span class="s">&lt;html&gt;</span>
+<span class="s">    &lt;body&gt;</span>
+<span class="s">        Hello</span>
+<span class="s">        &lt;esi:include src=&quot;/included&quot; /&gt;</span>
+<span class="s">    &lt;/body&gt;</span>
+<span class="s">&lt;/html&gt;</span>
+
+<span class="dl">EOF</span>
+    <span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;Surrogate-Control&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;content=&quot;ESI/1.0&quot;&#39;</span><span class="p">,</span>
+    <span class="p">));</span>
+
+    <span class="nv">$response</span><span class="o">-&gt;</span><span class="na">setTtl</span><span class="p">(</span><span class="mi">20</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="nv">$response</span><span class="p">;</span>
+<span class="p">});</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/included&#39;</span><span class="p">,</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nv">$response</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Response</span><span class="p">(</span><span class="s1">&#39;Foo&#39;</span><span class="p">);</span>
+    <span class="nv">$response</span><span class="o">-&gt;</span><span class="na">setTtl</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="nv">$response</span><span class="p">;</span>
+<span class="p">});</span>
+
+<span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;http_cache&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">run</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>If your application doesn’t use ESI, you can disable it to slightly improve the
+overall performance:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">PrestoPHP\Provider\HttpCacheServiceProvider</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
+   <span class="s1">&#39;http_cache.cache_dir&#39;</span> <span class="o">=&gt;</span> <span class="no">__DIR__</span><span class="o">.</span><span class="s1">&#39;/cache/&#39;</span><span class="p">,</span>
+   <span class="s1">&#39;http_cache.esi&#39;</span>       <span class="o">=&gt;</span> <span class="k">null</span><span class="p">,</span>
+<span class="p">));</span>
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>To help you debug caching issues, set your application <code class="docutils literal notranslate"><span class="pre">debug</span></code> to true.
+Symfony automatically adds a <code class="docutils literal notranslate"><span class="pre">X-Symfony-Cache</span></code> header to each response
+with useful information about cache hits and misses.</p>
+<p>If you are <em>not</em> using the Symfony Session provider, you might want to set
+the PHP <code class="docutils literal notranslate"><span class="pre">session.cache_limiter</span></code> setting to an empty value to avoid the
+default PHP behavior.</p>
+<p>Finally, check that your Web server does not override your caching strategy.</p>
+</div>
+<p>For more information, consult the <a class="reference external" href="https://symfony.com/doc/current/book/http_cache.html">Symfony HTTP Cache documentation</a>.</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">PrestoPHP</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../middlewares.html">Middleware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../organizing_controllers.html">Organizing Controllers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../services.html">Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../providers.html">Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cookbook/index.html">Cookbook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internals.html">Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html#writing-documentation">Writing Documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Built-in Service Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../web_servers.html">Webserver Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Built-in Service Providers</a><ul>
+      <li>Previous: <a href="csrf.html" title="previous chapter">CSRF</a></li>
+      <li>Next: <a href="http_fragment.html" title="next chapter">HTTP Fragment</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2010 Fabien Potencier.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/providers/http_cache.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

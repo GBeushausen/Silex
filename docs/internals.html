@@ -1,0 +1,181 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Internals &#8212; PrestoPHP 0.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Contributing" href="contributing.html" />
+    <link rel="prev" title="How to Create a Custom Authentication System with Guard" href="cookbook/guard_authentication.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="internals">
+<h1>Internals<a class="headerlink" href="#internals" title="Permalink to this headline">¶</a></h1>
+<p>This chapter will tell you how PrestoPHP works internally.</p>
+<div class="section" id="prestophp">
+<h2>PrestoPHP<a class="headerlink" href="#prestophp" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="application">
+<h3>Application<a class="headerlink" href="#application" title="Permalink to this headline">¶</a></h3>
+<p>The application is the main interface to PrestoPHP. It implements Symfony’s
+<a class="reference external" href="https://api.symfony.com/master/Symfony/Component/HttpKernel/HttpKernelInterface.html">HttpKernelInterface</a>,
+so you can pass a <a class="reference external" href="https://api.symfony.com/master/Symfony/Component/HttpFoundation/Request.html">Request</a>
+to the <code class="docutils literal notranslate"><span class="pre">handle</span></code> method and it will return a <a class="reference external" href="https://api.symfony.com/master/Symfony/Component/HttpFoundation/Response.html">Response</a>.</p>
+<p>It extends the <code class="docutils literal notranslate"><span class="pre">Pimple</span></code> service container, allowing for flexibility on the
+outside as well as the inside. You could replace any service, and you are also
+able to read them.</p>
+<p>The application makes strong use of the <a class="reference external" href="https://api.symfony.com/master/Symfony/Component/EventDispatcher/EventDispatcher.html">EventDispatcher</a> to hook into the Symfony <a class="reference external" href="https://api.symfony.com/master/Symfony/Component/HttpKernel/HttpKernel.html">HttpKernel</a>
+events. This allows fetching the <code class="docutils literal notranslate"><span class="pre">Request</span></code>, converting string responses into
+<code class="docutils literal notranslate"><span class="pre">Response</span></code> objects and handling Exceptions. We also use it to dispatch some
+custom events like before/after middlewares and errors.</p>
+</div>
+<div class="section" id="controller">
+<h3>Controller<a class="headerlink" href="#controller" title="Permalink to this headline">¶</a></h3>
+<p>The Symfony <a class="reference external" href="https://api.symfony.com/master/Symfony/Component/Routing/Route.html">Route</a> is
+actually quite powerful. Routes can be named, which allows for URL generation.
+They can also have requirements for the variable parts. In order to allow
+setting these through a nice interface, the <code class="docutils literal notranslate"><span class="pre">match</span></code> method (which is used by
+<code class="docutils literal notranslate"><span class="pre">get</span></code>, <code class="docutils literal notranslate"><span class="pre">post</span></code>, etc.) returns an instance of the <code class="docutils literal notranslate"><span class="pre">Controller</span></code>, which
+wraps a route.</p>
+</div>
+<div class="section" id="controllercollection">
+<h3>ControllerCollection<a class="headerlink" href="#controllercollection" title="Permalink to this headline">¶</a></h3>
+<p>One of the goals of exposing the <a class="reference external" href="https://api.symfony.com/master/Symfony/Component/Routing/RouteCollection.html">RouteCollection</a>
+was to make it mutable, so providers could add stuff to it. The challenge here
+is the fact that routes know nothing about their name. The name only has
+meaning in context of the <code class="docutils literal notranslate"><span class="pre">RouteCollection</span></code> and cannot be changed.</p>
+<p>To solve this challenge we came up with a staging area for routes. The
+<code class="docutils literal notranslate"><span class="pre">ControllerCollection</span></code> holds the controllers until <code class="docutils literal notranslate"><span class="pre">flush</span></code> is called, at
+which point the routes are added to the <code class="docutils literal notranslate"><span class="pre">RouteCollection</span></code>. Also, the
+controllers are then frozen. This means that they can no longer be modified
+and will throw an Exception if you try to do so.</p>
+<p>Unfortunately no good way for flushing implicitly could be found, which is why
+flushing is now always explicit. The Application will flush, but if you want
+to read the <code class="docutils literal notranslate"><span class="pre">ControllerCollection</span></code> before the request takes place, you will
+have to call flush yourself.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Application</span></code> provides a shortcut <code class="docutils literal notranslate"><span class="pre">flush</span></code> method for flushing the
+<code class="docutils literal notranslate"><span class="pre">ControllerCollection</span></code>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Instead of creating an instance of <code class="docutils literal notranslate"><span class="pre">RouteCollection</span></code> yourself, use the
+<code class="docutils literal notranslate"><span class="pre">$app['controllers_factory']</span></code> factory instead.</p>
+</div>
+</div>
+</div>
+<div class="section" id="symfony">
+<h2>Symfony<a class="headerlink" href="#symfony" title="Permalink to this headline">¶</a></h2>
+<p>Following Symfony components are used by PrestoPHP:</p>
+<ul class="simple">
+<li><p><strong>HttpFoundation</strong>: For <code class="docutils literal notranslate"><span class="pre">Request</span></code> and <code class="docutils literal notranslate"><span class="pre">Response</span></code>.</p></li>
+<li><p><strong>HttpKernel</strong>: Because we need a heart.</p></li>
+<li><p><strong>Routing</strong>: For matching defined routes.</p></li>
+<li><p><strong>EventDispatcher</strong>: For hooking into the HttpKernel.</p></li>
+</ul>
+<p>For more information, <a class="reference external" href="https://symfony.com/">check out the Symfony website</a>.</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">PrestoPHP</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="middlewares.html">Middleware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="organizing_controllers.html">Organizing Controllers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="services.html">Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="providers.html">Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cookbook/index.html">Cookbook</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html#writing-documentation">Writing Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="providers/index.html">Built-in Service Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web_servers.html">Webserver Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="cookbook/guard_authentication.html" title="previous chapter">How to Create a Custom Authentication System with Guard</a></li>
+      <li>Next: <a href="contributing.html" title="next chapter">Contributing</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2010 Fabien Potencier.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/internals.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

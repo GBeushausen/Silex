@@ -1,0 +1,186 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Asset &#8212; PrestoPHP 0.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Monolog" href="monolog.html" />
+    <link rel="prev" title="Twig" href="twig.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="asset">
+<h1>Asset<a class="headerlink" href="#asset" title="Permalink to this headline">¶</a></h1>
+<p>The <em>AssetServiceProvider</em> provides a way to manage URL generation and
+versioning of web assets such as CSS stylesheets, JavaScript files and image
+files.</p>
+<div class="section" id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>assets.version</strong>: Default version for assets.</p></li>
+<li><p><strong>assets.version_format</strong> (optional): Default format for assets.</p></li>
+<li><p><strong>assets.base_path</strong>: Default path to prepend to all assets without a package.</p></li>
+<li><p><strong>assets.base_urls</strong>: (Alternative to <code class="docutils literal notranslate"><span class="pre">assets.base_path</span></code>) List of base URLs
+to choose from to prepend to assets without a package.</p></li>
+<li><p><strong>assets.named_packages</strong> (optional): Named packages. Keys are the package
+names and values the configuration (supported keys are <code class="docutils literal notranslate"><span class="pre">version</span></code>,
+<code class="docutils literal notranslate"><span class="pre">version_format</span></code>, <code class="docutils literal notranslate"><span class="pre">base_urls</span></code>, and <code class="docutils literal notranslate"><span class="pre">base_path</span></code>).</p></li>
+<li><p><strong>assets.json_manifest_path</strong> (optional): Absolute path to a <a class="reference external" href="https://symfony.com/blog/new-in-symfony-3-3-manifest-based-asset-versioning">JSON version manifest</a>.</p></li>
+</ul>
+</div>
+<div class="section" id="services">
+<h2>Services<a class="headerlink" href="#services" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>assets.packages</strong>: The asset service.</p></li>
+</ul>
+</div>
+<div class="section" id="registering">
+<h2>Registering<a class="headerlink" href="#registering" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">PrestoPHP\Provider\AssetServiceProvider</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;assets.version&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;v1&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;assets.version_format&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;%s?version=%s&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;assets.named_packages&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;css&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;version&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;css2&#39;</span><span class="p">,</span> <span class="s1">&#39;base_path&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;/whatever-makes-sense&#39;</span><span class="p">),</span>
+        <span class="s1">&#39;images&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;base_urls&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;https://img.example.com&#39;</span><span class="p">)),</span>
+    <span class="p">),</span>
+<span class="p">));</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Add the Symfony Asset Component as a dependency:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>composer require symfony/asset
+</pre></div>
+</div>
+<p>If you want to use assets in your Twig templates, you must also install the
+Symfony Twig Bridge:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>composer require symfony/twig-bridge
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<p>The AssetServiceProvider is mostly useful with the Twig provider using the
+<code class="docutils literal notranslate"><span class="pre">asset()</span></code> method. It takes two arguments. In the case of named
+packages, the first is the path relative to the base_path specified in the
+package definition and the second is the package name. For unmamed packages,
+there is only one argument, the path relative to the assets folder:</p>
+<div class="highlight-jinja notranslate"><div class="highlight"><pre><span></span><span class="cp">{{</span> <span class="nv">asset</span><span class="o">(</span><span class="s1">&#39;/css/foo.png&#39;</span><span class="o">)</span> <span class="cp">}}</span><span class="x"></span>
+<span class="cp">{{</span> <span class="nv">asset</span><span class="o">(</span><span class="s1">&#39;/css/foo.css&#39;</span><span class="o">,</span> <span class="s1">&#39;css&#39;</span><span class="o">)</span> <span class="cp">}}</span><span class="x"></span>
+<span class="cp">{{</span> <span class="nv">asset</span><span class="o">(</span><span class="s1">&#39;/img/foo.png&#39;</span><span class="o">,</span> <span class="s1">&#39;images&#39;</span><span class="o">)</span> <span class="cp">}}</span><span class="x"></span>
+
+<span class="cp">{{</span> <span class="nv">asset_version</span><span class="o">(</span><span class="s1">&#39;/css/foo.png&#39;</span><span class="o">)</span> <span class="cp">}}</span><span class="x"></span>
+</pre></div>
+</div>
+<p>For more information, check out the <a class="reference external" href="https://symfony.com/doc/current/components/asset/introduction.html">Asset Component documentation</a>.</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">PrestoPHP</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../middlewares.html">Middleware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../organizing_controllers.html">Organizing Controllers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../services.html">Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../providers.html">Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cookbook/index.html">Cookbook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internals.html">Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html#writing-documentation">Writing Documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Built-in Service Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../web_servers.html">Webserver Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Built-in Service Providers</a><ul>
+      <li>Previous: <a href="twig.html" title="previous chapter">Twig</a></li>
+      <li>Next: <a href="monolog.html" title="next chapter">Monolog</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2010 Fabien Potencier.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/providers/asset.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

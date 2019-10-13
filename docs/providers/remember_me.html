@@ -1,0 +1,178 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Remember Me &#8212; PrestoPHP 0.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Serializer" href="serializer.html" />
+    <link rel="prev" title="Security" href="security.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="remember-me">
+<h1>Remember Me<a class="headerlink" href="#remember-me" title="Permalink to this headline">¶</a></h1>
+<p>The <em>RememberMeServiceProvider</em> adds “Remember-Me” authentication to the
+<em>SecurityServiceProvider</em>.</p>
+<div class="section" id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
+<p>n/a</p>
+</div>
+<div class="section" id="services">
+<h2>Services<a class="headerlink" href="#services" title="Permalink to this headline">¶</a></h2>
+<p>n/a</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The service provider defines many other services that are used internally
+but rarely need to be customized.</p>
+</div>
+</div>
+<div class="section" id="registering">
+<h2>Registering<a class="headerlink" href="#registering" title="Permalink to this headline">¶</a></h2>
+<p>Before registering this service provider, you must register the
+<em>SecurityServiceProvider</em>:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">PrestoPHP\Provider\SecurityServiceProvider</span><span class="p">());</span>
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">PrestoPHP\Provider\RememberMeServiceProvider</span><span class="p">());</span>
+
+<span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.firewalls&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;my-firewall&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;pattern&#39;</span>     <span class="o">=&gt;</span> <span class="s1">&#39;^/secure$&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;form&#39;</span>        <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+        <span class="s1">&#39;logout&#39;</span>      <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+        <span class="s1">&#39;remember_me&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+            <span class="s1">&#39;key&#39;</span>                <span class="o">=&gt;</span> <span class="s1">&#39;Choose_A_Unique_Random_Key&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;always_remember_me&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+            <span class="cm">/* Other options */</span>
+        <span class="p">),</span>
+        <span class="s1">&#39;users&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span> <span class="cm">/* ... */</span> <span class="p">),</span>
+    <span class="p">),</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="options">
+<h2>Options<a class="headerlink" href="#options" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>key</strong>: A secret key to generate tokens (you should generate a random
+string).</p></li>
+<li><p><strong>name</strong>: Cookie name (default: <code class="docutils literal notranslate"><span class="pre">REMEMBERME</span></code>).</p></li>
+<li><p><strong>lifetime</strong>: Cookie lifetime (default: <code class="docutils literal notranslate"><span class="pre">31536000</span></code> ~ 1 year).</p></li>
+<li><p><strong>path</strong>: Cookie path (default: <code class="docutils literal notranslate"><span class="pre">/</span></code>).</p></li>
+<li><p><strong>domain</strong>: Cookie domain (default: <code class="docutils literal notranslate"><span class="pre">null</span></code> = request domain).</p></li>
+<li><p><strong>secure</strong>: Cookie is secure (default: <code class="docutils literal notranslate"><span class="pre">false</span></code>).</p></li>
+<li><p><strong>httponly</strong>: Cookie is HTTP only (default: <code class="docutils literal notranslate"><span class="pre">true</span></code>).</p></li>
+<li><p><strong>always_remember_me</strong>: Enable remember me (default: <code class="docutils literal notranslate"><span class="pre">false</span></code>).</p></li>
+<li><p><strong>remember_me_parameter</strong>: Name of the request parameter enabling remember_me
+on login. To add the checkbox to the login form. You can find more
+information in the <a class="reference external" href="https://symfony.com/doc/current/cookbook/security/remember_me.html">Symfony cookbook</a>
+(default: <code class="docutils literal notranslate"><span class="pre">_remember_me</span></code>).</p></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">PrestoPHP</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../middlewares.html">Middleware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../organizing_controllers.html">Organizing Controllers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../services.html">Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../providers.html">Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cookbook/index.html">Cookbook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internals.html">Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html#writing-documentation">Writing Documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Built-in Service Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../web_servers.html">Webserver Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Built-in Service Providers</a><ul>
+      <li>Previous: <a href="security.html" title="previous chapter">Security</a></li>
+      <li>Next: <a href="serializer.html" title="next chapter">Serializer</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2010 Fabien Potencier.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/providers/remember_me.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

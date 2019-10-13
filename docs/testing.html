@@ -1,0 +1,327 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Testing &#8212; PrestoPHP 0.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Cookbook" href="cookbook/index.html" />
+    <link rel="prev" title="Providers" href="providers.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="testing">
+<h1>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h1>
+<p>Because PrestoPHP is built on top of Symfony, it is very easy to write functional
+tests for your application. Functional tests are automated software tests that
+ensure that your code is working correctly. They go through the user interface,
+using a fake browser, and mimic the actions a user would do.</p>
+<div class="section" id="why">
+<h2>Why<a class="headerlink" href="#why" title="Permalink to this headline">¶</a></h2>
+<p>If you are not familiar with software tests, you may be wondering why you would
+need this. Every time you make a change to your application, you have to test
+it. This means going through all the pages and making sure they are still
+working. Functional tests save you a lot of time, because they enable you to
+test your application in usually under a second by running a single command.</p>
+<p>For more information on functional testing, unit testing, and automated
+software tests in general, check out <a class="reference external" href="https://github.com/sebastianbergmann/phpunit">PHPUnit</a> and <a class="reference external" href="https://www.slideshare.net/avalanche123/clean-code-5609451">Bulat Shakirzyanov’s talk
+on Clean Code</a>.</p>
+</div>
+<div class="section" id="id1">
+<h2>PHPUnit<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://github.com/sebastianbergmann/phpunit">PHPUnit</a> is the de-facto
+standard testing framework for PHP. It was built for writing unit tests, but it
+can be used for functional tests too. You write tests by creating a new class,
+that extends the <code class="docutils literal notranslate"><span class="pre">PHPUnit\Framework\TestCase</span></code>. Your test cases are methods
+prefixed with <code class="docutils literal notranslate"><span class="pre">test</span></code>:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">use</span> <span class="nx">PHPUnit\Framework\TestCase</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">ContactFormTest</span> <span class="k">extends</span> <span class="nx">TestCase</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">testInitialPage</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="o">...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>In your test cases, you do assertions on the state of what you are testing. In
+this case we are testing a contact form, so we would want to assert that the
+page loaded correctly and contains our form:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">function</span> <span class="nf">testInitialPage</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="nv">$statusCode</span> <span class="o">=</span> <span class="o">...</span>
+    <span class="nv">$pageContent</span> <span class="o">=</span> <span class="o">...</span>
+
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="nv">$statusCode</span><span class="p">);</span>
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertContains</span><span class="p">(</span><span class="s1">&#39;Contact us&#39;</span><span class="p">,</span> <span class="nv">$pageContent</span><span class="p">);</span>
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertContains</span><span class="p">(</span><span class="s1">&#39;&lt;form&#39;</span><span class="p">,</span> <span class="nv">$pageContent</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Here you see some of the available assertions. There is a full list available
+in the <a class="reference external" href="https://phpunit.de/manual/current/en/writing-tests-for-phpunit.html">Writing Tests for PHPUnit</a>
+section of the PHPUnit documentation.</p>
+</div>
+<div class="section" id="webtestcase">
+<h2>WebTestCase<a class="headerlink" href="#webtestcase" title="Permalink to this headline">¶</a></h2>
+<p>Symfony provides a WebTestCase class that can be used to write functional
+tests. The PrestoPHP version of this class is <code class="docutils literal notranslate"><span class="pre">PrestoPHP\WebTestCase</span></code>, and you can
+use it by making your test extend it:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">use</span> <span class="nx">PrestoPHP\WebTestCase</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">ContactFormTest</span> <span class="k">extends</span> <span class="nx">WebTestCase</span>
+<span class="p">{</span>
+    <span class="o">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>If you need to override the <code class="docutils literal notranslate"><span class="pre">setUp()</span></code> method, don’t forget to call the
+parent (<code class="docutils literal notranslate"><span class="pre">parent::setUp()</span></code>) to call the PrestoPHP default setup.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you want to use the Symfony <code class="docutils literal notranslate"><span class="pre">WebTestCase</span></code> class you will need to
+explicitly install its dependencies for your project:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>composer require --dev symfony/browser-kit symfony/css-selector
+</pre></div>
+</div>
+</div>
+<p>For your WebTestCase, you will have to implement a <code class="docutils literal notranslate"><span class="pre">createApplication</span></code>
+method, which returns your application instance:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">function</span> <span class="nf">createApplication</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="c1">// app.php must return an Application instance</span>
+    <span class="k">return</span> <span class="k">require</span> <span class="no">__DIR__</span><span class="o">.</span><span class="s1">&#39;/path/to/app.php&#39;</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Make sure you do <strong>not</strong> use <code class="docutils literal notranslate"><span class="pre">require_once</span></code> here, as this method will be
+executed before every test.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>By default, the application behaves in the same way as when using it from a
+browser. But when an error occurs, it is sometimes easier to get raw
+exceptions instead of HTML pages. It is rather simple if you tweak the
+application configuration in the <code class="docutils literal notranslate"><span class="pre">createApplication()</span></code> method like
+follows:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">function</span> <span class="nf">createApplication</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="nv">$app</span> <span class="o">=</span> <span class="k">require</span> <span class="no">__DIR__</span><span class="o">.</span><span class="s1">&#39;/path/to/app.php&#39;</span><span class="p">;</span>
+    <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;debug&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">true</span><span class="p">;</span>
+    <span class="nb">unset</span><span class="p">(</span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;exception_handler&#39;</span><span class="p">]);</span>
+
+    <span class="k">return</span> <span class="nv">$app</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If your application use sessions, set <code class="docutils literal notranslate"><span class="pre">session.test</span></code> to <code class="docutils literal notranslate"><span class="pre">true</span></code> to
+simulate sessions:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">function</span> <span class="nf">createApplication</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="c1">// ...</span>
+
+    <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;session.test&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">true</span><span class="p">;</span>
+
+    <span class="c1">// ...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<p>The WebTestCase provides a <code class="docutils literal notranslate"><span class="pre">createClient</span></code> method. A client acts as a browser,
+and allows you to interact with your application. Here’s how it works:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">function</span> <span class="nf">testInitialPage</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="nv">$client</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">createClient</span><span class="p">();</span>
+    <span class="nv">$crawler</span> <span class="o">=</span> <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">request</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">);</span>
+
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertTrue</span><span class="p">(</span><span class="nv">$client</span><span class="o">-&gt;</span><span class="na">getResponse</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">isOk</span><span class="p">());</span>
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertCount</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nv">$crawler</span><span class="o">-&gt;</span><span class="na">filter</span><span class="p">(</span><span class="s1">&#39;h1:contains(&quot;Contact us&quot;)&#39;</span><span class="p">));</span>
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertCount</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nv">$crawler</span><span class="o">-&gt;</span><span class="na">filter</span><span class="p">(</span><span class="s1">&#39;form&#39;</span><span class="p">));</span>
+    <span class="o">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>There are several things going on here. You have both a <code class="docutils literal notranslate"><span class="pre">Client</span></code> and a
+<code class="docutils literal notranslate"><span class="pre">Crawler</span></code>.</p>
+<p>You can also access the application through <code class="docutils literal notranslate"><span class="pre">$this-&gt;app</span></code>.</p>
+<div class="section" id="client">
+<h3>Client<a class="headerlink" href="#client" title="Permalink to this headline">¶</a></h3>
+<p>The client represents a browser. It holds your browsing history, cookies and
+more. The <code class="docutils literal notranslate"><span class="pre">request</span></code> method allows you to make a request to a page on your
+application.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can find some documentation for it in <a class="reference external" href="https://symfony.com/doc/current/book/testing.html#the-test-client">the client section of the
+testing chapter of the Symfony documentation</a>.</p>
+</div>
+</div>
+<div class="section" id="crawler">
+<h3>Crawler<a class="headerlink" href="#crawler" title="Permalink to this headline">¶</a></h3>
+<p>The crawler allows you to inspect the content of a page. You can filter it
+using CSS expressions and lots more.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can find some documentation for it in <a class="reference external" href="https://symfony.com/doc/current/book/testing.html#the-test-client">the crawler section of the testing
+chapter of the Symfony documentation</a>.</p>
+</div>
+</div>
+</div>
+<div class="section" id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<p>The suggested way to configure PHPUnit is to create a <code class="docutils literal notranslate"><span class="pre">phpunit.xml.dist</span></code>
+file, a <code class="docutils literal notranslate"><span class="pre">tests</span></code> folder and your tests in
+<code class="docutils literal notranslate"><span class="pre">tests/YourApp/Tests/YourTest.php</span></code>. The <code class="docutils literal notranslate"><span class="pre">phpunit.xml.dist</span></code> file should
+look like this:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="nt">&lt;phpunit</span> <span class="na">bootstrap=</span><span class="s">&quot;./vendor/autoload.php&quot;</span>
+         <span class="na">backupGlobals=</span><span class="s">&quot;false&quot;</span>
+         <span class="na">backupStaticAttributes=</span><span class="s">&quot;false&quot;</span>
+         <span class="na">colors=</span><span class="s">&quot;true&quot;</span>
+         <span class="na">convertErrorsToExceptions=</span><span class="s">&quot;true&quot;</span>
+         <span class="na">convertNoticesToExceptions=</span><span class="s">&quot;true&quot;</span>
+         <span class="na">convertWarningsToExceptions=</span><span class="s">&quot;true&quot;</span>
+         <span class="na">processIsolation=</span><span class="s">&quot;false&quot;</span>
+         <span class="na">stopOnFailure=</span><span class="s">&quot;false&quot;</span>
+         <span class="na">syntaxCheck=</span><span class="s">&quot;false&quot;</span>
+<span class="nt">&gt;</span>
+    <span class="nt">&lt;testsuites&gt;</span>
+        <span class="nt">&lt;testsuite</span> <span class="na">name=</span><span class="s">&quot;YourApp Test Suite&quot;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;directory&gt;</span>./tests/<span class="nt">&lt;/directory&gt;</span>
+        <span class="nt">&lt;/testsuite&gt;</span>
+    <span class="nt">&lt;/testsuites&gt;</span>
+<span class="nt">&lt;/phpunit&gt;</span>
+</pre></div>
+</div>
+<p>Your <code class="docutils literal notranslate"><span class="pre">tests/YourApp/Tests/YourTest.php</span></code> should look like this:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">namespace</span> <span class="nx">YourApp\Tests</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">PrestoPHP\WebTestCase</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">YourTest</span> <span class="k">extends</span> <span class="nx">WebTestCase</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">createApplication</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="k">require</span> <span class="no">__DIR__</span><span class="o">.</span><span class="s1">&#39;/../../../app.php&#39;</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">testFooBar</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="o">...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Now, when running <code class="docutils literal notranslate"><span class="pre">phpunit</span></code> on the command line, tests should run.</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">PrestoPHP</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="middlewares.html">Middleware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="organizing_controllers.html">Organizing Controllers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="services.html">Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="providers.html">Providers</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cookbook/index.html">Cookbook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="internals.html">Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html#writing-documentation">Writing Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="providers/index.html">Built-in Service Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web_servers.html">Webserver Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="providers.html" title="previous chapter">Providers</a></li>
+      <li>Next: <a href="cookbook/index.html" title="next chapter">Cookbook</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2010 Fabien Potencier.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/testing.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

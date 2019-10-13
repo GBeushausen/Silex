@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Converting Errors to Exceptions &#8212; PrestoPHP 0.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Using multiple Monolog Loggers" href="multiple_loggers.html" />
+    <link rel="prev" title="Making sub-Requests" href="sub_requests.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="converting-errors-to-exceptions">
+<h1>Converting Errors to Exceptions<a class="headerlink" href="#converting-errors-to-exceptions" title="Permalink to this headline">¶</a></h1>
+<p>PrestoPHP catches exceptions that are thrown from within a request/response cycle.
+However, it does <em>not</em> catch PHP errors and notices. This recipe tells you how
+to catch them by converting them to exceptions.</p>
+<div class="section" id="registering-the-errorhandler">
+<h2>Registering the ErrorHandler<a class="headerlink" href="#registering-the-errorhandler" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">Symfony/Debug</span></code> package has an <code class="docutils literal notranslate"><span class="pre">ErrorHandler</span></code> class that solves this
+problem. It converts all errors to exceptions, and exceptions are then caught
+by PrestoPHP.</p>
+<p>Register it by calling the static <code class="docutils literal notranslate"><span class="pre">register</span></code> method:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">use</span> <span class="nx">Symfony\Component\Debug\ErrorHandler</span><span class="p">;</span>
+
+<span class="nx">ErrorHandler</span><span class="o">::</span><span class="na">register</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>It is recommended that you do this as early as possible.</p>
+</div>
+<div class="section" id="handling-fatal-errors">
+<h2>Handling fatal errors<a class="headerlink" href="#handling-fatal-errors" title="Permalink to this headline">¶</a></h2>
+<p>To handle fatal errors, you can additionally register a global
+<code class="docutils literal notranslate"><span class="pre">ExceptionHandler</span></code>:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">use</span> <span class="nx">Symfony\Component\Debug\ExceptionHandler</span><span class="p">;</span>
+
+<span class="nx">ExceptionHandler</span><span class="o">::</span><span class="na">register</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>In production you may want to disable the debug output by passing <code class="docutils literal notranslate"><span class="pre">false</span></code> as
+the <code class="docutils literal notranslate"><span class="pre">$debug</span></code> argument:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">use</span> <span class="nx">Symfony\Component\Debug\ExceptionHandler</span><span class="p">;</span>
+
+<span class="nx">ExceptionHandler</span><span class="o">::</span><span class="na">register</span><span class="p">(</span><span class="k">false</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Important caveat when using PrestoPHP on a command-line interface:
+The <code class="docutils literal notranslate"><span class="pre">ExceptionHandler</span></code> should not be enabled as it would convert an error
+to HTML output and return a non-zero exit code:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">use</span> <span class="nx">Symfony\Component\Debug\ExceptionHandler</span><span class="p">;</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">in_array</span><span class="p">(</span><span class="nx">PHP_SAPI</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;cli&#39;</span><span class="p">,</span> <span class="s1">&#39;phpdbg&#39;</span><span class="p">]))</span> <span class="p">{</span>
+    <span class="nx">ExceptionHandler</span><span class="o">::</span><span class="na">register</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">PrestoPHP</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../middlewares.html">Middleware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../organizing_controllers.html">Organizing Controllers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../services.html">Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../providers.html">Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing.html">Testing</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Cookbook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internals.html">Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html#writing-documentation">Writing Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../providers/index.html">Built-in Service Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../web_servers.html">Webserver Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Cookbook</a><ul>
+      <li>Previous: <a href="sub_requests.html" title="previous chapter">Making sub-Requests</a></li>
+      <li>Next: <a href="multiple_loggers.html" title="next chapter">Using multiple Monolog Loggers</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2010 Fabien Potencier.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/cookbook/error_handler.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

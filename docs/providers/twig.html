@@ -1,0 +1,325 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Twig &#8212; PrestoPHP 0.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Asset" href="asset.html" />
+    <link rel="prev" title="Built-in Service Providers" href="index.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="twig">
+<h1>Twig<a class="headerlink" href="#twig" title="Permalink to this headline">¶</a></h1>
+<p>The <em>TwigServiceProvider</em> provides integration with the <a class="reference external" href="https://twig.symfony.com/">Twig</a> template engine.</p>
+<div class="section" id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>twig.path</strong> (optional): Path to the directory containing twig template
+files (it can also be an array of paths).</p></li>
+<li><p><strong>twig.templates</strong> (optional): An associative array of template names to
+template contents. Use this if you want to define your templates inline.</p></li>
+<li><p><strong>twig.options</strong> (optional): An associative array of twig
+options. Check out the <a class="reference external" href="https://twig.symfony.com/doc/api.html#environment-options">twig documentation</a>
+for more information.</p></li>
+<li><p><strong>twig.form.templates</strong> (optional): An array of templates used to render
+forms (only available when the <code class="docutils literal notranslate"><span class="pre">FormServiceProvider</span></code> is enabled). The
+default theme is <code class="docutils literal notranslate"><span class="pre">form_div_layout.html.twig</span></code>, but you can use the other
+built-in themes: <code class="docutils literal notranslate"><span class="pre">form_table_layout.html.twig</span></code>,
+<code class="docutils literal notranslate"><span class="pre">bootstrap_3_layout.html.twig</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">bootstrap_3_horizontal_layout.html.twig</span></code>.</p></li>
+<li><p><strong>twig.date.format</strong> (optional): Default format used by the <code class="docutils literal notranslate"><span class="pre">date</span></code>
+filter. The format string must conform to the format accepted by
+<a class="reference external" href="https://secure.php.net/date">date()</a>.</p></li>
+<li><p><strong>twig.date.interval_format</strong> (optional): Default format used by the
+<code class="docutils literal notranslate"><span class="pre">date</span></code> filter when the filtered data is of type <a class="reference external" href="https://secure.php.net/DateInterval">DateInterval</a>.
+The format string must conform to the format accepted by
+<a class="reference external" href="https://secure.php.net/DateInterval.format">DateInterval::format()</a>.</p></li>
+<li><p><strong>twig.date.timezone</strong> (optional): Default timezone used when formatting
+dates. If set to <code class="docutils literal notranslate"><span class="pre">null</span></code> the timezone returned by <a class="reference external" href="https://secure.php.net/date_default_timezone_get">date_default_timezone_get()</a>
+is used.</p></li>
+<li><p><strong>twig.number_format.decimals</strong> (optional): Default number of decimals
+displayed by the <code class="docutils literal notranslate"><span class="pre">number_format</span></code> filter.</p></li>
+<li><p><strong>twig.number_format.decimal_point</strong> (optional): Default separator for
+the decimal point used by the <code class="docutils literal notranslate"><span class="pre">number_format</span></code> filter.</p></li>
+<li><p><strong>twig.number_format.thousands_separator</strong> (optional): Default thousands
+separator used by the <code class="docutils literal notranslate"><span class="pre">number_format</span></code> filter.</p></li>
+</ul>
+</div>
+<div class="section" id="services">
+<h2>Services<a class="headerlink" href="#services" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>twig</strong>: The <code class="docutils literal notranslate"><span class="pre">Twig\Environment</span></code> instance. The main way of
+interacting with Twig.</p></li>
+<li><p><strong>twig.loader</strong>: The loader for Twig templates which uses the <code class="docutils literal notranslate"><span class="pre">twig.path</span></code>
+and the <code class="docutils literal notranslate"><span class="pre">twig.templates</span></code> options. You can also replace the loader
+completely.</p></li>
+</ul>
+</div>
+<div class="section" id="registering">
+<h2>Registering<a class="headerlink" href="#registering" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">PrestoPHP\Provider\TwigServiceProvider</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;twig.path&#39;</span> <span class="o">=&gt;</span> <span class="no">__DIR__</span><span class="o">.</span><span class="s1">&#39;/views&#39;</span><span class="p">,</span>
+<span class="p">));</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Add Twig as a dependency:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>composer require twig/twig
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<p>The Twig provider provides a <code class="docutils literal notranslate"><span class="pre">twig</span></code> service that can render templates:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/hello/{name}&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$name</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;twig&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">render</span><span class="p">(</span><span class="s1">&#39;hello.twig&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="nv">$name</span><span class="p">,</span>
+    <span class="p">));</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="symfony-components-integration">
+<h2>Symfony Components Integration<a class="headerlink" href="#symfony-components-integration" title="Permalink to this headline">¶</a></h2>
+<p>Symfony provides a Twig bridge that provides additional integration between
+some Symfony components and Twig. Add it as a dependency:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>composer require symfony/twig-bridge
+</pre></div>
+</div>
+<p>When present, the <code class="docutils literal notranslate"><span class="pre">TwigServiceProvider</span></code> will provide you with the following
+additional capabilities.</p>
+<ul>
+<li><p>Access to the <code class="docutils literal notranslate"><span class="pre">path()</span></code> and <code class="docutils literal notranslate"><span class="pre">url()</span></code> functions. You can find more
+information in the <a class="reference external" href="https://symfony.com/doc/current/book/routing.html#generating-urls-from-a-template">Symfony Routing documentation</a>:</p>
+<div class="highlight-jinja notranslate"><div class="highlight"><pre><span></span><span class="cp">{{</span> <span class="nv">path</span><span class="o">(</span><span class="s1">&#39;homepage&#39;</span><span class="o">)</span> <span class="cp">}}</span><span class="x"></span>
+<span class="cp">{{</span> <span class="nv">url</span><span class="o">(</span><span class="s1">&#39;homepage&#39;</span><span class="o">)</span> <span class="cp">}}</span><span class="x"> </span><span class="c">{# generates the absolute url http://example.org/ #}</span><span class="x"></span>
+<span class="cp">{{</span> <span class="nv">path</span><span class="o">(</span><span class="s1">&#39;hello&#39;</span><span class="o">,</span> <span class="o">{</span><span class="nv">name</span><span class="o">:</span> <span class="s1">&#39;Fabien&#39;</span><span class="o">})</span> <span class="cp">}}</span><span class="x"></span>
+<span class="cp">{{</span> <span class="nv">url</span><span class="o">(</span><span class="s1">&#39;hello&#39;</span><span class="o">,</span> <span class="o">{</span><span class="nv">name</span><span class="o">:</span> <span class="s1">&#39;Fabien&#39;</span><span class="o">})</span> <span class="cp">}}</span><span class="x"> </span><span class="c">{# generates the absolute url http://example.org/hello/Fabien #}</span><span class="x"></span>
+</pre></div>
+</div>
+</li>
+<li><p>Access to the <code class="docutils literal notranslate"><span class="pre">absolute_url()</span></code> and <code class="docutils literal notranslate"><span class="pre">relative_path()</span></code> Twig functions.</p></li>
+</ul>
+<div class="section" id="translations-support">
+<h3>Translations Support<a class="headerlink" href="#translations-support" title="Permalink to this headline">¶</a></h3>
+<p>If you are using the <code class="docutils literal notranslate"><span class="pre">TranslationServiceProvider</span></code>, you will get the
+<code class="docutils literal notranslate"><span class="pre">trans()</span></code> and <code class="docutils literal notranslate"><span class="pre">transchoice()</span></code> functions for translation in Twig templates.
+You can find more information in the <a class="reference external" href="https://symfony.com/doc/current/book/translation.html#twig-templates">Symfony Translation documentation</a>.</p>
+</div>
+<div class="section" id="form-support">
+<h3>Form Support<a class="headerlink" href="#form-support" title="Permalink to this headline">¶</a></h3>
+<p>If you are using the <code class="docutils literal notranslate"><span class="pre">FormServiceProvider</span></code>, you will get a set of helpers for
+working with forms in templates. You can find more information in the <a class="reference external" href="https://symfony.com/doc/current/reference/forms/twig_reference.html">Symfony
+Forms reference</a>.</p>
+</div>
+<div class="section" id="security-support">
+<h3>Security Support<a class="headerlink" href="#security-support" title="Permalink to this headline">¶</a></h3>
+<p>If you are using the <code class="docutils literal notranslate"><span class="pre">SecurityServiceProvider</span></code>, you will have access to the
+<code class="docutils literal notranslate"><span class="pre">is_granted()</span></code> function in templates. You can find more information in the
+<a class="reference external" href="https://symfony.com/doc/current/book/security.html#access-control-in-templates">Symfony Security documentation</a>.</p>
+</div>
+<div class="section" id="web-link-support">
+<h3>Web Link Support<a class="headerlink" href="#web-link-support" title="Permalink to this headline">¶</a></h3>
+<p>If you are using the <code class="docutils literal notranslate"><span class="pre">symfony/web-link</span></code> component, you will have access to the
+<code class="docutils literal notranslate"><span class="pre">preload()</span></code>, <code class="docutils literal notranslate"><span class="pre">prefetch()</span></code>, <code class="docutils literal notranslate"><span class="pre">prerender()</span></code>, <code class="docutils literal notranslate"><span class="pre">dns_prefetch()</span></code>,
+<code class="docutils literal notranslate"><span class="pre">preconnect()</span></code> and <code class="docutils literal notranslate"><span class="pre">link()</span></code> functions in templates. You can find more
+information in the <a class="reference external" href="https://symfony.com/doc/current/components/weblink/introduction.html">Symfony WebLink documentation</a>.</p>
+</div>
+<div class="section" id="global-variable">
+<h3>Global Variable<a class="headerlink" href="#global-variable" title="Permalink to this headline">¶</a></h3>
+<p>When the Twig bridge is available, the <code class="docutils literal notranslate"><span class="pre">global</span></code> variable refers to an
+instance of <a class="reference external" href="https://api.symfony.com/master/Symfony/Bridge/Twig/AppVariable.html">AppVariable</a>.
+It gives access to the following methods:</p>
+<div class="highlight-jinja notranslate"><div class="highlight"><pre><span></span><span class="c">{# The current Request #}</span><span class="x"></span>
+<span class="cp">{{</span> <span class="nv">global.request</span> <span class="cp">}}</span><span class="x"></span>
+
+<span class="c">{# The current User (when security is enabled) #}</span><span class="x"></span>
+<span class="cp">{{</span> <span class="nv">global.user</span> <span class="cp">}}</span><span class="x"></span>
+
+<span class="c">{# The current Session #}</span><span class="x"></span>
+<span class="cp">{{</span> <span class="nv">global.session</span> <span class="cp">}}</span><span class="x"></span>
+
+<span class="c">{# The debug flag #}</span><span class="x"></span>
+<span class="cp">{{</span> <span class="nv">global.debug</span> <span class="cp">}}</span><span class="x"></span>
+
+<span class="c">{# The flash messages (Symfony 3.3 or later) #}</span><span class="x"></span>
+<span class="cp">{{</span> <span class="nv">global.flashes</span> <span class="cp">}}</span><span class="x"></span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="rendering-a-controller">
+<h3>Rendering a Controller<a class="headerlink" href="#rendering-a-controller" title="Permalink to this headline">¶</a></h3>
+<p>A <code class="docutils literal notranslate"><span class="pre">render</span></code> function is also registered to help you render another controller
+from a template (available when the <a class="reference internal" href="http_fragment.html"><span class="doc">HttpFragment Service Provider</span></a> is registered):</p>
+<div class="highlight-jinja notranslate"><div class="highlight"><pre><span></span><span class="cp">{{</span> <span class="nv">render</span><span class="o">(</span><span class="nv">url</span><span class="o">(</span><span class="s1">&#39;sidebar&#39;</span><span class="o">))</span> <span class="cp">}}</span><span class="x"></span>
+
+<span class="c">{# or you can reference a controller directly without defining a route for it #}</span><span class="x"></span>
+<span class="cp">{{</span> <span class="nv">render</span><span class="o">(</span><span class="nv">controller</span><span class="o">(</span><span class="nv">controller</span><span class="o">))</span> <span class="cp">}}</span><span class="x"></span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You must prepend the <code class="docutils literal notranslate"><span class="pre">app.request.baseUrl</span></code> to render calls to ensure
+that the render works when deployed into a sub-directory of the docroot.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Read the Twig <a class="reference external" href="https://symfony.com/doc/current/reference/twig_reference.html#controller">reference</a> for Symfony document to learn more about the
+various Twig functions.</p>
+</div>
+</div>
+</div>
+<div class="section" id="traits">
+<h2>Traits<a class="headerlink" href="#traits" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">PrestoPHP\Application\TwigTrait</span></code> adds the following shortcuts:</p>
+<ul class="simple">
+<li><p><strong>render</strong>: Renders a view with the given parameters and returns a Response
+object.</p></li>
+</ul>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">return</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">render</span><span class="p">(</span><span class="s1">&#39;index.html&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Fabien&#39;</span><span class="p">]);</span>
+
+<span class="nv">$response</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Response</span><span class="p">();</span>
+<span class="nv">$response</span><span class="o">-&gt;</span><span class="na">setTtl</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+
+<span class="k">return</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">render</span><span class="p">(</span><span class="s1">&#39;index.html&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Fabien&#39;</span><span class="p">],</span> <span class="nv">$response</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="c1">// stream a view</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\StreamedResponse</span><span class="p">;</span>
+
+<span class="k">return</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">render</span><span class="p">(</span><span class="s1">&#39;index.html&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Fabien&#39;</span><span class="p">],</span> <span class="k">new</span> <span class="nx">StreamedResponse</span><span class="p">());</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>renderView</strong>: Renders a view with the given parameters and returns a string.</p></li>
+</ul>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$content</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">renderView</span><span class="p">(</span><span class="s1">&#39;index.html&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Fabien&#39;</span><span class="p">]);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="customization">
+<h2>Customization<a class="headerlink" href="#customization" title="Permalink to this headline">¶</a></h2>
+<p>You can configure the Twig environment before using it by extending the
+<code class="docutils literal notranslate"><span class="pre">twig</span></code> service:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">extend</span><span class="p">(</span><span class="s1">&#39;twig&#39;</span><span class="p">,</span> <span class="k">function</span><span class="p">(</span><span class="nv">$twig</span><span class="p">,</span> <span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$twig</span><span class="o">-&gt;</span><span class="na">addGlobal</span><span class="p">(</span><span class="s1">&#39;pi&#39;</span><span class="p">,</span> <span class="mf">3.14</span><span class="p">);</span>
+    <span class="nv">$twig</span><span class="o">-&gt;</span><span class="na">addFilter</span><span class="p">(</span><span class="s1">&#39;levenshtein&#39;</span><span class="p">,</span> <span class="k">new</span> <span class="nx">\Twig_Filter_Function</span><span class="p">(</span><span class="s1">&#39;levenshtein&#39;</span><span class="p">));</span>
+
+    <span class="k">return</span> <span class="nv">$twig</span><span class="p">;</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>For more information, check out the <a class="reference external" href="https://twig.symfony.com">official Twig documentation</a>.</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">PrestoPHP</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../middlewares.html">Middleware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../organizing_controllers.html">Organizing Controllers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../services.html">Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../providers.html">Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cookbook/index.html">Cookbook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internals.html">Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html#writing-documentation">Writing Documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Built-in Service Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../web_servers.html">Webserver Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Built-in Service Providers</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Built-in Service Providers</a></li>
+      <li>Next: <a href="asset.html" title="next chapter">Asset</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2010 Fabien Potencier.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/providers/twig.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

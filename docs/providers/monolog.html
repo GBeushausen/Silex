@@ -1,0 +1,226 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Monolog &#8212; PrestoPHP 0.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Session" href="session.html" />
+    <link rel="prev" title="Asset" href="asset.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="monolog">
+<h1>Monolog<a class="headerlink" href="#monolog" title="Permalink to this headline">¶</a></h1>
+<p>The <em>MonologServiceProvider</em> provides a default logging mechanism through
+Jordi Boggiano’s <a class="reference external" href="https://github.com/Seldaek/monolog">Monolog</a> library.</p>
+<p>It will log requests and errors and allow you to add logging to your
+application. This allows you to debug and monitor the behaviour,
+even in production.</p>
+<div class="section" id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p><strong>monolog.logfile</strong>: File where logs are written to.</p></li>
+<li><p><strong>monolog.bubble</strong> (optional): Whether the messages that are handled can bubble up the stack or not.</p></li>
+<li><p><strong>monolog.permission</strong> (optional): File permissions default (null), nothing change.</p></li>
+<li><p><strong>monolog.level</strong> (optional): Level of logging, defaults
+to <code class="docutils literal notranslate"><span class="pre">DEBUG</span></code>. Must be one of <code class="docutils literal notranslate"><span class="pre">Logger::DEBUG</span></code>, <code class="docutils literal notranslate"><span class="pre">Logger::INFO</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Logger::WARNING</span></code>, <code class="docutils literal notranslate"><span class="pre">Logger::ERROR</span></code>. <code class="docutils literal notranslate"><span class="pre">DEBUG</span></code> will log
+everything, <code class="docutils literal notranslate"><span class="pre">INFO</span></code> will log everything except <code class="docutils literal notranslate"><span class="pre">DEBUG</span></code>,
+etc.</p>
+<p>In addition to the <code class="docutils literal notranslate"><span class="pre">Logger::</span></code> constants, it is also possible to supply the
+level in string form, for example: <code class="docutils literal notranslate"><span class="pre">&quot;DEBUG&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;INFO&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;WARNING&quot;</span></code>,
+<code class="docutils literal notranslate"><span class="pre">&quot;ERROR&quot;</span></code>.</p>
+<p>PSR-3 log levels from <code class="docutils literal notranslate"><span class="pre">\Psr\Log\LogLevel::</span></code> constants are also supported.</p>
+</li>
+<li><p><strong>monolog.name</strong> (optional): Name of the monolog channel,
+defaults to <code class="docutils literal notranslate"><span class="pre">myapp</span></code>.</p></li>
+<li><p><strong>monolog.exception.logger_filter</strong> (optional): An anonymous function that
+returns an error level for on uncaught exception that should be logged.</p></li>
+<li><p><strong>monolog.use_error_handler</strong> (optional): Whether errors and uncaught exceptions
+should be handled by the Monolog <code class="docutils literal notranslate"><span class="pre">ErrorHandler</span></code> class and added to the log.
+By default the error handler is enabled unless the application <code class="docutils literal notranslate"><span class="pre">debug</span></code> parameter
+is set to true.</p>
+<p>Please note that enabling the error handler may silence some errors,
+ignoring the PHP <code class="docutils literal notranslate"><span class="pre">display_errors</span></code> configuration setting.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="services">
+<h2>Services<a class="headerlink" href="#services" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p><strong>monolog</strong>: The monolog logger instance.</p>
+<p>Example usage:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;monolog&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">debug</span><span class="p">(</span><span class="s1">&#39;Testing the Monolog logging.&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>monolog.listener</strong>: An event listener to log requests, responses and errors.</p></li>
+</ul>
+</div>
+<div class="section" id="registering">
+<h2>Registering<a class="headerlink" href="#registering" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">PrestoPHP\Provider\MonologServiceProvider</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;monolog.logfile&#39;</span> <span class="o">=&gt;</span> <span class="no">__DIR__</span><span class="o">.</span><span class="s1">&#39;/development.log&#39;</span><span class="p">,</span>
+<span class="p">));</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Add Monolog as a dependency:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>composer require monolog/monolog
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<p>The MonologServiceProvider provides a <code class="docutils literal notranslate"><span class="pre">monolog</span></code> service. You can use it to
+add log entries for any logging level through <code class="docutils literal notranslate"><span class="pre">debug()</span></code>, <code class="docutils literal notranslate"><span class="pre">info()</span></code>,
+<code class="docutils literal notranslate"><span class="pre">warning()</span></code> and <code class="docutils literal notranslate"><span class="pre">error()</span></code>:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Response</span><span class="p">;</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">post</span><span class="p">(</span><span class="s1">&#39;/user&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">()</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+
+    <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;monolog&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">info</span><span class="p">(</span><span class="nb">sprintf</span><span class="p">(</span><span class="s2">&quot;User &#39;%s&#39; registered.&quot;</span><span class="p">,</span> <span class="nv">$username</span><span class="p">));</span>
+
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">Response</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="mi">201</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="customization">
+<h2>Customization<a class="headerlink" href="#customization" title="Permalink to this headline">¶</a></h2>
+<p>You can configure Monolog (like adding or changing the handlers) before using
+it by extending the <code class="docutils literal notranslate"><span class="pre">monolog</span></code> service:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">extend</span><span class="p">(</span><span class="s1">&#39;monolog&#39;</span><span class="p">,</span> <span class="k">function</span><span class="p">(</span><span class="nv">$monolog</span><span class="p">,</span> <span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$monolog</span><span class="o">-&gt;</span><span class="na">pushHandler</span><span class="p">(</span><span class="o">...</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="nv">$monolog</span><span class="p">;</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>By default, all requests, responses and errors are logged by an event listener
+registered as a service called <cite>monolog.listener</cite>. You can replace or remove
+this service if you want to modify or disable the logged information.</p>
+</div>
+<div class="section" id="traits">
+<h2>Traits<a class="headerlink" href="#traits" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">PrestoPHP\Application\MonologTrait</span></code> adds the following shortcuts:</p>
+<ul class="simple">
+<li><p><strong>log</strong>: Logs a message.</p></li>
+</ul>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">log</span><span class="p">(</span><span class="nb">sprintf</span><span class="p">(</span><span class="s2">&quot;User &#39;%s&#39; registered.&quot;</span><span class="p">,</span> <span class="nv">$username</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>For more information, check out the <a class="reference external" href="https://github.com/Seldaek/monolog">Monolog documentation</a>.</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">PrestoPHP</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../middlewares.html">Middleware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../organizing_controllers.html">Organizing Controllers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../services.html">Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../providers.html">Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cookbook/index.html">Cookbook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internals.html">Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html#writing-documentation">Writing Documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Built-in Service Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../web_servers.html">Webserver Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Built-in Service Providers</a><ul>
+      <li>Previous: <a href="asset.html" title="previous chapter">Asset</a></li>
+      <li>Next: <a href="session.html" title="next chapter">Session</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2010 Fabien Potencier.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/providers/monolog.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

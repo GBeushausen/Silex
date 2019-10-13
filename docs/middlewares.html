@@ -1,0 +1,275 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Middleware &#8212; PrestoPHP 0.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Organizing Controllers" href="organizing_controllers.html" />
+    <link rel="prev" title="Usage" href="usage.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="middleware">
+<h1>Middleware<a class="headerlink" href="#middleware" title="Permalink to this headline">¶</a></h1>
+<p>PrestoPHP allows you to run code, that changes the default PrestoPHP behavior, at
+different stages during the handling of a request through <em>middleware</em>:</p>
+<ul class="simple">
+<li><p><em>Application middleware</em> is triggered independently of the current handled
+request;</p></li>
+<li><p><em>Route middleware</em> is triggered when its associated route is matched.</p></li>
+</ul>
+<div class="section" id="application-middleware">
+<h2>Application Middleware<a class="headerlink" href="#application-middleware" title="Permalink to this headline">¶</a></h2>
+<p>Application middleware is only run for the “master” Request.</p>
+<div class="section" id="before-middleware">
+<h3>Before Middleware<a class="headerlink" href="#before-middleware" title="Permalink to this headline">¶</a></h3>
+<p>A <em>before</em> application middleware allows you to tweak the Request before the
+controller is executed:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">before</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nx">Request</span> <span class="nv">$request</span><span class="p">,</span> <span class="nx">Application</span> <span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>By default, the middleware is run after the routing and the security.</p>
+<p>If you want your middleware to be run even if an exception is thrown early on
+(on a 404 or 403 error for instance), then, you need to register it as an
+early event:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">before</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nx">Request</span> <span class="nv">$request</span><span class="p">,</span> <span class="nx">Application</span> <span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">},</span> <span class="nx">Application</span><span class="o">::</span><span class="na">EARLY_EVENT</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>In this case, the routing and the security won’t have been executed, and so you
+won’t have access to the locale, the current route, or the security user.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The before middleware is an event registered on the Symfony <em>request</em>
+event.</p>
+</div>
+</div>
+<div class="section" id="after-middleware">
+<h3>After Middleware<a class="headerlink" href="#after-middleware" title="Permalink to this headline">¶</a></h3>
+<p>An <em>after</em> application middleware allows you to tweak the Response before it
+is sent to the client:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">after</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nx">Request</span> <span class="nv">$request</span><span class="p">,</span> <span class="nx">Response</span> <span class="nv">$response</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The after middleware is an event registered on the Symfony <em>response</em>
+event.</p>
+</div>
+</div>
+<div class="section" id="finish-middleware">
+<h3>Finish Middleware<a class="headerlink" href="#finish-middleware" title="Permalink to this headline">¶</a></h3>
+<p>A <em>finish</em> application middleware allows you to execute tasks after the
+Response has been sent to the client (like sending emails or logging):</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">finish</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nx">Request</span> <span class="nv">$request</span><span class="p">,</span> <span class="nx">Response</span> <span class="nv">$response</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+    <span class="c1">// Warning: modifications to the Request or Response will be ignored</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The finish middleware is an event registered on the Symfony <em>terminate</em>
+event.</p>
+</div>
+</div>
+</div>
+<div class="section" id="route-middleware">
+<h2>Route Middleware<a class="headerlink" href="#route-middleware" title="Permalink to this headline">¶</a></h2>
+<p>Route middleware is added to routes or route collections and it is only
+triggered when the corresponding route is matched. You can also stack them:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/somewhere&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">})</span>
+<span class="o">-&gt;</span><span class="na">before</span><span class="p">(</span><span class="nv">$before1</span><span class="p">)</span>
+<span class="o">-&gt;</span><span class="na">before</span><span class="p">(</span><span class="nv">$before2</span><span class="p">)</span>
+<span class="o">-&gt;</span><span class="na">after</span><span class="p">(</span><span class="nv">$after1</span><span class="p">)</span>
+<span class="o">-&gt;</span><span class="na">after</span><span class="p">(</span><span class="nv">$after2</span><span class="p">)</span>
+<span class="p">;</span>
+</pre></div>
+</div>
+<div class="section" id="id1">
+<h3>Before Middleware<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>A <em>before</em> route middleware is fired just before the route callback, but after
+the <em>before</em> application middleware:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$before</span> <span class="o">=</span> <span class="k">function</span> <span class="p">(</span><span class="nx">Request</span> <span class="nv">$request</span><span class="p">,</span> <span class="nx">Application</span> <span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">};</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/somewhere&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">})</span>
+<span class="o">-&gt;</span><span class="na">before</span><span class="p">(</span><span class="nv">$before</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id2">
+<h3>After Middleware<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>An <em>after</em> route middleware is fired just after the route callback, but before
+the application <em>after</em> application middleware:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$after</span> <span class="o">=</span> <span class="k">function</span> <span class="p">(</span><span class="nx">Request</span> <span class="nv">$request</span><span class="p">,</span> <span class="nx">Response</span> <span class="nv">$response</span><span class="p">,</span> <span class="nx">Application</span> <span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">};</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/somewhere&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">})</span>
+<span class="o">-&gt;</span><span class="na">after</span><span class="p">(</span><span class="nv">$after</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="middleware-priority">
+<h2>Middleware Priority<a class="headerlink" href="#middleware-priority" title="Permalink to this headline">¶</a></h2>
+<p>You can add as much middleware as you want, in which case they are triggered
+in the same order as you added them.</p>
+<p>You can explicitly control the priority of your middleware by passing an
+additional argument to the registration methods:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">before</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nx">Request</span> <span class="nv">$request</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">},</span> <span class="mi">32</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>As a convenience, two constants allow you to register an event as early as
+possible or as late as possible:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">before</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nx">Request</span> <span class="nv">$request</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">},</span> <span class="nx">Application</span><span class="o">::</span><span class="na">EARLY_EVENT</span><span class="p">);</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">before</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nx">Request</span> <span class="nv">$request</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">},</span> <span class="nx">Application</span><span class="o">::</span><span class="na">LATE_EVENT</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="short-circuiting-the-controller">
+<h2>Short-circuiting the Controller<a class="headerlink" href="#short-circuiting-the-controller" title="Permalink to this headline">¶</a></h2>
+<p>If a <em>before</em> middleware returns a <code class="docutils literal notranslate"><span class="pre">Response</span></code> object, the request handling is
+short-circuited (the next middleware won’t be run, nor the route
+callback), and the Response is passed to the <em>after</em> middleware right away:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">before</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nx">Request</span> <span class="nv">$request</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// redirect the user to the login screen if access to the Resource is protected</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nx">RedirectResponse</span><span class="p">(</span><span class="s1">&#39;/login&#39;</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">RuntimeException</span></code> is thrown if a before middleware does not return a
+Response or <code class="docutils literal notranslate"><span class="pre">null</span></code>.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">PrestoPHP</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Middleware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="organizing_controllers.html">Organizing Controllers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="services.html">Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="providers.html">Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cookbook/index.html">Cookbook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="internals.html">Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html#writing-documentation">Writing Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="providers/index.html">Built-in Service Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web_servers.html">Webserver Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="usage.html" title="previous chapter">Usage</a></li>
+      <li>Next: <a href="organizing_controllers.html" title="next chapter">Organizing Controllers</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2010 Fabien Potencier.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/middlewares.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

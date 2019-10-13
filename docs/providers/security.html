@@ -1,0 +1,802 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Security &#8212; PrestoPHP 0.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Remember Me" href="remember_me.html" />
+    <link rel="prev" title="HTTP Fragment" href="http_fragment.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="security">
+<h1>Security<a class="headerlink" href="#security" title="Permalink to this headline">¶</a></h1>
+<p>The <em>SecurityServiceProvider</em> manages authentication and authorization for
+your applications.</p>
+<div class="section" id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>security.hide_user_not_found</strong> (optional): Defines whether to hide user not
+found exception or not. Defaults to <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p></li>
+<li><p><strong>security.encoder.native.cost</strong> (optional): Defines BCrypt password encoder cost. Defaults to 13.</p></li>
+<li><p><strong>security.role_hierarchy</strong>:(optional): Defines a map of roles including other roles.</p></li>
+<li><p><strong>security.access_rules</strong> (optional): Defines rules based on paths and roles.
+See <a class="reference external" href="#defining-access-rules">Defining Access Rule</a>.</p></li>
+</ul>
+</div>
+<div class="section" id="services">
+<h2>Services<a class="headerlink" href="#services" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>security.token_storage</strong>: Gives access to the user token.</p></li>
+<li><p><strong>security.authorization_checker</strong>: Allows to check authorizations for the
+users.</p></li>
+<li><p><strong>security.authentication_manager</strong>: An instance of
+<a class="reference external" href="https://api.symfony.com/master/Symfony/Component/Security/Core/Authentication/AuthenticationProviderManager.html">AuthenticationProviderManager</a>,
+responsible for authentication.</p></li>
+<li><p><strong>security.access_manager</strong>: An instance of <a class="reference external" href="https://api.symfony.com/master/Symfony/Component/Security/Core/Authorization/AccessDecisionManager.html">AccessDecisionManager</a>,
+responsible for authorization.</p></li>
+<li><p><strong>security.session_strategy</strong>: Define the session strategy used for
+authentication (default to a migration strategy).</p></li>
+<li><p><strong>security.user_checker</strong>: Checks user flags after authentication.</p></li>
+<li><p><strong>security.last_error</strong>: Returns the last authentication error message when
+given a Request object.</p></li>
+<li><p><strong>security.authentication_utils</strong>: Returns the AuthenticationUtils service
+allowing you to get last authentication exception or last username.</p></li>
+<li><p><strong>security.encoder_factory</strong>: Defines the encoding strategies for user
+passwords (uses <code class="docutils literal notranslate"><span class="pre">security.default_encoder</span></code>).</p></li>
+<li><p><strong>security.default_encoder</strong>: The encoder to use by default for all users (BCrypt).</p></li>
+<li><p><strong>security.encoder.digest</strong>: Digest password encoder.</p></li>
+<li><p><strong>security.encoder.bcrypt</strong>: BCrypt password encoder.</p></li>
+<li><p><strong>security.encoder.pbkdf2</strong>: Pbkdf2 password encoder.</p></li>
+<li><p><strong>user</strong>: Returns the current user</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The service provider defines many other services that are used internally
+but rarely need to be customized.</p>
+</div>
+</div>
+<div class="section" id="registering">
+<h2>Registering<a class="headerlink" href="#registering" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">PrestoPHP\Provider\SecurityServiceProvider</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;security.firewalls&#39;</span> <span class="o">=&gt;</span> <span class="c1">// see below</span>
+<span class="p">));</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Add the Symfony Security Component as a dependency:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>composer require symfony/security
+</pre></div>
+</div>
+</div>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>If you’re using a form to authenticate users, you need to enable
+<code class="docutils literal notranslate"><span class="pre">SessionServiceProvider</span></code>.</p>
+</div>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>The security features are only available after the Application has been
+booted. So, if you want to use it outside of the handling of a request,
+don’t forget to call <code class="docutils literal notranslate"><span class="pre">boot()</span></code> first:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">boot</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<p>The Symfony Security component is powerful. To learn more about it, read the
+<a class="reference external" href="https://symfony.com/doc/current/security.html">Symfony Security documentation</a>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>When a security configuration does not behave as expected, enable logging
+(with the Monolog extension for instance) as the Security Component logs a
+lot of interesting information about what it does and why.</p>
+</div>
+<p>Below is a list of recipes that cover some common use cases.</p>
+<div class="section" id="accessing-the-current-user">
+<h3>Accessing the current User<a class="headerlink" href="#accessing-the-current-user" title="Permalink to this headline">¶</a></h3>
+<p>The current user information is stored in a token that is accessible via the
+<code class="docutils literal notranslate"><span class="pre">security</span></code> service:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$token</span> <span class="o">=</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.token_storage&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">getToken</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>If there is no information about the user, the token is <code class="docutils literal notranslate"><span class="pre">null</span></code>. If the user
+is known, you can get it with a call to <code class="docutils literal notranslate"><span class="pre">getUser()</span></code>:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="p">(</span><span class="k">null</span> <span class="o">!==</span> <span class="nv">$token</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$user</span> <span class="o">=</span> <span class="nv">$token</span><span class="o">-&gt;</span><span class="na">getUser</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The user can be a string, an object with a <code class="docutils literal notranslate"><span class="pre">__toString()</span></code> method, or an
+instance of <a class="reference external" href="https://api.symfony.com/master/Symfony/Component/Security/Core/User/UserInterface.html">UserInterface</a>.</p>
+</div>
+<div class="section" id="securing-a-path-with-http-authentication">
+<h3>Securing a Path with HTTP Authentication<a class="headerlink" href="#securing-a-path-with-http-authentication" title="Permalink to this headline">¶</a></h3>
+<p>The following configuration uses HTTP basic authentication to secure URLs
+under <code class="docutils literal notranslate"><span class="pre">/admin/</span></code>:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.firewalls&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;admin&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;pattern&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;^/admin&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;http&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+        <span class="s1">&#39;users&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+            <span class="c1">// raw password is foo</span>
+            <span class="s1">&#39;admin&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;ROLE_ADMIN&#39;</span><span class="p">,</span> <span class="s1">&#39;$2y$10$3i9/lVd8UOFIJ6PAMFt8gu3/r5g0qeCJvoSlLCsvMTythye19F77a&#39;</span><span class="p">),</span>
+        <span class="p">),</span>
+    <span class="p">),</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">pattern</span></code> is a regular expression on the URL path; the <code class="docutils literal notranslate"><span class="pre">http</span></code> setting
+tells the security layer to use HTTP basic authentication and the <code class="docutils literal notranslate"><span class="pre">users</span></code>
+entry defines valid users.</p>
+<p>If you want to restrict the firewall by more than the URL pattern (like the
+HTTP method, the client IP, the hostname, or any Request attributes), use an
+instance of a <a class="reference external" href="https://api.symfony.com/master/Symfony/Component/HttpFoundation/RequestMatcher.html">RequestMatcher</a>
+for the <code class="docutils literal notranslate"><span class="pre">pattern</span></code> option:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\RequestMatcher</span><span class="p">;</span>
+
+<span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.firewalls&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;admin&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;pattern&#39;</span> <span class="o">=&gt;</span> <span class="k">new</span> <span class="nx">RequestMatcher</span><span class="p">(</span><span class="s1">&#39;^/admin&#39;</span><span class="p">,</span> <span class="s1">&#39;example.com&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">),</span>
+        <span class="c1">// ...</span>
+    <span class="p">),</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>Each user is defined with the following information:</p>
+<ul class="simple">
+<li><p>The role or an array of roles for the user (roles are strings beginning with
+<code class="docutils literal notranslate"><span class="pre">ROLE_</span></code> and ending with anything you want);</p></li>
+<li><p>The user encoded password.</p></li>
+</ul>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>All users must at least have one role associated with them.</p>
+</div>
+<p>The default configuration of the extension enforces encoded passwords. To
+generate a valid encoded password from a raw password, use the
+<code class="docutils literal notranslate"><span class="pre">security.encoder_factory</span></code> service:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="c1">// find the encoder for a UserInterface instance</span>
+<span class="nv">$encoder</span> <span class="o">=</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.encoder_factory&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">getEncoder</span><span class="p">(</span><span class="nv">$user</span><span class="p">);</span>
+
+<span class="c1">// compute the encoded password for foo</span>
+<span class="nv">$password</span> <span class="o">=</span> <span class="nv">$encoder</span><span class="o">-&gt;</span><span class="na">encodePassword</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="nv">$user</span><span class="o">-&gt;</span><span class="na">getSalt</span><span class="p">());</span>
+</pre></div>
+</div>
+<p>When the user is authenticated, the user stored in the token is an instance of
+<a class="reference external" href="https://api.symfony.com/master/Symfony/Component/Security/Core/User/User.html">User</a></p>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>If you are using php-cgi under Apache, you need to add this configuration
+to make things work correctly:</p>
+<div class="highlight-apache notranslate"><div class="highlight"><pre><span></span><span class="nb">RewriteEngine</span> <span class="k">On</span>
+<span class="nb">RewriteCond</span> %{HTTP:Authorization} ^(.+)$
+<span class="nb">RewriteRule</span> .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+<span class="nb">RewriteCond</span> %{REQUEST_FILENAME} !-f
+<span class="nb">RewriteRule</span> ^(.*)$ app.php [QSA,L]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="securing-a-path-with-a-form">
+<h3>Securing a Path with a Form<a class="headerlink" href="#securing-a-path-with-a-form" title="Permalink to this headline">¶</a></h3>
+<p>Using a form to authenticate users is very similar to the above configuration.
+Instead of using the <code class="docutils literal notranslate"><span class="pre">http</span></code> setting, use the <code class="docutils literal notranslate"><span class="pre">form</span></code> one and define these
+two parameters:</p>
+<ul class="simple">
+<li><p><strong>login_path</strong>: The login path where the user is redirected when they are
+accessing a secured area without being authenticated so that they can enter
+their credentials;</p></li>
+<li><p><strong>check_path</strong>: The check URL used by Symfony to validate the credentials of
+the user.</p></li>
+</ul>
+<p>Here is how to secure all URLs under <code class="docutils literal notranslate"><span class="pre">/admin/</span></code> with a form:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.firewalls&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;admin&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;pattern&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;^/admin/&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;form&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;login_path&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;/login&#39;</span><span class="p">,</span> <span class="s1">&#39;check_path&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;/admin/login_check&#39;</span><span class="p">),</span>
+        <span class="s1">&#39;users&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+            <span class="s1">&#39;admin&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;ROLE_ADMIN&#39;</span><span class="p">,</span> <span class="s1">&#39;$2y$10$3i9/lVd8UOFIJ6PAMFt8gu3/r5g0qeCJvoSlLCsvMTythye19F77a&#39;</span><span class="p">),</span>
+        <span class="p">),</span>
+    <span class="p">),</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>Always keep in mind the following two golden rules:</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">login_path</span></code> path must always be defined <strong>outside</strong> the secured area
+(or if it is in the secured area, the <code class="docutils literal notranslate"><span class="pre">anonymous</span></code> authentication mechanism
+must be enabled – see below);</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">check_path</span></code> path must always be defined <strong>inside</strong> the secured area.</p></li>
+</ul>
+<p>For the login form to work, create a controller like the following:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Request</span><span class="p">;</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/login&#39;</span><span class="p">,</span> <span class="k">function</span><span class="p">(</span><span class="nx">Request</span> <span class="nv">$request</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;twig&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">render</span><span class="p">(</span><span class="s1">&#39;login.html&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;error&#39;</span>         <span class="o">=&gt;</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.last_error&#39;</span><span class="p">](</span><span class="nv">$request</span><span class="p">),</span>
+        <span class="s1">&#39;last_username&#39;</span> <span class="o">=&gt;</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;session&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;_security.last_username&#39;</span><span class="p">),</span>
+    <span class="p">));</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">error</span></code> and <code class="docutils literal notranslate"><span class="pre">last_username</span></code> variables contain the last authentication
+error and the last username entered by the user in case of an authentication
+error.</p>
+<p>If you want to have the last error message translated, you would need to use
+the <code class="docutils literal notranslate"><span class="pre">security.authentication_utils</span></code> service and retrieve
+the actual <code class="docutils literal notranslate"><span class="pre">AuthenticationException</span></code> instance.</p>
+<p>Create the associated template:</p>
+<div class="highlight-jinja notranslate"><div class="highlight"><pre><span></span><span class="x">&lt;form action=&quot;</span><span class="cp">{{</span> <span class="nv">path</span><span class="o">(</span><span class="s1">&#39;admin_login_check&#39;</span><span class="o">)</span> <span class="cp">}}</span><span class="x">&quot; method=&quot;post&quot;&gt;</span>
+<span class="x">    </span><span class="cp">{{</span> <span class="nv">error</span> <span class="cp">}}</span><span class="x"></span>
+<span class="x">    &lt;input type=&quot;text&quot; name=&quot;_username&quot; value=&quot;</span><span class="cp">{{</span> <span class="nv">last_username</span> <span class="cp">}}</span><span class="x">&quot; /&gt;</span>
+<span class="x">    &lt;input type=&quot;password&quot; name=&quot;_password&quot; value=&quot;&quot; /&gt;</span>
+<span class="x">    &lt;input type=&quot;submit&quot; /&gt;</span>
+<span class="x">&lt;/form&gt;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">admin_login_check</span></code> route is automatically defined by PrestoPHP and its
+name is derived from the <code class="docutils literal notranslate"><span class="pre">check_path</span></code> value (all <code class="docutils literal notranslate"><span class="pre">/</span></code> are replaced with
+<code class="docutils literal notranslate"><span class="pre">_</span></code> and the leading <code class="docutils literal notranslate"><span class="pre">/</span></code> is stripped).</p>
+</div>
+</div>
+<div class="section" id="defining-more-than-one-firewall">
+<h3>Defining more than one Firewall<a class="headerlink" href="#defining-more-than-one-firewall" title="Permalink to this headline">¶</a></h3>
+<p>You are not limited to define one firewall per project.</p>
+<p>Configuring several firewalls is useful when you want to secure different
+parts of your website with different authentication strategies or for
+different users (like using an HTTP basic authentication for the website API
+and a form to secure your website administration area).</p>
+<p>It’s also useful when you want to secure all URLs except the login form:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.firewalls&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;login&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;pattern&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;^/login$&#39;</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="s1">&#39;secured&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;pattern&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;^.*$&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;form&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;login_path&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;/login&#39;</span><span class="p">,</span> <span class="s1">&#39;check_path&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;/login_check&#39;</span><span class="p">),</span>
+        <span class="s1">&#39;users&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+            <span class="s1">&#39;admin&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;ROLE_ADMIN&#39;</span><span class="p">,</span> <span class="s1">&#39;$2y$10$3i9/lVd8UOFIJ6PAMFt8gu3/r5g0qeCJvoSlLCsvMTythye19F77a&#39;</span><span class="p">),</span>
+        <span class="p">),</span>
+    <span class="p">),</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>The order of the firewall configurations is significant as the first one to
+match wins. The above configuration first ensures that the <code class="docutils literal notranslate"><span class="pre">/login</span></code> URL is
+not secured (no authentication settings), and then it secures all other URLs.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>You can toggle all registered authentication mechanisms for a particular
+area on and off with the <code class="docutils literal notranslate"><span class="pre">security</span></code> flag:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.firewalls&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;api&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;pattern&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;^/api&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;security&#39;</span> <span class="o">=&gt;</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;debug&#39;</span><span class="p">]</span> <span class="o">?</span> <span class="k">false</span> <span class="o">:</span> <span class="k">true</span><span class="p">,</span>
+        <span class="s1">&#39;wsse&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+
+        <span class="c1">// ...</span>
+    <span class="p">),</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="adding-a-logout">
+<h3>Adding a Logout<a class="headerlink" href="#adding-a-logout" title="Permalink to this headline">¶</a></h3>
+<p>When using a form for authentication, you can let users log out if you add the
+<code class="docutils literal notranslate"><span class="pre">logout</span></code> setting, where <code class="docutils literal notranslate"><span class="pre">logout_path</span></code> must match the main firewall
+pattern:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.firewalls&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;secured&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;pattern&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;^/admin/&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;form&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;login_path&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;/login&#39;</span><span class="p">,</span> <span class="s1">&#39;check_path&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;/admin/login_check&#39;</span><span class="p">),</span>
+        <span class="s1">&#39;logout&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;logout_path&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;/admin/logout&#39;</span><span class="p">,</span> <span class="s1">&#39;invalidate_session&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">),</span>
+
+        <span class="c1">// ...</span>
+    <span class="p">),</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>A route is automatically generated, based on the configured path (all <code class="docutils literal notranslate"><span class="pre">/</span></code>
+are replaced with <code class="docutils literal notranslate"><span class="pre">_</span></code> and the leading <code class="docutils literal notranslate"><span class="pre">/</span></code> is stripped):</p>
+<div class="highlight-jinja notranslate"><div class="highlight"><pre><span></span><span class="x">&lt;a href=&quot;</span><span class="cp">{{</span> <span class="nv">path</span><span class="o">(</span><span class="s1">&#39;admin_logout&#39;</span><span class="o">)</span> <span class="cp">}}</span><span class="x">&quot;&gt;Logout&lt;/a&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="allowing-anonymous-users">
+<h3>Allowing Anonymous Users<a class="headerlink" href="#allowing-anonymous-users" title="Permalink to this headline">¶</a></h3>
+<p>When securing only some parts of your website, the user information are not
+available in non-secured areas. To make the user accessible in such areas,
+enabled the <code class="docutils literal notranslate"><span class="pre">anonymous</span></code> authentication mechanism:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.firewalls&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;unsecured&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;anonymous&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+
+        <span class="c1">// ...</span>
+    <span class="p">),</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>When enabling the anonymous setting, a user will always be accessible from the
+security context; if the user is not authenticated, it returns the <code class="docutils literal notranslate"><span class="pre">anon.</span></code>
+string.</p>
+</div>
+<div class="section" id="checking-user-roles">
+<h3>Checking User Roles<a class="headerlink" href="#checking-user-roles" title="Permalink to this headline">¶</a></h3>
+<p>To check if a user is granted some role, use the <code class="docutils literal notranslate"><span class="pre">isGranted()</span></code> method on the
+security context:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="p">(</span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.authorization_checker&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">isGranted</span><span class="p">(</span><span class="s1">&#39;ROLE_ADMIN&#39;</span><span class="p">))</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>You can check roles in Twig templates too:</p>
+<div class="highlight-jinja notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">if</span> <span class="nv">is_granted</span><span class="o">(</span><span class="s1">&#39;ROLE_ADMIN&#39;</span><span class="o">)</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    &lt;a href=&quot;/secured?_switch_user=fabien&quot;&gt;Switch to Fabien&lt;/a&gt;</span>
+<span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<p>You can check if a user is “fully authenticated” (not an anonymous user for
+instance) with the special <code class="docutils literal notranslate"><span class="pre">IS_AUTHENTICATED_FULLY</span></code> role:</p>
+<div class="highlight-jinja notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">if</span> <span class="nv">is_granted</span><span class="o">(</span><span class="s1">&#39;IS_AUTHENTICATED_FULLY&#39;</span><span class="o">)</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    &lt;a href=&quot;</span><span class="cp">{{</span> <span class="nv">path</span><span class="o">(</span><span class="s1">&#39;logout&#39;</span><span class="o">)</span> <span class="cp">}}</span><span class="x">&quot;&gt;Logout&lt;/a&gt;</span>
+<span class="cp">{%</span> <span class="k">else</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    &lt;a href=&quot;</span><span class="cp">{{</span> <span class="nv">path</span><span class="o">(</span><span class="s1">&#39;login&#39;</span><span class="o">)</span> <span class="cp">}}</span><span class="x">&quot;&gt;Login&lt;/a&gt;</span>
+<span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<p>Of course you will need to define a <code class="docutils literal notranslate"><span class="pre">login</span></code> route for this to work.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Don’t use the <code class="docutils literal notranslate"><span class="pre">getRoles()</span></code> method to check user roles.</p>
+</div>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p><code class="docutils literal notranslate"><span class="pre">isGranted()</span></code> throws an exception when no authentication information is
+available (which is the case on non-secured area).</p>
+</div>
+</div>
+<div class="section" id="impersonating-a-user">
+<h3>Impersonating a User<a class="headerlink" href="#impersonating-a-user" title="Permalink to this headline">¶</a></h3>
+<p>If you want to be able to switch to another user (without knowing the user
+credentials), enable the <code class="docutils literal notranslate"><span class="pre">switch_user</span></code> authentication strategy:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.firewalls&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;unsecured&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;switch_user&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;parameter&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;_switch_user&#39;</span><span class="p">,</span> <span class="s1">&#39;role&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;ROLE_ALLOWED_TO_SWITCH&#39;</span><span class="p">),</span>
+
+        <span class="c1">// ...</span>
+    <span class="p">),</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>Switching to another user is now a matter of adding the <code class="docutils literal notranslate"><span class="pre">_switch_user</span></code> query
+parameter to any URL when logged in as a user who has the
+<code class="docutils literal notranslate"><span class="pre">ROLE_ALLOWED_TO_SWITCH</span></code> role:</p>
+<div class="highlight-jinja notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">if</span> <span class="nv">is_granted</span><span class="o">(</span><span class="s1">&#39;ROLE_ALLOWED_TO_SWITCH&#39;</span><span class="o">)</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    &lt;a href=&quot;?_switch_user=fabien&quot;&gt;Switch to user Fabien&lt;/a&gt;</span>
+<span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<p>You can check that you are impersonating a user by checking the special
+<code class="docutils literal notranslate"><span class="pre">ROLE_PREVIOUS_ADMIN</span></code>. This is useful for instance to allow the user to
+switch back to their primary account:</p>
+<div class="highlight-jinja notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">if</span> <span class="nv">is_granted</span><span class="o">(</span><span class="s1">&#39;ROLE_PREVIOUS_ADMIN&#39;</span><span class="o">)</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    You are an admin but you&#39;ve switched to another user,</span>
+<span class="x">    &lt;a href=&quot;?_switch_user=_exit&quot;&gt; exit&lt;/a&gt; the switch.</span>
+<span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="sharing-security-context-between-multiple-firewalls">
+<h3>Sharing Security Context between multiple Firewalls<a class="headerlink" href="#sharing-security-context-between-multiple-firewalls" title="Permalink to this headline">¶</a></h3>
+<p>By default, all the firewalls have a different <strong>security context</strong>. In case you
+need to share the same security context between multiple firewalls you can set
+the <code class="docutils literal notranslate"><span class="pre">context</span></code> setting for each firewall you want the context to be shared
+with.</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.firewalls&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;login&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;context&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;admin_security&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;pattern&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;^/login&#39;</span><span class="p">,</span>
+        <span class="c1">// ...</span>
+    <span class="p">),</span>
+    <span class="s1">&#39;secured&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;context&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;admin_security&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;pattern&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;^/admin/&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;form&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;login_path&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;/login&#39;</span><span class="p">,</span> <span class="s1">&#39;check_path&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;/admin/login_check&#39;</span><span class="p">),</span>
+        <span class="s1">&#39;users&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+            <span class="s1">&#39;admin&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;ROLE_ADMIN&#39;</span><span class="p">,</span> <span class="s1">&#39;$2y$10$3i9/lVd8UOFIJ6PAMFt8gu3/r5g0qeCJvoSlLCsvMTythye19F77a&#39;</span><span class="p">),</span>
+        <span class="p">),</span>
+        <span class="c1">// ...</span>
+    <span class="p">),</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>Above configuration ensures that you have the same security context
+<code class="docutils literal notranslate"><span class="pre">admin_security</span></code> inside both, <code class="docutils literal notranslate"><span class="pre">login</span></code> and <code class="docutils literal notranslate"><span class="pre">admin</span></code> firewalls. This might be
+useful for instance to redirect already logged in users to the secured area of
+your website when they visit the login form, as you have the possibility to
+check if the user has been granted the <code class="docutils literal notranslate"><span class="pre">ROLE_ADMIN</span></code> role inside the <code class="docutils literal notranslate"><span class="pre">login</span></code>
+firewall.</p>
+</div>
+<div class="section" id="defining-a-role-hierarchy">
+<h3>Defining a Role Hierarchy<a class="headerlink" href="#defining-a-role-hierarchy" title="Permalink to this headline">¶</a></h3>
+<p>Defining a role hierarchy allows to automatically grant users some additional
+roles:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.role_hierarchy&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;ROLE_ADMIN&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;ROLE_USER&#39;</span><span class="p">,</span> <span class="s1">&#39;ROLE_ALLOWED_TO_SWITCH&#39;</span><span class="p">),</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>With this configuration, all users with the <code class="docutils literal notranslate"><span class="pre">ROLE_ADMIN</span></code> role also
+automatically have the <code class="docutils literal notranslate"><span class="pre">ROLE_USER</span></code> and <code class="docutils literal notranslate"><span class="pre">ROLE_ALLOWED_TO_SWITCH</span></code> roles.</p>
+</div>
+<div class="section" id="defining-access-rules">
+<h3>Defining Access Rules<a class="headerlink" href="#defining-access-rules" title="Permalink to this headline">¶</a></h3>
+<p>Roles are a great way to adapt the behavior of your website depending on
+groups of users, but they can also be used to further secure some areas by
+defining access rules:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.access_rules&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="k">array</span><span class="p">(</span><span class="s1">&#39;^/admin&#39;</span><span class="p">,</span> <span class="s1">&#39;ROLE_ADMIN&#39;</span><span class="p">,</span> <span class="s1">&#39;https&#39;</span><span class="p">),</span>
+    <span class="k">array</span><span class="p">(</span><span class="s1">&#39;^.*$&#39;</span><span class="p">,</span> <span class="s1">&#39;ROLE_USER&#39;</span><span class="p">),</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>With the above configuration, users must have the <code class="docutils literal notranslate"><span class="pre">ROLE_ADMIN</span></code> to access the
+<code class="docutils literal notranslate"><span class="pre">/admin</span></code> section of the website, and <code class="docutils literal notranslate"><span class="pre">ROLE_USER</span></code> for everything else.
+Furthermore, the admin section can only be accessible via HTTPS (if that’s not
+the case, the user will be automatically redirected).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The first argument can also be a <a class="reference external" href="https://api.symfony.com/master/Symfony/Component/HttpFoundation/RequestMatcher.html">RequestMatcher</a>
+instance.</p>
+</div>
+</div>
+<div class="section" id="defining-a-custom-user-provider">
+<h3>Defining a custom User Provider<a class="headerlink" href="#defining-a-custom-user-provider" title="Permalink to this headline">¶</a></h3>
+<p>Using an array of users is simple and useful when securing an admin section of
+a personal website, but you can override this default mechanism with you own.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">users</span></code> setting can be defined as a service or a service id that returns
+an instance of <a class="reference external" href="https://api.symfony.com/master/Symfony/Component/Security/Core/User/UserProviderInterface.html">UserProviderInterface</a>:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;users&#39;</span> <span class="o">=&gt;</span> <span class="k">function</span> <span class="p">()</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">UserProvider</span><span class="p">(</span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;db&#39;</span><span class="p">]);</span>
+<span class="p">},</span>
+</pre></div>
+</div>
+<p>Here is a simple example of a user provider, where Doctrine DBAL is used to
+store the users:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">use</span> <span class="nx">Symfony\Component\Security\Core\User\UserProviderInterface</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\Security\Core\User\UserInterface</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\Security\Core\User\User</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\Security\Core\Exception\UnsupportedUserException</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\Security\Core\Exception\UsernameNotFoundException</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Doctrine\DBAL\Connection</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">UserProvider</span> <span class="k">implements</span> <span class="nx">UserProviderInterface</span>
+<span class="p">{</span>
+    <span class="k">private</span> <span class="nv">$conn</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">Connection</span> <span class="nv">$conn</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">conn</span> <span class="o">=</span> <span class="nv">$conn</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">loadUserByUsername</span><span class="p">(</span><span class="nv">$username</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$stmt</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">conn</span><span class="o">-&gt;</span><span class="na">executeQuery</span><span class="p">(</span><span class="s1">&#39;SELECT * FROM users WHERE username = ?&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="nb">strtolower</span><span class="p">(</span><span class="nv">$username</span><span class="p">)));</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$user</span> <span class="o">=</span> <span class="nv">$stmt</span><span class="o">-&gt;</span><span class="na">fetch</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nx">UsernameNotFoundException</span><span class="p">(</span><span class="nb">sprintf</span><span class="p">(</span><span class="s1">&#39;Username &quot;%s&quot; does not exist.&#39;</span><span class="p">,</span> <span class="nv">$username</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="k">new</span> <span class="nx">User</span><span class="p">(</span><span class="nv">$user</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">],</span> <span class="nv">$user</span><span class="p">[</span><span class="s1">&#39;password&#39;</span><span class="p">],</span> <span class="nb">explode</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="nv">$user</span><span class="p">[</span><span class="s1">&#39;roles&#39;</span><span class="p">]),</span> <span class="k">true</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">refreshUser</span><span class="p">(</span><span class="nx">UserInterface</span> <span class="nv">$user</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$user</span> <span class="nx">instanceof</span> <span class="nx">User</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nx">UnsupportedUserException</span><span class="p">(</span><span class="nb">sprintf</span><span class="p">(</span><span class="s1">&#39;Instances of &quot;%s&quot; are not supported.&#39;</span><span class="p">,</span> <span class="nb">get_class</span><span class="p">(</span><span class="nv">$user</span><span class="p">)));</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">loadUserByUsername</span><span class="p">(</span><span class="nv">$user</span><span class="o">-&gt;</span><span class="na">getUsername</span><span class="p">());</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">supportsClass</span><span class="p">(</span><span class="nv">$class</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nv">$class</span> <span class="o">===</span> <span class="s1">&#39;Symfony\Component\Security\Core\User\User&#39;</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>In this example, instances of the default <code class="docutils literal notranslate"><span class="pre">User</span></code> class are created for the
+users, but you can define your own class; the only requirement is that the
+class must implement <a class="reference external" href="https://api.symfony.com/master/Symfony/Component/Security/Core/User/UserInterface.html">UserInterface</a></p>
+<p>And here is the code that you can use to create the database schema and some
+sample users:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">use</span> <span class="nx">Doctrine\DBAL\Schema\Table</span><span class="p">;</span>
+
+<span class="nv">$schema</span> <span class="o">=</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;db&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">getSchemaManager</span><span class="p">();</span>
+<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$schema</span><span class="o">-&gt;</span><span class="na">tablesExist</span><span class="p">(</span><span class="s1">&#39;users&#39;</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nv">$users</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Table</span><span class="p">(</span><span class="s1">&#39;users&#39;</span><span class="p">);</span>
+    <span class="nv">$users</span><span class="o">-&gt;</span><span class="na">addColumn</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;integer&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;unsigned&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="s1">&#39;autoincrement&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">));</span>
+    <span class="nv">$users</span><span class="o">-&gt;</span><span class="na">setPrimaryKey</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">));</span>
+    <span class="nv">$users</span><span class="o">-&gt;</span><span class="na">addColumn</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">,</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;length&#39;</span> <span class="o">=&gt;</span> <span class="mi">32</span><span class="p">));</span>
+    <span class="nv">$users</span><span class="o">-&gt;</span><span class="na">addUniqueIndex</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">));</span>
+    <span class="nv">$users</span><span class="o">-&gt;</span><span class="na">addColumn</span><span class="p">(</span><span class="s1">&#39;password&#39;</span><span class="p">,</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;length&#39;</span> <span class="o">=&gt;</span> <span class="mi">255</span><span class="p">));</span>
+    <span class="nv">$users</span><span class="o">-&gt;</span><span class="na">addColumn</span><span class="p">(</span><span class="s1">&#39;roles&#39;</span><span class="p">,</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;length&#39;</span> <span class="o">=&gt;</span> <span class="mi">255</span><span class="p">));</span>
+
+    <span class="nv">$schema</span><span class="o">-&gt;</span><span class="na">createTable</span><span class="p">(</span><span class="nv">$users</span><span class="p">);</span>
+
+    <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;db&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">insert</span><span class="p">(</span><span class="s1">&#39;users&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
+      <span class="s1">&#39;username&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;fabien&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;password&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;$2y$10$3i9/lVd8UOFIJ6PAMFt8gu3/r5g0qeCJvoSlLCsvMTythye19F77a&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;roles&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;ROLE_USER&#39;</span>
+    <span class="p">));</span>
+
+    <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;db&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">insert</span><span class="p">(</span><span class="s1">&#39;users&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
+      <span class="s1">&#39;username&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;admin&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;password&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;$2y$10$3i9/lVd8UOFIJ6PAMFt8gu3/r5g0qeCJvoSlLCsvMTythye19F77a&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;roles&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;ROLE_ADMIN&#39;</span>
+    <span class="p">));</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If you are using the Doctrine ORM, the Symfony bridge for Doctrine
+provides a user provider class that is able to load users from your
+entities.</p>
+</div>
+</div>
+<div class="section" id="defining-a-custom-encoder">
+<h3>Defining a custom Encoder<a class="headerlink" href="#defining-a-custom-encoder" title="Permalink to this headline">¶</a></h3>
+<p>By default, PrestoPHP uses the <code class="docutils literal notranslate"><span class="pre">BCrypt</span></code> algorithm to encode passwords.
+Additionally, the password is encoded multiple times.
+You can change these defaults by overriding <code class="docutils literal notranslate"><span class="pre">security.default_encoder</span></code>
+service to return one of the predefined encoders:</p>
+<ul class="simple">
+<li><p><strong>security.encoder.digest</strong>: Digest password encoder.</p></li>
+<li><p><strong>security.encoder.bcrypt</strong>: BCrypt password encoder.</p></li>
+<li><p><strong>security.encoder.pbkdf2</strong>: Pbkdf2 password encoder.</p></li>
+</ul>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.default_encoder&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.encoder.pbkdf2&#39;</span><span class="p">];</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Or you can define you own, fully customizable encoder:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">use</span> <span class="nx">Symfony\Component\Security\Core\Encoder\PlaintextPasswordEncoder</span><span class="p">;</span>
+
+<span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.default_encoder&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Plain text (e.g. for debugging)</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">PlaintextPasswordEncoder</span><span class="p">();</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>You can change the default BCrypt encoding cost by overriding <code class="docutils literal notranslate"><span class="pre">security.encoder.native.cost</span></code></p>
+</div>
+</div>
+<div class="section" id="defining-a-custom-authentication-provider">
+<h3>Defining a custom Authentication Provider<a class="headerlink" href="#defining-a-custom-authentication-provider" title="Permalink to this headline">¶</a></h3>
+<p>The Symfony Security component provides a lot of ready-to-use authentication
+providers (form, HTTP, X509, remember me, …), but you can add new ones easily.
+To register a new authentication provider, create a service named
+<code class="docutils literal notranslate"><span class="pre">security.authentication_listener.factory.XXX</span></code> where <code class="docutils literal notranslate"><span class="pre">XXX</span></code> is the name you
+want to use in your configuration:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.authentication_listener.factory.wsse&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">protect</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nv">$name</span><span class="p">,</span> <span class="nv">$options</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// define the authentication provider object</span>
+    <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.authentication_provider.&#39;</span><span class="o">.</span><span class="nv">$name</span><span class="o">.</span><span class="s1">&#39;.wsse&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">function</span> <span class="p">()</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nx">WsseProvider</span><span class="p">(</span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.user_provider.default&#39;</span><span class="p">],</span> <span class="no">__DIR__</span><span class="o">.</span><span class="s1">&#39;/security_cache&#39;</span><span class="p">);</span>
+    <span class="p">};</span>
+
+    <span class="c1">// define the authentication listener object</span>
+    <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.authentication_listener.&#39;</span><span class="o">.</span><span class="nv">$name</span><span class="o">.</span><span class="s1">&#39;.wsse&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">function</span> <span class="p">()</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nx">WsseListener</span><span class="p">(</span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.token_storage&#39;</span><span class="p">],</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.authentication_manager&#39;</span><span class="p">]);</span>
+    <span class="p">};</span>
+
+    <span class="k">return</span> <span class="k">array</span><span class="p">(</span>
+        <span class="c1">// the authentication provider id</span>
+        <span class="s1">&#39;security.authentication_provider.&#39;</span><span class="o">.</span><span class="nv">$name</span><span class="o">.</span><span class="s1">&#39;.wsse&#39;</span><span class="p">,</span>
+        <span class="c1">// the authentication listener id</span>
+        <span class="s1">&#39;security.authentication_listener.&#39;</span><span class="o">.</span><span class="nv">$name</span><span class="o">.</span><span class="s1">&#39;.wsse&#39;</span><span class="p">,</span>
+        <span class="c1">// the entry point id</span>
+        <span class="k">null</span><span class="p">,</span>
+        <span class="c1">// the position of the listener in the stack</span>
+        <span class="s1">&#39;pre_auth&#39;</span>
+    <span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>You can now use it in your configuration like any other built-in
+authentication provider:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">PrestoPHP\Provider\SecurityServiceProvider</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;security.firewalls&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;default&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+            <span class="s1">&#39;wsse&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+
+            <span class="c1">// ...</span>
+        <span class="p">),</span>
+    <span class="p">),</span>
+<span class="p">));</span>
+</pre></div>
+</div>
+<p>Instead of <code class="docutils literal notranslate"><span class="pre">true</span></code>, you can also define an array of options that customize
+the behavior of your authentication factory; it will be passed as the second
+argument of your authentication factory (see above).</p>
+<p>This example uses the authentication provider classes as described in the
+Symfony <a class="reference external" href="https://symfony.com/doc/current/cookbook/security/custom_authentication_provider.html">cookbook</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The Guard component simplifies the creation of custom authentication
+providers. <a class="reference internal" href="../cookbook/guard_authentication.html"><span class="doc">How to Create a Custom Authentication System with Guard</span></a></p>
+</div>
+</div>
+<div class="section" id="stateless-authentication">
+<h3>Stateless Authentication<a class="headerlink" href="#stateless-authentication" title="Permalink to this headline">¶</a></h3>
+<p>By default, a session cookie is created to persist the security context of
+the user. However, if you use certificates, HTTP authentication, WSSE and so
+on, the credentials are sent for each request. In that case, you can turn off
+persistence by activating the <code class="docutils literal notranslate"><span class="pre">stateless</span></code> authentication flag:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.firewalls&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;default&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;stateless&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+        <span class="s1">&#39;wsse&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+
+        <span class="c1">// ...</span>
+    <span class="p">),</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="traits">
+<h2>Traits<a class="headerlink" href="#traits" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">PrestoPHP\Application\SecurityTrait</span></code> adds the following shortcuts:</p>
+<ul class="simple">
+<li><p><strong>encodePassword</strong>: Encode a given password.</p></li>
+</ul>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$encoded</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">encodePassword</span><span class="p">(</span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;user&#39;</span><span class="p">],</span> <span class="s1">&#39;foo&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">PrestoPHP\Route\SecurityTrait</span></code> adds the following methods to the controllers:</p>
+<ul class="simple">
+<li><p><strong>secure</strong>: Secures a controller for the given roles.</p></li>
+</ul>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// do something but only for admins</span>
+<span class="p">})</span><span class="o">-&gt;</span><span class="na">secure</span><span class="p">(</span><span class="s1">&#39;ROLE_ADMIN&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">PrestoPHP\Route\SecurityTrait</span></code> must be used with a user defined
+<code class="docutils literal notranslate"><span class="pre">Route</span></code> class, not the application.</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">use</span> <span class="nx">PrestoPHP\Route</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">MyRoute</span> <span class="k">extends</span> <span class="nx">Route</span>
+<span class="p">{</span>
+    <span class="k">use</span> <span class="nx">Route\SecurityTrait</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;route_class&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;MyRoute&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">PrestoPHP</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../middlewares.html">Middleware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../organizing_controllers.html">Organizing Controllers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../services.html">Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../providers.html">Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cookbook/index.html">Cookbook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internals.html">Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html#writing-documentation">Writing Documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Built-in Service Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../web_servers.html">Webserver Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Built-in Service Providers</a><ul>
+      <li>Previous: <a href="http_fragment.html" title="previous chapter">HTTP Fragment</a></li>
+      <li>Next: <a href="remember_me.html" title="next chapter">Remember Me</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2010 Fabien Potencier.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/providers/security.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

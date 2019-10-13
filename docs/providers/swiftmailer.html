@@ -1,0 +1,264 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Swiftmailer &#8212; PrestoPHP 0.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Locale" href="locale.html" />
+    <link rel="prev" title="Session" href="session.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="swiftmailer">
+<h1>Swiftmailer<a class="headerlink" href="#swiftmailer" title="Permalink to this headline">¶</a></h1>
+<p>The <em>SwiftmailerServiceProvider</em> provides a service for sending email through
+the <a class="reference external" href="https://swiftmailer.symfony.com">Swift Mailer</a> library.</p>
+<p>You can use the <code class="docutils literal notranslate"><span class="pre">mailer</span></code> service to send messages easily. By default, it
+will attempt to send emails through SMTP.</p>
+<div class="section" id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p><strong>swiftmailer.use_spool</strong>: A boolean to specify whether or not to use the
+memory spool, defaults to true.</p></li>
+<li><p><strong>swiftmailer.options</strong>: An array of options for the default SMTP-based
+configuration.</p>
+<p>The following options can be set:</p>
+<ul class="simple">
+<li><p><strong>host</strong>: SMTP hostname, defaults to ‘localhost’.</p></li>
+<li><p><strong>port</strong>: SMTP port, defaults to 25.</p></li>
+<li><p><strong>username</strong>: SMTP username, defaults to an empty string.</p></li>
+<li><p><strong>password</strong>: SMTP password, defaults to an empty string.</p></li>
+<li><p><strong>encryption</strong>: SMTP encryption, defaults to null. Valid values are ‘tls’, ‘ssl’, or null (indicating no encryption).</p></li>
+<li><p><strong>auth_mode</strong>: SMTP authentication mode, defaults to null. Valid values are ‘plain’, ‘login’, ‘cram-md5’, or null.</p></li>
+</ul>
+<p>Example usage:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;swiftmailer.options&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;host&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;host&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;port&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;25&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;username&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;username&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;password&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;password&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;encryption&#39;</span> <span class="o">=&gt;</span> <span class="k">null</span><span class="p">,</span>
+    <span class="s1">&#39;auth_mode&#39;</span> <span class="o">=&gt;</span> <span class="k">null</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>swiftmailer.sender_address</strong>: If set, all messages will be delivered with
+this address as the “return path” address.</p></li>
+<li><p><strong>swiftmailer.delivery_addresses</strong>: If not empty, all email messages will be
+sent to those addresses instead of being sent to their actual recipients. This
+is often useful when developing.</p></li>
+<li><p><strong>swiftmailer.delivery_whitelist</strong>: Used in combination with
+<code class="docutils literal notranslate"><span class="pre">delivery_addresses</span></code>. If set, emails matching any of these patterns will be
+delivered like normal, as well as being sent to <code class="docutils literal notranslate"><span class="pre">delivery_addresses</span></code>.</p></li>
+<li><p><strong>swiftmailer.plugins</strong>: Array of SwiftMailer plugins.</p>
+<p>Example usage:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;swiftmailer.plugins&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">array</span><span class="p">(</span>
+        <span class="k">new</span> <span class="nx">\Swift_Plugins_PopBeforeSmtpPlugin</span><span class="p">(</span><span class="s1">&#39;pop3.example.com&#39;</span><span class="p">),</span>
+    <span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="services">
+<h2>Services<a class="headerlink" href="#services" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p><strong>mailer</strong>: The mailer instance.</p>
+<p>Example usage:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$message</span> <span class="o">=</span> <span class="nx">\Swift_Message</span><span class="o">::</span><span class="na">newInstance</span><span class="p">();</span>
+
+<span class="c1">// ...</span>
+
+<span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;mailer&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">(</span><span class="nv">$message</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>swiftmailer.transport</strong>: The transport used for e-mail
+delivery. Defaults to a <code class="docutils literal notranslate"><span class="pre">Swift_Transport_EsmtpTransport</span></code>.</p></li>
+<li><p><strong>swiftmailer.transport.buffer</strong>: StreamBuffer used by
+the transport.</p></li>
+<li><p><strong>swiftmailer.transport.authhandler</strong>: Authentication
+handler used by the transport. Will try the following
+by default: CRAM-MD5, login, plaintext.</p></li>
+<li><p><strong>swiftmailer.transport.eventdispatcher</strong>: Internal event
+dispatcher used by Swiftmailer.</p></li>
+</ul>
+</div>
+<div class="section" id="registering">
+<h2>Registering<a class="headerlink" href="#registering" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">PrestoPHP\Provider\SwiftmailerServiceProvider</span><span class="p">());</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Add SwiftMailer as a dependency:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>composer require swiftmailer/swiftmailer
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<p>The Swiftmailer provider provides a <code class="docutils literal notranslate"><span class="pre">mailer</span></code> service:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Request</span><span class="p">;</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">post</span><span class="p">(</span><span class="s1">&#39;/feedback&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nx">Request</span> <span class="nv">$request</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$message</span> <span class="o">=</span> <span class="nx">\Swift_Message</span><span class="o">::</span><span class="na">newInstance</span><span class="p">()</span>
+        <span class="o">-&gt;</span><span class="na">setSubject</span><span class="p">(</span><span class="s1">&#39;[YourSite] Feedback&#39;</span><span class="p">)</span>
+        <span class="o">-&gt;</span><span class="na">setFrom</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">&#39;noreply@yoursite.com&#39;</span><span class="p">))</span>
+        <span class="o">-&gt;</span><span class="na">setTo</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">&#39;feedback@yoursite.com&#39;</span><span class="p">))</span>
+        <span class="o">-&gt;</span><span class="na">setBody</span><span class="p">(</span><span class="nv">$request</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">));</span>
+
+    <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;mailer&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">(</span><span class="nv">$message</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">Response</span><span class="p">(</span><span class="s1">&#39;Thank you for your feedback!&#39;</span><span class="p">,</span> <span class="mi">201</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<div class="section" id="usage-in-commands">
+<h3>Usage in commands<a class="headerlink" href="#usage-in-commands" title="Permalink to this headline">¶</a></h3>
+<p>By default, the Swiftmailer provider sends the emails using the <code class="docutils literal notranslate"><span class="pre">KernelEvents::TERMINATE</span></code>
+event, which is fired after the response has been sent. However, as this event
+isn’t fired for console commands, your emails won’t be sent.</p>
+<p>For that reason, if you send emails using a command console, it is recommended
+that you disable the use of the memory spool (before accessing <code class="docutils literal notranslate"><span class="pre">$app['mailer']</span></code>):</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;swiftmailer.use_spool&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">false</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Alternatively, you can just make sure to flush the message spool by hand before
+ending the command execution. To do so, use the following code:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;swiftmailer.spooltransport&#39;</span><span class="p">]</span>
+    <span class="o">-&gt;</span><span class="na">getSpool</span><span class="p">()</span>
+    <span class="o">-&gt;</span><span class="na">flushQueue</span><span class="p">(</span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;swiftmailer.transport&#39;</span><span class="p">])</span>
+<span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="traits">
+<h2>Traits<a class="headerlink" href="#traits" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">PrestoPHP\Application\SwiftmailerTrait</span></code> adds the following shortcuts:</p>
+<ul class="simple">
+<li><p><strong>mail</strong>: Sends an email.</p></li>
+</ul>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">mail</span><span class="p">(</span><span class="nx">\Swift_Message</span><span class="o">::</span><span class="na">newInstance</span><span class="p">()</span>
+    <span class="o">-&gt;</span><span class="na">setSubject</span><span class="p">(</span><span class="s1">&#39;[YourSite] Feedback&#39;</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="na">setFrom</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">&#39;noreply@yoursite.com&#39;</span><span class="p">))</span>
+    <span class="o">-&gt;</span><span class="na">setTo</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">&#39;feedback@yoursite.com&#39;</span><span class="p">))</span>
+    <span class="o">-&gt;</span><span class="na">setBody</span><span class="p">(</span><span class="nv">$request</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">)));</span>
+</pre></div>
+</div>
+<p>For more information, check out the <a class="reference external" href="https://swiftmailer.symfony.com">Swift Mailer documentation</a>.</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">PrestoPHP</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../middlewares.html">Middleware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../organizing_controllers.html">Organizing Controllers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../services.html">Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../providers.html">Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cookbook/index.html">Cookbook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internals.html">Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html#writing-documentation">Writing Documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Built-in Service Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../web_servers.html">Webserver Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Built-in Service Providers</a><ul>
+      <li>Previous: <a href="session.html" title="previous chapter">Session</a></li>
+      <li>Next: <a href="locale.html" title="next chapter">Locale</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2010 Fabien Potencier.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/providers/swiftmailer.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

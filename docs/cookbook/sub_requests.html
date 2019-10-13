@@ -1,0 +1,242 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Making sub-Requests &#8212; PrestoPHP 0.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Converting Errors to Exceptions" href="error_handler.html" />
+    <link rel="prev" title="Using YAML to configure Validation" href="validator_yaml.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="making-sub-requests">
+<h1>Making sub-Requests<a class="headerlink" href="#making-sub-requests" title="Permalink to this headline">¶</a></h1>
+<p>Since PrestoPHP is based on the <code class="docutils literal notranslate"><span class="pre">HttpKernelInterface</span></code>, it allows you to simulate
+requests against your application. This means that you can embed a page within
+another, it also allows you to forward a request which is essentially an
+internal redirect that does not change the URL.</p>
+<div class="section" id="basics">
+<h2>Basics<a class="headerlink" href="#basics" title="Permalink to this headline">¶</a></h2>
+<p>You can make a sub-request by calling the <code class="docutils literal notranslate"><span class="pre">handle</span></code> method on the
+<code class="docutils literal notranslate"><span class="pre">Application</span></code>. This method takes three arguments:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">$request</span></code>: An instance of the <code class="docutils literal notranslate"><span class="pre">Request</span></code> class which represents the</dt><dd><p>HTTP request.</p>
+</dd>
+</dl>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">$type</span></code>: Must be either <code class="docutils literal notranslate"><span class="pre">HttpKernelInterface::MASTER_REQUEST</span></code> or
+<code class="docutils literal notranslate"><span class="pre">HttpKernelInterface::SUB_REQUEST</span></code>. Certain listeners are only executed for
+the master request, so it’s important that this is set to <code class="docutils literal notranslate"><span class="pre">SUB_REQUEST</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">$catch</span></code>: Catches exceptions and turns them into a response with status code
+<code class="docutils literal notranslate"><span class="pre">500</span></code>. This argument defaults to <code class="docutils literal notranslate"><span class="pre">true</span></code>. For sub-requests you will most
+likely want to set it to <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p></li>
+</ul>
+<p>By calling <code class="docutils literal notranslate"><span class="pre">handle</span></code>, you can make a sub-request manually. Here’s an example:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Request</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\HttpKernel\HttpKernelInterface</span><span class="p">;</span>
+
+<span class="nv">$subRequest</span> <span class="o">=</span> <span class="nx">Request</span><span class="o">::</span><span class="na">create</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">);</span>
+<span class="nv">$response</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">handle</span><span class="p">(</span><span class="nv">$subRequest</span><span class="p">,</span> <span class="nx">HttpKernelInterface</span><span class="o">::</span><span class="na">SUB_REQUEST</span><span class="p">,</span> <span class="k">false</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>There’s some more things that you need to keep in mind though. In most cases
+you will want to forward some parts of the current master request to the
+sub-request like cookies, server information, or the session.</p>
+<p>Here is a more advanced example that forwards said information (<code class="docutils literal notranslate"><span class="pre">$request</span></code>
+holds the master request):</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Request</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\HttpKernel\HttpKernelInterface</span><span class="p">;</span>
+
+<span class="nv">$subRequest</span> <span class="o">=</span> <span class="nx">Request</span><span class="o">::</span><span class="na">create</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(),</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">cookies</span><span class="o">-&gt;</span><span class="na">all</span><span class="p">(),</span> <span class="k">array</span><span class="p">(),</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">server</span><span class="o">-&gt;</span><span class="na">all</span><span class="p">());</span>
+<span class="k">if</span> <span class="p">(</span><span class="nv">$request</span><span class="o">-&gt;</span><span class="na">getSession</span><span class="p">())</span> <span class="p">{</span>
+    <span class="nv">$subRequest</span><span class="o">-&gt;</span><span class="na">setSession</span><span class="p">(</span><span class="nv">$request</span><span class="o">-&gt;</span><span class="na">getSession</span><span class="p">());</span>
+<span class="p">}</span>
+
+<span class="nv">$response</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">handle</span><span class="p">(</span><span class="nv">$subRequest</span><span class="p">,</span> <span class="nx">HttpKernelInterface</span><span class="o">::</span><span class="na">SUB_REQUEST</span><span class="p">,</span> <span class="k">false</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>To forward this response to the client, you can simply return it from a
+controller:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">use</span> <span class="nx">PrestoPHP\Application</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Request</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\HttpKernel\HttpKernelInterface</span><span class="p">;</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/foo&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nx">Application</span> <span class="nv">$app</span><span class="p">,</span> <span class="nx">Request</span> <span class="nv">$request</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$subRequest</span> <span class="o">=</span> <span class="nx">Request</span><span class="o">::</span><span class="na">create</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="o">...</span><span class="p">);</span>
+    <span class="nv">$response</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">handle</span><span class="p">(</span><span class="nv">$subRequest</span><span class="p">,</span> <span class="nx">HttpKernelInterface</span><span class="o">::</span><span class="na">SUB_REQUEST</span><span class="p">,</span> <span class="k">false</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="nv">$response</span><span class="p">;</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>If you want to embed the response as part of a larger page you can call
+<code class="docutils literal notranslate"><span class="pre">Response::getContent</span></code>:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$header</span> <span class="o">=</span> <span class="o">...</span><span class="p">;</span>
+<span class="nv">$footer</span> <span class="o">=</span> <span class="o">...</span><span class="p">;</span>
+<span class="nv">$body</span> <span class="o">=</span> <span class="nv">$response</span><span class="o">-&gt;</span><span class="na">getContent</span><span class="p">();</span>
+
+<span class="k">return</span> <span class="nv">$header</span><span class="o">.</span><span class="nv">$body</span><span class="o">.</span><span class="nv">$footer</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="rendering-pages-in-twig-templates">
+<h2>Rendering pages in Twig templates<a class="headerlink" href="#rendering-pages-in-twig-templates" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="../providers/twig.html"><span class="doc">TwigServiceProvider</span></a> provides a <code class="docutils literal notranslate"><span class="pre">render</span></code>
+function that you can use in Twig templates. It gives you a convenient way to
+embed pages.</p>
+<div class="highlight-jinja notranslate"><div class="highlight"><pre><span></span><span class="cp">{{</span> <span class="nv">render</span><span class="o">(</span><span class="s1">&#39;/sidebar&#39;</span><span class="o">)</span> <span class="cp">}}</span><span class="x"></span>
+</pre></div>
+</div>
+<p>For details, refer to the <a class="reference internal" href="../providers/twig.html"><span class="doc">TwigServiceProvider</span></a> docs.</p>
+</div>
+<div class="section" id="edge-side-includes">
+<h2>Edge Side Includes<a class="headerlink" href="#edge-side-includes" title="Permalink to this headline">¶</a></h2>
+<p>You can use ESI either through the <a class="reference internal" href="../providers/http_cache.html"><span class="doc">HttpCacheServiceProvider</span></a> or a reverse proxy cache such as Varnish. This also
+allows you to embed pages, however it also gives you the benefit of caching
+parts of the page.</p>
+<p>Here is an example of how you would embed a page via ESI:</p>
+<div class="highlight-jinja notranslate"><div class="highlight"><pre><span></span><span class="x">&lt;esi:include src=&quot;/sidebar&quot; /&gt;</span>
+</pre></div>
+</div>
+<p>For details, refer to the <a class="reference internal" href="../providers/http_cache.html"><span class="doc">HttpCacheServiceProvider</span></a> docs.</p>
+</div>
+<div class="section" id="dealing-with-the-request-base-url">
+<h2>Dealing with the request base URL<a class="headerlink" href="#dealing-with-the-request-base-url" title="Permalink to this headline">¶</a></h2>
+<p>One thing to watch out for is the base URL. If your application is not
+hosted at the webroot of your web server, then you may have an URL like
+<code class="docutils literal notranslate"><span class="pre">http://example.org/foo/index.php/articles/42</span></code>.</p>
+<p>In this case, <code class="docutils literal notranslate"><span class="pre">/foo/index.php</span></code> is your request base path. PrestoPHP accounts for
+this path prefix in the routing process, it reads it from
+<code class="docutils literal notranslate"><span class="pre">$request-&gt;server</span></code>. In the context of sub-requests this can lead to issues,
+because if you do not prepend the base path the request could mistake a part
+of the path you want to match as the base path and cut it off.</p>
+<p>You can prevent that from happening by always prepending the base path when
+constructing a request:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$url</span> <span class="o">=</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">getUriForPath</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">);</span>
+<span class="nv">$subRequest</span> <span class="o">=</span> <span class="nx">Request</span><span class="o">::</span><span class="na">create</span><span class="p">(</span><span class="nv">$url</span><span class="p">,</span> <span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(),</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">cookies</span><span class="o">-&gt;</span><span class="na">all</span><span class="p">(),</span> <span class="k">array</span><span class="p">(),</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">server</span><span class="o">-&gt;</span><span class="na">all</span><span class="p">());</span>
+</pre></div>
+</div>
+<p>This is something to be aware of when making sub-requests by hand.</p>
+</div>
+<div class="section" id="services-depending-on-the-request">
+<h2>Services depending on the Request<a class="headerlink" href="#services-depending-on-the-request" title="Permalink to this headline">¶</a></h2>
+<p>The container is a concept that is global to a PrestoPHP application, since the
+application object <strong>is</strong> the container. Any request that is run against an
+application will re-use the same set of services. Since these services are
+mutable, code in a master request can affect the sub-requests and vice versa.
+Any services depending on the <code class="docutils literal notranslate"><span class="pre">request</span></code> service will store the first request
+that they get (could be master or sub-request), and keep using it, even if
+that request is already over.</p>
+<p>Instead of injecting the <code class="docutils literal notranslate"><span class="pre">request</span></code> service, you should always inject the
+<code class="docutils literal notranslate"><span class="pre">request_stack</span></code> one instead.</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">PrestoPHP</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../middlewares.html">Middleware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../organizing_controllers.html">Organizing Controllers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../services.html">Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../providers.html">Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing.html">Testing</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Cookbook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internals.html">Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html#writing-documentation">Writing Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../providers/index.html">Built-in Service Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../web_servers.html">Webserver Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Cookbook</a><ul>
+      <li>Previous: <a href="validator_yaml.html" title="previous chapter">Using YAML to configure Validation</a></li>
+      <li>Next: <a href="error_handler.html" title="next chapter">Converting Errors to Exceptions</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2010 Fabien Potencier.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/cookbook/sub_requests.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
