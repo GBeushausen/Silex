@@ -1,10 +1,14 @@
 {
-    "name": "gbeushausen/prestophp",
+    "name": "prestophp/prestophp",
     "description": "The PHP micro-framework based on the Symfony Components",
     "keywords": ["microframework"],
-    "homepage": "https://PrestoPHP.symfony.com",
+    "homepage": "https://www.prestophp.com",
     "license": "MIT",
     "authors": [
+        {
+            "name": "Gunnar Beushausen",
+            "email": "gunnar@prestophp.com"
+        },
         {
             "name": "Fabien Potencier",
             "email": "fabien@symfony.com"
