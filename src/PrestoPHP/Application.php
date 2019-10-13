@@ -42,7 +42,7 @@ use PrestoPHP\Provider\HttpKernelServiceProvider;
  */
 class Application extends Container implements HttpKernelInterface, TerminableInterface
 {
-    const VERSION = '2.3.1-DEV';
+    const VERSION = '2.3.2-DEV';
 
     const EARLY_EVENT = 512;
     const LATE_EVENT = -512;
