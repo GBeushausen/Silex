@@ -1,10 +1,11 @@
 Changelog
 =========
 
-2.3.1 (2019-XX-XX)
+2.3.2 (2019-10-22)
 ------------------
 
- * n/a
+ * removed warning messages, as new code will be moved to separate repository and this code is already stable
+ * fixed documentation links
 
 
 2.3.1 (2019-10-07)

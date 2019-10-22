@@ -1,8 +1,6 @@
 PrestoPHP, a simple Web Framework
 =============================
 
-**WARNING**: PrestoPHP is a work in Progress right now. While the Microservice part is stable other parts might not be ready for live usage.
-
 PrestoPHP is a PHP micro-framework to develop websites and API's based on `Symfony
 components`_:
 
@@ -31,7 +29,7 @@ The recommended way to install PrestoPHP is through `Composer`_:
 
 .. code-block:: bash
 
-    composer require PrestoPHP/PrestoPHP "~2.0"
+    composer require prestophp/prestophp "~2.0"
 
 Alternatively, you can download the `PrestoPHP.zip`_ file and extract it.
 
@@ -66,7 +64,7 @@ PrestoPHP is licensed under the MIT license.
 .. _Symfony components: https://symfony.com
 .. _Composer:           https://getcomposer.org
 .. _PHPUnit:            https://phpunit.de
-.. _PrestoPHP.zip:      https://PrestoPHP.symfony.com/download
-.. _documentation:      https://PrestoPHP.symfony.com/documentation
+.. _PrestoPHP.zip:      https://github.com/PrestoPHP/PrestoPHP/archive/master.zip
+.. _documentation:      https://www.prestophp.com
 .. _PrestoPHP tag:      https://stackoverflow.com/questions/tagged/PrestoPHP
-.. _open an issue:      https://github.com/PrestoPHPphp/PrestoPHP/issues/new
+.. _open an issue:      https://github.com/PrestoPHP/PrestoPHP/issues/new
