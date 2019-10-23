@@ -234,6 +234,15 @@ You can configure the Twig environment before using it by extending the
         return $twig;
     });
 
+Since Twig 2.x assigning global variables after initializing twig is not possible anymore, PrestoPHP assigns global
+variables out of the config array "twig.globals"::
+
+    ...
+    'twig.globals' => [
+        'layout' => 'layouts/layout.twig'
+    ]
+    ...
+
 For more information, check out the `official Twig documentation
 <https://twig.symfony.com>`_.
 

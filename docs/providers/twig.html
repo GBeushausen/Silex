@@ -235,6 +235,15 @@ object.</p></li>
 <span class="p">});</span>
 </pre></div>
 </div>
+<p>Since Twig 2.x assigning global variables after initializing twig is not possible anymore, PrestoPHP assigns global
+variables out of the config array “twig.globals”:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+<span class="s1">&#39;twig.globals&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
+    <span class="s1">&#39;layout&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;layouts/layout.twig&#39;</span>
+<span class="p">]</span>
+<span class="o">...</span>
+</pre></div>
+</div>
 <p>For more information, check out the <a class="reference external" href="https://twig.symfony.com">official Twig documentation</a>.</p>
 </div>
 </div>

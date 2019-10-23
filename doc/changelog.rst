@@ -1,10 +1,15 @@
 Changelog
 =========
 
-2.3.3 (2019-XX-XX)
+2.3.4 (2019-XX-XX)
 ------------------
 
  * n/a
+
+2.3.3 (2019-10-24)
+------------------
+
+ * added possibility to set global Twig variables from config array twig.options, since setting global variables after initialization is not possible since Twig 2.x anymore
 
 2.3.2 (2019-10-22)
 ------------------

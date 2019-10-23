@@ -4,7 +4,7 @@ Internals
 This chapter will tell you how PrestoPHP works internally.
 
 PrestoPHP
------
+---------
 
 Application
 ~~~~~~~~~~~

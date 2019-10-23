@@ -76,6 +76,12 @@ class TwigServiceProvider implements ServiceProviderInterface
                 $twig->addExtension(new DebugExtension());
             }
 
+            if(isset($app['twig.globals'])) {
+                foreach ($app['twig.globals'] as $key=>$value) {
+                    $twig->addGlobal($key, $value);
+                }
+            }
+
             if (class_exists('Symfony\Bridge\Twig\Extension\RoutingExtension')) {
                 $app['twig.app_variable'] = function ($app) {
                     $var = new AppVariable();
