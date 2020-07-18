@@ -1,10 +1,15 @@
 Changelog
 =========
 
-2.3.4 (2019-XX-XX)
+2.3.5 (2020-XX-XX)
 ------------------
 
  * n/a
+
+2.3.4 (2020-07-18)
+------------------
+
+ * [SessionServiceProvider] Updated SessionListener to return SessionInterface to keep compatibility with newer Symfony versions.
 
 2.3.3 (2019-10-24)
 ------------------

@@ -12,6 +12,7 @@
 namespace PrestoPHP\Provider\Session;
 
 use Pimple\Container;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\EventListener\SessionListener as BaseSessionListener;
 
 /**
@@ -22,19 +23,19 @@ use Symfony\Component\HttpKernel\EventListener\SessionListener as BaseSessionLis
  */
 class SessionListener extends BaseSessionListener
 {
-    private $app;
+	private $app;
 
-    public function __construct(Container $app)
-    {
-        $this->app = $app;
-    }
+	public function __construct(Container $app)
+	{
+		$this->app = $app;
+	}
 
-    protected function getSession()
-    {
-        if (!isset($this->app['session'])) {
-            return;
-        }
+	protected function getSession(): ?SessionInterface
+	{
+		if (!isset($this->app['session'])) {
+			return null;
+		}
 
-        return $this->app['session'];
-    }
+		return $this->app['session'];
+	}
 }
