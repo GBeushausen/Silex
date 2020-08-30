@@ -8,7 +8,7 @@ If you want to get started fast, use the `PrestoPHP Skeleton`_:
 
 .. code-block:: bash
 
-    composer create-project fabpot/PrestoPHP-skeleton path/to/install "~2.0"
+    composer create-project prestophp/prestophp-skeleton path/to/install
 
 If you want more flexibility, use Composer_ instead:
 

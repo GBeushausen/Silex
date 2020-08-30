@@ -1,17 +1,18 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Changelog &#8212; PrestoPHP 0.0.0 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="prev" title="Webserver Configuration" href="web_servers.html" />
@@ -34,7 +35,7 @@
   <div class="section" id="changelog">
 <h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="xx-xx">
-<h2>2.3.3 (2019-XX-XX)<a class="headerlink" href="#xx-xx" title="Permalink to this headline">¶</a></h2>
+<h2>2.3.5 (2020-XX-XX)<a class="headerlink" href="#xx-xx" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><ul class="simple">
 <li><p>n/a</p></li>
@@ -42,7 +43,23 @@
 </div></blockquote>
 </div>
 <div class="section" id="id1">
-<h2>2.3.2 (2019-10-22)<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<h2>2.3.4 (2020-07-18)<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><p>[SessionServiceProvider] Updated SessionListener to return SessionInterface to keep compatibility with newer Symfony versions.</p></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="id2">
+<h2>2.3.3 (2019-10-24)<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><p>added possibility to set global Twig variables from config array twig.options, since setting global variables after initialization is not possible since Twig 2.x anymore</p></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="id3">
+<h2>2.3.2 (2019-10-22)<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><ul class="simple">
 <li><p>removed warning messages, as new code will be moved to separate repository and this code is already stable</p></li>
@@ -50,8 +67,8 @@
 </ul>
 </div></blockquote>
 </div>
-<div class="section" id="id2">
-<h2>2.3.1 (2019-10-07)<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id4">
+<h2>2.3.1 (2019-10-07)<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><ul class="simple">
 <li><p>fixed compatibility issue with Symfony 4.3</p></li>
@@ -60,8 +77,8 @@
 </ul>
 </div></blockquote>
 </div>
-<div class="section" id="id3">
-<h2>2.3.0 (2018-04-20)<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id5">
+<h2>2.3.0 (2018-04-20)<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><ul class="simple">
 <li><p>added support for defining users provider as a service ID</p></li>
@@ -78,8 +95,8 @@
 </ul>
 </div></blockquote>
 </div>
-<div class="section" id="id4">
-<h2>2.2.3 (2018-02-25)<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id6">
+<h2>2.2.3 (2018-02-25)<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><ul class="simple">
 <li><p>fixed validator integration into the security provider (order of registration of the validator and security providers does not matter anymore)</p></li>
@@ -87,21 +104,21 @@
 </ul>
 </div></blockquote>
 </div>
-<div class="section" id="id5">
-<h2>2.2.2 (2018-01-12)<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id7">
+<h2>2.2.2 (2018-01-12)<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>[SECURITY] fixed before handlers not executed under mounts</p></li>
 </ul>
 </div>
-<div class="section" id="id6">
-<h2>2.2.1 (2017-12-14)<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id8">
+<h2>2.2.1 (2017-12-14)<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>added support for Swiftmailer SSL stream_context_options option</p></li>
 <li><p>fixed usage of namespaces for Twig paths</p></li>
 </ul>
 </div>
-<div class="section" id="id7">
-<h2>2.2.0 (2017-07-23)<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id9">
+<h2>2.2.0 (2017-07-23)<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>added json manifest version strategy support</p></li>
 <li><p>fixed EsiFragment constructor</p></li>
@@ -110,8 +127,8 @@
 <li><p>fixed WebTestCase compatibility with PHPUnit 6+</p></li>
 </ul>
 </div>
-<div class="section" id="id8">
-<h2>2.1.0 (2017-05-03)<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id10">
+<h2>2.1.0 (2017-05-03)<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>added more options to security.firewalls</p></li>
 <li><p>added WebLink component integration</p></li>
@@ -123,37 +140,37 @@
 <li><p>added support for registering Swiftmailer plugins</p></li>
 </ul>
 </div>
-<div class="section" id="id9">
-<h2>2.0.4 (2016-11-06)<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id11">
+<h2>2.0.4 (2016-11-06)<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>fixed twig.app_variable definition</p></li>
 <li><p>added support for latest versions of Twig 1.x and 2.0 (Twig runtime loaders)</p></li>
 <li><p>added support for Symfony 2.3</p></li>
 </ul>
 </div>
-<div class="section" id="id10">
-<h2>2.0.3 (2016-08-22)<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id12">
+<h2>2.0.3 (2016-08-22)<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>fixed lazy evaluation of ‘monolog.use_error_handler’</p></li>
 <li><p>fixed PHP7 type hint on controllers</p></li>
 </ul>
 </div>
-<div class="section" id="id11">
-<h2>2.0.2 (2016-06-14)<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id13">
+<h2>2.0.2 (2016-06-14)<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>fixed Symfony 3.1 deprecations</p></li>
 </ul>
 </div>
-<div class="section" id="id12">
-<h2>2.0.1 (2016-05-27)<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id14">
+<h2>2.0.1 (2016-05-27)<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>fixed the PrestoPHP form extension registration to allow overriding default ones</p></li>
 <li><p>removed support for the obsolete Locale Symfony component (uses the Intl one now)</p></li>
 <li><p>added support for Symfony 3.1</p></li>
 </ul>
 </div>
-<div class="section" id="id13">
-<h2>2.0.0 (2016-05-18)<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id15">
+<h2>2.0.0 (2016-05-18)<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>decoupled the exception handler from HttpKernelServiceProvider</p></li>
 <li><p>Switched to BCrypt as the default encoder in the security provider</p></li>
@@ -186,27 +203,27 @@ namespace, allowing publishing as separate package via sub-tree split</p></li>
 <li><p>[BC BREAK] <code class="docutils literal notranslate"><span class="pre">$app['request']</span></code> service removed, use <code class="docutils literal notranslate"><span class="pre">$app['request_stack']</span></code> instead</p></li>
 </ul>
 </div>
-<div class="section" id="id14">
-<h2>1.3.6 (2016-XX-XX)<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id16">
+<h2>1.3.6 (2016-XX-XX)<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>n/a</p></li>
 </ul>
 </div>
-<div class="section" id="id15">
-<h2>1.3.5 (2016-01-06)<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id17">
+<h2>1.3.5 (2016-01-06)<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>fixed typo in SecurityServiceProvider</p></li>
 </ul>
 </div>
-<div class="section" id="id16">
-<h2>1.3.4 (2015-09-15)<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id18">
+<h2>1.3.4 (2015-09-15)<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>fixed some new deprecations</p></li>
 <li><p>fixed translation registration for the validators</p></li>
 </ul>
 </div>
-<div class="section" id="id17">
-<h2>1.3.3 (2015-09-08)<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id19">
+<h2>1.3.3 (2015-09-08)<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>added support for Symfony 3.0 and Twig 2.0</p></li>
 <li><p>fixed some Form deprecations</p></li>
@@ -214,14 +231,14 @@ namespace, allowing publishing as separate package via sub-tree split</p></li>
 <li><p>fixed Swiftmailer spool flushing when spool is not enabled</p></li>
 </ul>
 </div>
-<div class="section" id="id18">
-<h2>1.3.2 (2015-08-24)<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id20">
+<h2>1.3.2 (2015-08-24)<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>no changes</p></li>
 </ul>
 </div>
-<div class="section" id="id19">
-<h2>1.3.1 (2015-08-04)<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id21">
+<h2>1.3.1 (2015-08-04)<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>added missing support for the Expression constraint</p></li>
 <li><p>fixed the possibility to override translations for validator error messages</p></li>
@@ -229,8 +246,8 @@ namespace, allowing publishing as separate package via sub-tree split</p></li>
 <li><p>fixed session logout handler when a firewall is stateless</p></li>
 </ul>
 </div>
-<div class="section" id="id20">
-<h2>1.3.0 (2015-06-05)<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id22">
+<h2>1.3.0 (2015-06-05)<a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>added a <cite>$app[‘user’]</cite> to get the current user (security provider)</p></li>
 <li><p>added view handlers</p></li>
@@ -242,45 +259,45 @@ namespace, allowing publishing as separate package via sub-tree split</p></li>
 <li><p>bumped minimum version of PHP to 5.3.9</p></li>
 </ul>
 </div>
-<div class="section" id="id21">
-<h2>1.2.5 (2015-06-04)<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id23">
+<h2>1.2.5 (2015-06-04)<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>no code changes (last version of the 1.2 branch)</p></li>
 </ul>
 </div>
-<div class="section" id="id22">
-<h2>1.2.4 (2015-04-11)<a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id24">
+<h2>1.2.4 (2015-04-11)<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>fixed the exception message when mounting a collection that doesn’t return a ControllerCollection</p></li>
 <li><p>fixed Symfony dependencies (PrestoPHP 1.2 is not compatible with Symfony 2.7)</p></li>
 </ul>
 </div>
-<div class="section" id="id23">
-<h2>1.2.3 (2015-01-20)<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id25">
+<h2>1.2.3 (2015-01-20)<a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>fixed remember me listener</p></li>
 <li><p>fixed translation files loading when they do not exist</p></li>
 <li><p>allowed global after middlewares to return responses like route specific ones</p></li>
 </ul>
 </div>
-<div class="section" id="id24">
-<h2>1.2.2 (2014-09-26)<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id26">
+<h2>1.2.2 (2014-09-26)<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>fixed Translator locale management</p></li>
 <li><p>added support for the $app argument in application middlewares (to make it consistent with route middlewares)</p></li>
 <li><p>added form.types to the Form provider</p></li>
 </ul>
 </div>
-<div class="section" id="id25">
-<h2>1.2.1 (2014-07-01)<a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id27">
+<h2>1.2.1 (2014-07-01)<a class="headerlink" href="#id27" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>added support permissions in the Monolog provider</p></li>
 <li><p>fixed Switfmailer spool where the event dispatcher is different from the other ones</p></li>
 <li><p>fixed locale when changing it on the translator itself</p></li>
 </ul>
 </div>
-<div class="section" id="id26">
-<h2>1.2.0 (2014-03-29)<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id28">
+<h2>1.2.0 (2014-03-29)<a class="headerlink" href="#id28" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Allowed disabling the boot logic of MonologServiceProvider</p></li>
 <li><p>Reverted “convert attributes on the request that actually exist”</p></li>
@@ -291,35 +308,35 @@ namespace, allowing publishing as separate package via sub-tree split</p></li>
 <li><p>Allowed a callback to be a method call on a service (before, after, finish, error, on Application; convert, before, after on Controller)</p></li>
 </ul>
 </div>
-<div class="section" id="id27">
-<h2>1.1.3 (2013-XX-XX)<a class="headerlink" href="#id27" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id29">
+<h2>1.1.3 (2013-XX-XX)<a class="headerlink" href="#id29" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed translator locale management</p></li>
 </ul>
 </div>
-<div class="section" id="id28">
-<h2>1.1.2 (2013-10-30)<a class="headerlink" href="#id28" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id30">
+<h2>1.1.2 (2013-10-30)<a class="headerlink" href="#id30" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Added missing “security.hide_user_not_found” support in SecurityServiceProvider</p></li>
 <li><p>Fixed event listeners that are registered after the boot via the on() method</p></li>
 </ul>
 </div>
-<div class="section" id="id29">
-<h2>1.0.2 (2013-10-30)<a class="headerlink" href="#id29" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id31">
+<h2>1.0.2 (2013-10-30)<a class="headerlink" href="#id31" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed SecurityServiceProvider to use null as a fake controller so that routes can be dumped</p></li>
 </ul>
 </div>
-<div class="section" id="id30">
-<h2>1.1.1 (2013-10-11)<a class="headerlink" href="#id30" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id32">
+<h2>1.1.1 (2013-10-11)<a class="headerlink" href="#id32" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Removed or replaced deprecated Symfony code</p></li>
 <li><p>Updated code to take advantages of 2.3 new features</p></li>
 <li><p>Only convert attributes on the request that actually exist.</p></li>
 </ul>
 </div>
-<div class="section" id="id31">
-<h2>1.1.0 (2013-07-04)<a class="headerlink" href="#id31" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id33">
+<h2>1.1.0 (2013-07-04)<a class="headerlink" href="#id33" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Support for any <code class="docutils literal notranslate"><span class="pre">Psr\Log\LoggerInterface</span></code> as opposed to the monolog-bridge
 one.</p></li>
@@ -328,15 +345,15 @@ lazy, so that they will not instantiate the dispatcher early.</p></li>
 <li><p>Dropped support for 2.1 and 2.2 versions of Symfony.</p></li>
 </ul>
 </div>
-<div class="section" id="id32">
-<h2>1.0.1 (2013-07-04)<a class="headerlink" href="#id32" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id34">
+<h2>1.0.1 (2013-07-04)<a class="headerlink" href="#id34" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed RedirectableUrlMatcher::redirect() when PrestoPHP is configured to use a logger</p></li>
 <li><p>Make <code class="docutils literal notranslate"><span class="pre">DoctrineServiceProvider</span></code> multi-db support lazy.</p></li>
 </ul>
 </div>
-<div class="section" id="id33">
-<h2>1.0.0 (2013-05-03)<a class="headerlink" href="#id33" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id35">
+<h2>1.0.0 (2013-05-03)<a class="headerlink" href="#id35" title="Permalink to this headline">¶</a></h2>
 <ul>
 <li><p><strong>2013-04-12</strong>: Added support for validators as services.</p></li>
 <li><p><strong>2013-04-01</strong>: Added support for host matching with symfony 2.2:</p>
@@ -553,7 +570,7 @@ of an <code class="docutils literal notranslate"><span class="pre">Application</
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
 
 
 
@@ -570,7 +587,7 @@ of an <code class="docutils literal notranslate"><span class="pre">Application</
       &copy;2010 Fabien Potencier.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
