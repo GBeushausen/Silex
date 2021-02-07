@@ -13,6 +13,7 @@ namespace PrestoPHP\Provider\Session;
 
 use Pimple\Container;
 use Pimple\Psr11\Container as PsrContainer;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\EventListener\TestSessionListener as BaseTestSessionListener;
 
 /**
@@ -31,10 +32,9 @@ class TestSessionListener extends BaseTestSessionListener
         parent::__construct(new PsrContainer($app));
     }
 
-    protected function getSession()
-    {
+    protected function getSession(): ?SessionInterface {
         if (!isset($this->app['session'])) {
-            return;
+            return null;
         }
 
         return $this->app['session'];
