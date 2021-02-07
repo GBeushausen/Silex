@@ -20,6 +20,7 @@ use PrestoPHP\Provider\TranslationServiceProvider;
 use PrestoPHP\Provider\ValidatorServiceProvider;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\AbstractTypeExtension;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormTypeGuesserChain;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -312,8 +313,11 @@ class DummyFormType extends AbstractType
 
 class DummyFormTypeExtension extends AbstractTypeExtension
 {
-    public function getExtendedType()
-    {
+	public static function getExtendedTypes(): iterable {
+		return [FileType::class];
+	}
+
+	public function getExtendedType(): string {
         return 'Symfony\Component\Form\Extension\Core\Type\FileType';
     }
 
