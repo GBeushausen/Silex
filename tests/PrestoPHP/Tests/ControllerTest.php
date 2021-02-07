@@ -31,12 +31,10 @@ class ControllerTest extends TestCase
         $this->assertEquals('foo', $controller->getRouteName());
     }
 
-    /**
-     * @expectedException \PrestoPHP\Exception\ControllerFrozenException
-     */
-    public function testBindOnFrozenControllerShouldThrowException()
+	public function testBindOnFrozenControllerShouldThrowException()
     {
-        $controller = new Controller(new Route('/foo'));
+		$this->expectException(\PrestoPHP\Exception\ControllerFrozenException::class);
+		$controller = new Controller(new Route('/foo'));
         $controller->bind('foo');
         $controller->freeze();
         $controller->bind('bar');
@@ -110,12 +108,10 @@ class ControllerTest extends TestCase
         $this->assertEquals('foo', $route->foo);
     }
 
-    /**
-     * @expectedException \BadMethodCallException
-     */
-    public function testRouteMethodDoesNotExist()
+	public function testRouteMethodDoesNotExist()
     {
-        $route = new MyRoute();
+		$this->expectException(\BadMethodCallException::class);
+		$route = new MyRoute();
 
         $controller = new Controller($route);
         $controller->bar();

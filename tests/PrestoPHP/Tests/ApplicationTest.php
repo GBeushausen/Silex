@@ -407,12 +407,10 @@ class ApplicationTest extends TestCase
         $this->assertSame(['1_routeTriggered', '2_filterAfter', '3_responseSent', '4_filterFinish'], $containerTarget);
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
-    public function testNonResponseAndNonNullReturnFromRouteBeforeMiddlewareShouldThrowRuntimeException()
+	public function testNonResponseAndNonNullReturnFromRouteBeforeMiddlewareShouldThrowRuntimeException()
     {
-        $app = new Application();
+		$this->expectException(\RuntimeException::class);
+		$app = new Application();
 
         $middleware = function (Request $request) {
             return 'string return';
@@ -426,12 +424,10 @@ class ApplicationTest extends TestCase
         $app->handle(Request::create('/'), HttpKernelInterface::MASTER_REQUEST, false);
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
-    public function testNonResponseAndNonNullReturnFromRouteAfterMiddlewareShouldThrowRuntimeException()
+	public function testNonResponseAndNonNullReturnFromRouteAfterMiddlewareShouldThrowRuntimeException()
     {
-        $app = new Application();
+		$this->expectException(\RuntimeException::class);
+		$app = new Application();
 
         $middleware = function (Request $request) {
             return 'string return';
@@ -489,23 +485,19 @@ class ApplicationTest extends TestCase
         $this->assertEquals(['first', 'second', 'third'], array_keys(iterator_to_array($app['routes'])));
     }
 
-    /**
-     * @expectedException        \LogicException
-     * @expectedExceptionMessage The "mount" method takes either a "ControllerCollection" instance, "ControllerProviderInterface" instance, or a callable.
-     */
-    public function testMountNullException()
+	public function testMountNullException()
     {
-        $app = new Application();
+		$this->expectExceptionMessage("The \"mount\" method takes either a \"ControllerCollection\" instance, \"ControllerProviderInterface\" instance, or a callable.");
+		$this->expectException(\LogicException::class);
+		$app = new Application();
         $app->mount('/exception', null);
     }
 
-    /**
-     * @expectedException        \LogicException
-     * @expectedExceptionMessage The method "PrestoPHP\Tests\IncorrectControllerCollection::connect" must return a "ControllerCollection" instance. Got: "NULL"
-     */
-    public function testMountWrongConnectReturnValueException()
+	public function testMountWrongConnectReturnValueException()
     {
-        $app = new Application();
+		$this->expectExceptionMessage("The method \"PrestoPHP\Tests\IncorrectControllerCollection::connect\" must return a \"ControllerCollection\" instance. Got: \"NULL\"");
+		$this->expectException(\LogicException::class);
+		$app = new Application();
         $app->mount('/exception', new IncorrectControllerCollection());
     }
 
@@ -530,13 +522,11 @@ class ApplicationTest extends TestCase
         $this->assertEquals(__FILE__, (string) $response->getFile());
     }
 
-    /**
-     * @expectedException        \LogicException
-     * @expectedExceptionMessage The "homepage" route must have code to run when it matches.
-     */
-    public function testGetRouteCollectionWithRouteWithoutController()
+	public function testGetRouteCollectionWithRouteWithoutController()
     {
-        $app = new Application();
+		$this->expectExceptionMessage("The \"homepage\" route must have code to run when it matches.");
+		$this->expectException(\LogicException::class);
+		$app = new Application();
         unset($app['exception_handler']);
         $app->match('/')->bind('homepage');
         $app->handle(Request::create('/'));

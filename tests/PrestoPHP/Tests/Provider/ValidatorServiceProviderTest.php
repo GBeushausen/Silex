@@ -29,8 +29,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  */
 class ValidatorServiceProviderTest extends TestCase
 {
-    public function testRegister()
-    {
+    public function testRegister(): Application {
         $app = new Application();
         $app->register(new ValidatorServiceProvider());
         $app->register(new FormServiceProvider());
@@ -38,8 +37,7 @@ class ValidatorServiceProviderTest extends TestCase
         return $app;
     }
 
-    public function testRegisterWithCustomValidators()
-    {
+    public function testRegisterWithCustomValidators(): Application {
         $app = new Application();
 
         $app['custom.validator'] = function () {
@@ -201,6 +199,6 @@ class ValidatorServiceProviderTest extends TestCase
         $app->register(new ValidatorServiceProvider());
         $app->register(new TranslationServiceProvider());
 
-        $this->assertInternalType('array', $app['translator.resources']);
+        $this->assertIsArray($app['translator.resources']);
     }
 }

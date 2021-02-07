@@ -83,13 +83,11 @@ class FormServiceProviderTest extends TestCase
         $this->assertInstanceOf('Symfony\Component\Form\Form', $form);
     }
 
-    /**
-     * @expectedException \Symfony\Component\Form\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Invalid form type. The PrestoPHP service "dummy" does not exist.
-     */
-    public function testNonExistentTypeService()
+	public function testNonExistentTypeService()
     {
-        $app = new Application();
+		$this->expectExceptionMessage("Invalid form type. The PrestoPHP service \"dummy\" does not exist.");
+		$this->expectException(\Symfony\Component\Form\Exception\InvalidArgumentException::class);
+		$app = new Application();
 
         $app->register(new FormServiceProvider());
 
@@ -147,13 +145,11 @@ class FormServiceProviderTest extends TestCase
         $this->assertInstanceOf('Symfony\Component\Form\Form', $form);
     }
 
-    /**
-     * @expectedException \Symfony\Component\Form\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Invalid form type extension. The PrestoPHP service "dummy.form.type.extension" does not exist.
-     */
-    public function testNonExistentTypeExtensionService()
+	public function testNonExistentTypeExtensionService()
     {
-        $app = new Application();
+		$this->expectExceptionMessage("Invalid form type extension. The PrestoPHP service \"dummy.form.type.extension\" does not exist.");
+		$this->expectException(\Symfony\Component\Form\Exception\InvalidArgumentException::class);
+		$app = new Application();
 
         $app->register(new FormServiceProvider());
 
@@ -202,13 +198,11 @@ class FormServiceProviderTest extends TestCase
         $this->assertInstanceOf('Symfony\Component\Form\FormFactory', $app['form.factory']);
     }
 
-    /**
-     * @expectedException \Symfony\Component\Form\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Invalid form type guesser. The PrestoPHP service "dummy.form.type.guesser" does not exist.
-     */
-    public function testNonExistentTypeGuesserService()
+	public function testNonExistentTypeGuesserService()
     {
-        $app = new Application();
+		$this->expectExceptionMessage("Invalid form type guesser. The PrestoPHP service \"dummy.form.type.guesser\" does not exist.");
+		$this->expectException(\Symfony\Component\Form\Exception\InvalidArgumentException::class);
+		$app = new Application();
 
         $app->register(new FormServiceProvider());
 
@@ -250,10 +244,10 @@ class FormServiceProviderTest extends TestCase
         $this->assertFalse($form->isValid());
         $r = new \ReflectionMethod($form, 'getErrors');
         if (!$r->getNumberOfParameters()) {
-            $this->assertContains('ERROR: German translation', $form->getErrorsAsString());
+            $this->assertStringContainsString('ERROR: German translation', $form->getErrorsAsString());
         } else {
             // as of 2.5
-            $this->assertContains('ERROR: German translation', (string) $form->getErrors(true, false));
+            $this->assertStringContainsString('ERROR: German translation', (string) $form->getErrors(true, false));
         }
     }
 

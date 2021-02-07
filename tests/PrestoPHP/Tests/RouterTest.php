@@ -95,12 +95,10 @@ class RouterTest extends TestCase
         $this->assertTrue($response->isRedirect('/target2'));
     }
 
-    /**
-     * @expectedException \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-     */
-    public function testMissingRoute()
+	public function testMissingRoute()
     {
-        $app = new Application();
+		$this->expectException(\Symfony\Component\HttpKernel\Exception\NotFoundHttpException::class);
+		$app = new Application();
         unset($app['exception_handler']);
 
         $request = Request::create('/baz');
@@ -164,7 +162,7 @@ class RouterTest extends TestCase
         foreach (['/foo', '/bar'] as $path) {
             $request = Request::create($path);
             $response = $app->handle($request);
-            $this->assertContains($path, $response->getContent());
+            $this->assertStringContainsString($path, $response->getContent());
         }
     }
 
@@ -264,7 +262,7 @@ class RouterTest extends TestCase
         $this->checkRouteResponse($app, '/bar', 'bar');
     }
 
-    protected function checkRouteResponse(Application $app, $path, $expectedContent, $method = 'get', $message = null)
+    protected function checkRouteResponse(Application $app, $path, $expectedContent, $method = 'get', $message = '')
     {
         $request = Request::create($path, $method);
         $response = $app->handle($request);

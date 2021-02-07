@@ -42,13 +42,11 @@ class LazyRequestMatcherTest extends TestCase
         $this->assertEquals(1, $callCounter);
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage Factory supplied to LazyRequestMatcher must return implementation of Symfony\Component\Routing\RequestMatcherInterface.
-     */
-    public function testThatCanInjectRequestMatcherOnly()
+	public function testThatCanInjectRequestMatcherOnly()
     {
-        $matcher = new LazyRequestMatcher(function () {
+		$this->expectExceptionMessage("Factory supplied to LazyRequestMatcher must return implementation of Symfony\Component\Routing\RequestMatcherInterface.");
+		$this->expectException(\LogicException::class);
+		$matcher = new LazyRequestMatcher(function () {
             return 'someMatcher';
         });
 

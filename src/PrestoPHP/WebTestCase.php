@@ -35,7 +35,7 @@ abstract class WebTestCase extends TestCase
      * Note: Child classes that define a setUp method must call
      * parent::setUp().
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->app = $this->createApplication();
     }

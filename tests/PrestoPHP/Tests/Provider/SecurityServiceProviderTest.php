@@ -29,12 +29,10 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class SecurityServiceProviderTest extends WebTestCase
 {
-    /**
-     * @expectedException \LogicException
-     */
-    public function testWrongAuthenticationType()
+	public function testWrongAuthenticationType()
     {
-        $app = new Application();
+		$this->expectException(\LogicException::class);
+		$app = new Application();
         $app->register(new SecurityServiceProvider(), [
             'security.firewalls' => [
                 'wrong' => [
@@ -57,7 +55,7 @@ class SecurityServiceProviderTest extends WebTestCase
         $this->assertEquals('ANONYMOUS', $client->getResponse()->getContent());
 
         $client->request('post', '/login_check', ['_username' => 'fabien', '_password' => 'bar']);
-        $this->assertContains('Bad credentials', $app['security.last_error']($client->getRequest()));
+        $this->assertStringContainsString('Bad credentials', $app['security.last_error']($client->getRequest()));
         // hack to re-close the session as the previous assertions re-opens it
         $client->getRequest()->getSession()->save();
 
