@@ -82,15 +82,13 @@ class RememberMeServiceProvider implements ServiceProviderInterface, EventListen
 
         $app['security.authentication_listener.remember_me._proto'] = $app->protect(function ($providerKey) use ($app) {
             return function () use ($app, $providerKey) {
-                $listener = new RememberMeListener(
-                    $app['security.token_storage'],
-                    $app['security.remember_me.service.'.$providerKey],
-                    $app['security.authentication_manager'],
-                    $app['logger'],
-                    $app['dispatcher']
-                );
-
-                return $listener;
+				return new RememberMeListener(
+					$app['security.token_storage'],
+					$app['security.remember_me.service.'.$providerKey],
+					$app['security.authentication_manager'],
+					$app['logger'],
+					$app['dispatcher']
+				);
             };
         });
 
