@@ -3,6 +3,7 @@
 /*
  * This file is part of the PrestoPHP framework.
  *
+ * (c) Gunnar Beushausen <gunnar@prestophp.com>	
  * (c) Fabien Potencier <fabien@symfony.com>
  *
  * This source file is subject to the MIT license that is bundled

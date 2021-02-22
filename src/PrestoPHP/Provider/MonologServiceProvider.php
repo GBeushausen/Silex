@@ -3,6 +3,7 @@
 /*
  * This file is part of the PrestoPHP framework.
  *
+ * (c) Gunnar Beushausen <gunnar@prestophp.com>	
  * (c) Fabien Potencier <fabien@symfony.com>
  *
  * For the full copyright and license information, please view the LICENSE
@@ -11,6 +12,7 @@
 
 namespace PrestoPHP\Provider;
 
+use Monolog\Handler\FingersCrossed\ErrorLevelActivationStrategy;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Monolog\Formatter\LineFormatter;
@@ -44,7 +46,7 @@ class MonologServiceProvider implements ServiceProviderInterface, BootableProvid
                 $app['monolog.not_found_activation_strategy'] = function () use ($app) {
                     $level = MonologServiceProvider::translateLevel($app['monolog.level']);
 
-                    return new NotFoundActivationStrategy($app['request_stack'], ['^/'], $level);
+                    return new NotFoundActivationStrategy($app['request_stack'], ['^/'], new ErrorLevelActivationStrategy($level));
                 };
             }
         }

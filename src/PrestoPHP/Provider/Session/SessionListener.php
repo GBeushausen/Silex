@@ -3,6 +3,7 @@
 /*
  * This file is part of the PrestoPHP framework.
  *
+ * (c) Gunnar Beushausen <gunnar@prestophp.com>	
  * (c) Fabien Potencier <fabien@symfony.com>
  *
  * For the full copyright and license information, please view the LICENSE
@@ -23,7 +24,7 @@ use Symfony\Component\HttpKernel\EventListener\SessionListener as BaseSessionLis
  */
 class SessionListener extends BaseSessionListener
 {
-	private $app;
+	private Container $app;
 
 	public function __construct(Container $app)
 	{

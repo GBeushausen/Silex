@@ -3,6 +3,7 @@
 /*
  * This file is part of the PrestoPHP framework.
  *
+ * (c) Gunnar Beushausen <gunnar@prestophp.com>	
  * (c) Fabien Potencier <fabien@symfony.com>
  *
  * For the full copyright and license information, please view the LICENSE
@@ -470,7 +471,7 @@ class SecurityServiceProvider implements ServiceProviderInterface, EventListener
                     $app['security.http_utils'],
                     $options
                 );
-                $handler->setProviderKey($name);
+                $handler->setFirewallName($name);
 
                 return $handler;
             };
