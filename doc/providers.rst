@@ -138,7 +138,7 @@ Here is an example of such a provider::
     use PrestoPHP\Api\EventListenerProviderInterface;
     use Symfony\Component\EventDispatcher\EventDispatcherInterface;
     use Symfony\Component\HttpKernel\KernelEvents;
-    use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+    use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
     class HelloServiceProvider implements ServiceProviderInterface, BootableProviderInterface, EventListenerProviderInterface
     {
@@ -159,7 +159,7 @@ Here is an example of such a provider::
 
         public function subscribe(Container $app, EventDispatcherInterface $dispatcher)
         {
-            $dispatcher->addListener(KernelEvents::REQUEST, function(FilterResponseEvent $event) use ($app) {
+            $dispatcher->addListener(KernelEvents::REQUEST, function(ResponseEvent $event) use ($app) {
                 // do something
             });
         }
