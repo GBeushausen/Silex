@@ -58,10 +58,6 @@ abstract class WebTestCase extends TestCase
      */
     public function createClient(array $server = [])
     {
-        if (!class_exists('Symfony\Component\BrowserKit\Client')) {
-            throw new \LogicException('Component "symfony/browser-kit" is required by WebTestCase.'.PHP_EOL.'Run composer require symfony/browser-kit');
-        }
-
 		if (class_exists(Client::class)) {
 			return new Client($this->app, $server);
 		}

@@ -112,7 +112,12 @@ class SwiftmailerServiceProviderTest extends TestCase
 
         $app['swiftmailer.sender_address'] = 'foo@example.com';
 
-        $app['mailer']->send(\Swift_Message::newInstance());
+		if (method_exists(Swift_Message::class, 'newInstance')) {
+			$app['mailer']->send(Swift_Message::newInstance());
+			return true;
+		}
+
+		$app['mailer']->send(new Swift_Message());
 
         $messages = $app['swiftmailer.spool']->getMessages();
         $this->assertCount(1, $messages);
