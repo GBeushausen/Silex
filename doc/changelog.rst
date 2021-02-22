@@ -1,10 +1,18 @@
 Changelog
 =========
 
-2.3.5 (2020-XX-XX)
+2.4.1 (2021-XX-XX)
 ------------------
 
  * n/a
+
+2.4.0 (2021-02-22)
+------------------
+
+ * dropped support for PHP < 7.4
+ * Dropped Support for Symfony 4
+ * Added support for Symfony 5
+ * Added PHPStan for internal development
 
 2.3.4 (2020-07-18)
 ------------------

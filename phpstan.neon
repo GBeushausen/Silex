@@ -1,0 +1,30 @@
+parameters:
+    reportUnmatchedIgnoredErrors: false
+    ignoreErrors:
+        - "#Call to function method_exists\\(\\) with '.+Component…' and '__construct' will always evaluate to false#"
+        - '#Method Symfony\\Component\\Validator\\ConstraintValidatorFactory::__construct\(\) invoked with 1 parameter, 0 required#'
+        - '#Call to an undefined static method Symfony\\Component\\HttpKernel\\Controller\\ControllerResolver::doGetArguments\(\)#'
+        - '#Call to an undefined method Symfony\\Component\\Debug\\ExceptionHandler::createResponse\(\)#'
+        - "#Call to function method_exists\\(\\) with '.+Component…' and 'setTemplating' will always evaluate to false.#"
+        - '#Instantiated class Symfony\\Bridge\\Doctrine\\Logger\\DbalLogger not found#'
+        - '#Instantiated class Symfony\\Component\\Form\\Extension\\Csrf\\CsrfProvider\\DefaultCsrfProvider not found#'
+        - '#Instantiated class Symfony\\Component\\HttpKernel\\EventListener\\EsiListener not found#'
+        - '#Instantiated class Symfony\\Bridge\\Monolog\\Handler\\DebugHandler not found#'
+        - '#Class Symfony\\Component\\Security\\Http\\Firewall\\AccessListener constructor invoked with 5 parameters, 4 required#'
+        - '#Class Spryker\\Shared\\Kernel\\Store not found#'
+        - '#Call to static method getInstance\(\) on an unknown class Spryker\\Shared\\Kernel\\Store#'
+        - '#Call to an undefined method Swift_Transport_EsmtpTransport::(setUsername|setPassword|setAuthMode)\(\)#'
+        - '#Instantiated class Symfony\\Component\\Validator\\Mapping\\ClassMetadataFactory not found#'
+        - '#Instantiated class Symfony\\Component\\Form\\Extension\\Csrf\\CsrfProvider\\SessionCsrfProvider not found#'
+        - '#Instantiated class PrestoPHP\\Provider\\SecurityContext not found#'
+        - '#Access to constant AUTHENTICATION_ERROR on an unknown class PrestoPHP\\Provider\\SecurityContextInterface#'
+        - '#Method PrestoPHP\\Application::register\(\) should return \$this\(PrestoPHP\\Application\) but returns PrestoPHP\\Application#'
+        - '#Parameter \#1 \$commandline of class Symfony\\Component\\Process\\Process constructor expects string, array<int, string> given.#'
+        - '#Instantiated class .+MessageSelector not found.#'
+        - '#Unreachable statement - code above always terminates.#'
+        - '#Return typehint of method .+WebTestCase::createClient\(\) has invalid type Symfony\\Component\\HttpKernel\\Client.#'
+        - '#Call to an undefined method Symfony\\Component\\HttpKernel\\Event\\ExceptionEvent::getException\(\).#'
+        - '#Call to an undefined static method Symfony\\Component\\Translation\\Translator::transChoice\(\).#'
+        - '#Call to an undefined static method Symfony\\Component\\Debug\\Exception\\FlattenException::createFromThrowable\(\).#'
+        - '#Instantiated class Symfony\\Component\\HttpKernel\\Client not found.#'
+
