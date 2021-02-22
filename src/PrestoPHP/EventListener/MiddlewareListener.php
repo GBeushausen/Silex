@@ -11,9 +11,9 @@
 
 namespace PrestoPHP\EventListener;
 
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use PrestoPHP\Application;
@@ -41,15 +41,15 @@ class MiddlewareListener implements EventSubscriberInterface
     /**
      * Runs before filters.
      *
-     * @param GetResponseEvent $event The event to handle
+     * @param RequestEvent $event The event to handle
      */
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(RequestEvent $event)
     {
         $request = $event->getRequest();
         $routeName = $request->attributes->get('_route');
-        if (!$route = $this->app['routes']->get($routeName)) {
-            return;
-        }
+		if ($routeName === null) return;
+
+		$route = $this->app['routes']->get($routeName);
 
         foreach ((array) $route->getOption('_before_middlewares') as $callback) {
             $ret = call_user_func($this->app['callback_resolver']->resolveCallback($callback), $request, $this->app);
@@ -57,7 +57,7 @@ class MiddlewareListener implements EventSubscriberInterface
                 $event->setResponse($ret);
 
                 return;
-            } elseif (null !== $ret) {
+            } elseif ($ret !== null) {
                 throw new \RuntimeException(sprintf('A before middleware for route "%s" returned an invalid response value. Must return null or an instance of Response.', $routeName));
             }
         }
@@ -66,15 +66,16 @@ class MiddlewareListener implements EventSubscriberInterface
     /**
      * Runs after filters.
      *
-     * @param FilterResponseEvent $event The event to handle
+     * @param ResponseEvent $event The event to handle
      */
-    public function onKernelResponse(FilterResponseEvent $event)
+    public function onKernelResponse(ResponseEvent $event)
     {
         $request = $event->getRequest();
         $routeName = $request->attributes->get('_route');
-        if (!$route = $this->app['routes']->get($routeName)) {
-            return;
-        }
+		if ($routeName === null) return;
+
+		$route = $this->app['routes']->get($routeName);
+		if (!$route) return;
 
         foreach ((array) $route->getOption('_after_middlewares') as $callback) {
             $response = call_user_func($this->app['callback_resolver']->resolveCallback($callback), $request, $event->getResponse(), $this->app);

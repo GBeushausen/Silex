@@ -63,6 +63,7 @@ use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 use Symfony\Component\Security\Guard\Firewall\GuardAuthenticationListener;
 use Symfony\Component\Security\Guard\Provider\GuardAuthenticationProvider;
+use Throwable;
 
 /**
  * Symfony Security component Provider.
@@ -355,13 +356,23 @@ class SecurityServiceProvider implements ServiceProviderInterface, EventListener
         };
 
         $app['security.access_listener'] = function ($app) {
-            return new AccessListener(
-                $app['security.token_storage'],
-                $app['security.access_manager'],
-                $app['security.access_map'],
-                $app['security.authentication_manager'],
-                $app['logger']
-            );
+			try {
+				return new AccessListener(
+					$app['security.token_storage'],
+					$app['security.access_manager'],
+					$app['security.access_map'],
+					$app['security.authentication_manager'],
+					$app['logger']
+				);
+			} catch (Throwable $throwable) {
+				return new AccessListener(
+					$app['security.token_storage'],
+					$app['security.access_manager'],
+					$app['security.access_map'],
+					$app['security.authentication_manager'],
+					true // Previously, the fifth argument was a logger in Symfony5 the logger was removed and replaced with an option to throw exception or not when a token is empty.
+				);
+			}
         };
 
         $app['security.access_map'] = function ($app) {
@@ -388,7 +399,7 @@ class SecurityServiceProvider implements ServiceProviderInterface, EventListener
         };
 
         $app['security.trust_resolver'] = function ($app) {
-            return new AuthenticationTrustResolver('Symfony\Component\Security\Core\Authentication\Token\AnonymousToken', 'Symfony\Component\Security\Core\Authentication\Token\RememberMeToken');
+            return new AuthenticationTrustResolver();
         };
 
         $app['security.session_strategy'] = function ($app) {

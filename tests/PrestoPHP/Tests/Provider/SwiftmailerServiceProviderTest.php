@@ -14,6 +14,7 @@ namespace PrestoPHP\Tests\Provider;
 use PHPUnit\Framework\TestCase;
 use PrestoPHP\Application;
 use PrestoPHP\Provider\SwiftmailerServiceProvider;
+use Swift_Message;
 use Symfony\Component\HttpFoundation\Request;
 
 class SwiftmailerServiceProviderTest extends TestCase
@@ -56,7 +57,14 @@ class SwiftmailerServiceProviderTest extends TestCase
         };
 
         $app->get('/', function () use ($app) {
-            $app['mailer']->send(\Swift_Message::newInstance());
+			if (method_exists(Swift_Message::class, 'newInstance')) {
+				$app['mailer']->send(Swift_Message::newInstance());
+				return true;
+			}
+
+			$app['mailer']->send(new Swift_Message());
+
+			return true;
         });
 
         $this->assertCount(0, $app['swiftmailer.spool']->getMessages());

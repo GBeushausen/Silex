@@ -12,10 +12,10 @@
 namespace PrestoPHP;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 
 /**
  * Wraps exception listeners.
@@ -40,23 +40,37 @@ class ExceptionListenerWrapper
         $this->callback = $callback;
     }
 
-    public function __invoke(GetResponseForExceptionEvent $event)
+    public function __invoke(ExceptionEvent $event)
     {
-        $exception = $event->getException();
+        $throwable = $this->getThrowable($event);
         $this->callback = $this->app['callback_resolver']->resolveCallback($this->callback);
 
-        if (!$this->shouldRun($exception)) {
+        if (!$this->shouldRun($throwable)) {
             return;
         }
 
-        $code = $exception instanceof HttpExceptionInterface ? $exception->getStatusCode() : 500;
+        $code = $throwable instanceof HttpExceptionInterface ? $throwable->getStatusCode() : 500;
 
-        $response = call_user_func($this->callback, $exception, $event->getRequest(), $code, $event);
+        $response = call_user_func($this->callback, $throwable, $event->getRequest(), $code, $event);
 
         $this->ensureResponse($response, $event);
     }
 
-    protected function shouldRun(\Exception $exception)
+	/**
+	 * @param ExceptionEvent $event
+	 *
+	 * @return \Throwable
+	 */
+	protected function getThrowable(ExceptionEvent $event): \Throwable
+	{
+		if (method_exists($event, 'getThrowable')) {
+			return $event->getThrowable();
+		}
+
+		return $event->getException();
+	}
+
+	protected function shouldRun(\Throwable $exception)
     {
         if (is_array($this->callback)) {
             $callbackReflection = new \ReflectionMethod($this->callback[0], $this->callback[1]);
@@ -78,13 +92,13 @@ class ExceptionListenerWrapper
         return true;
     }
 
-    protected function ensureResponse($response, GetResponseForExceptionEvent $event)
+    protected function ensureResponse($response, ExceptionEvent $event)
     {
         if ($response instanceof Response) {
             $event->setResponse($response);
         } else {
-            $viewEvent = new GetResponseForControllerResultEvent($this->app['kernel'], $event->getRequest(), $event->getRequestType(), $response);
-            $this->app['dispatcher']->dispatch($viewEvent, KernelEvents::VIEW);
+			$viewEvent = new ViewEvent($this->app['kernel'], $event->getRequest(), $event->getRequestType(), $response);
+			$this->app['dispatcher']->dispatch($viewEvent, KernelEvents::VIEW);
 
             if ($viewEvent->hasResponse()) {
                 $event->setResponse($viewEvent->getResponse());

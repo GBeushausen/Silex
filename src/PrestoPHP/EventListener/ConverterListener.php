@@ -12,8 +12,8 @@
 namespace PrestoPHP\EventListener;
 
 use PrestoPHP\CallbackResolver;
+use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -43,12 +43,15 @@ class ConverterListener implements EventSubscriberInterface
     /**
      * Handles converters.
      *
-     * @param FilterControllerEvent $event The event to handle
+     * @param ControllerEvent $event The event to handle
      */
-    public function onKernelController(FilterControllerEvent $event)
+    public function onKernelController(ControllerEvent $event)
     {
         $request = $event->getRequest();
-        $route = $this->routes->get($request->attributes->get('_route'));
+        $routeName = $request->attributes->get('_route');
+        if ($routeName === null) return;
+
+        $route = $this->routes->get($routeName);
         if ($route && $converters = $route->getOption('_converters')) {
             foreach ($converters as $name => $callback) {
                 $callback = $this->callbackResolver->resolveCallback($callback);

@@ -12,8 +12,8 @@
 namespace PrestoPHP\Provider\Locale;
 
 use Pimple\Container;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
+use Symfony\Component\HttpKernel\Event\KernelEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -42,7 +42,7 @@ class LocaleListener implements EventSubscriberInterface
         $this->requestContext = $requestContext;
     }
 
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(KernelEvent $event)
     {
         $request = $event->getRequest();
         $request->setDefaultLocale($this->defaultLocale);

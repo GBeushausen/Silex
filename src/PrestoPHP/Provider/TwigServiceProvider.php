@@ -27,6 +27,7 @@ use Symfony\Bridge\Twig\Extension\WebLinkExtension;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Bridge\Twig\Extension\HttpKernelRuntime;
 use Symfony\Component\Form\FormRenderer;
+use Symfony\Component\HttpKernel\Fragment\HIncludeFragmentRenderer;
 use Twig\Environment;
 use Twig\Extension\DebugExtension;
 use Twig\Loader\ArrayLoader;
@@ -113,7 +114,9 @@ class TwigServiceProvider implements ServiceProviderInterface
                 }
 
                 if (isset($app['fragment.handler'])) {
-                    $app['fragment.renderer.hinclude']->setTemplating($twig);
+					if (method_exists(HIncludeFragmentRenderer::class, 'setTemplating')) {
+						$app['fragment.renderer.hinclude']->setTemplating($twig);
+					}
 
                     $twig->addExtension(new HttpKernelExtension($app['fragment.handler']));
                 }

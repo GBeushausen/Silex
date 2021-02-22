@@ -14,8 +14,10 @@ namespace PrestoPHP\Tests\Provider;
 use PrestoPHP\Application;
 use PrestoPHP\WebTestCase;
 use PrestoPHP\Provider\SessionServiceProvider;
+use Symfony\Component\BrowserKit\AbstractBrowser;
 use Symfony\Component\HttpKernel\Client;
 use Symfony\Component\HttpFoundation\Session;
+use Symfony\Component\HttpKernel\HttpKernelBrowser;
 
 /**
  * SessionProvider test cases.
@@ -93,7 +95,7 @@ class SessionServiceProviderTest extends WebTestCase
         $app['debug'] = true;
         unset($app['exception_handler']);
 
-        $client = new Client($app);
+        $client = $this->getClient($app);
 
         $client->request('get', '/');
         $this->assertEquals('A welcome page.', $client->getResponse()->getContent());
@@ -102,7 +104,22 @@ class SessionServiceProviderTest extends WebTestCase
         $this->assertEquals('Informations for robots.', $client->getResponse()->getContent());
     }
 
-    public function testSessionRegister()
+	/**
+	 * @param Application $app
+	 *
+	 * @return AbstractBrowser
+	 */
+	protected function getClient(Application $app): AbstractBrowser
+	{
+		if (class_exists(Client::class)) {
+			return new Client($app);
+		}
+
+		return new HttpKernelBrowser($app);
+
+	}
+
+	public function testSessionRegister()
     {
         $app = new Application();
 

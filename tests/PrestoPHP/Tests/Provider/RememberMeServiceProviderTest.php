@@ -16,7 +16,9 @@ use PrestoPHP\WebTestCase;
 use PrestoPHP\Provider\RememberMeServiceProvider;
 use PrestoPHP\Provider\SecurityServiceProvider;
 use PrestoPHP\Provider\SessionServiceProvider;
+use Symfony\Component\BrowserKit\AbstractBrowser;
 use Symfony\Component\HttpKernel\Client;
+use Symfony\Component\HttpKernel\HttpKernelBrowser;
 use Symfony\Component\Security\Http\SecurityEvents;
 
 /**
@@ -34,7 +36,7 @@ class RememberMeServiceProviderTest extends WebTestCase
         $interactiveLogin = new InteractiveLoginTriggered();
         $app->on(SecurityEvents::INTERACTIVE_LOGIN, [$interactiveLogin, 'onInteractiveLogin']);
 
-        $client = new Client($app);
+		$client = $this->getClient($app);
 
         $client->request('get', '/');
         $this->assertFalse($interactiveLogin->triggered, 'The interactive login has not been triggered yet');
@@ -95,6 +97,22 @@ class RememberMeServiceProviderTest extends WebTestCase
 
         return $app;
     }
+
+	/**
+	 * @param Application $app
+	 *
+	 * @return AbstractBrowser
+	 */
+	protected function getClient(Application $app): AbstractBrowser
+	{
+		if (class_exists(Client::class)) {
+			return new Client($app);
+		}
+
+		return new HttpKernelBrowser($app);
+	}
+
+
 }
 
 class InteractiveLoginTriggered

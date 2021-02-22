@@ -133,14 +133,31 @@ class ApplicationTest extends TestCase
         $app = new Application();
         $app['pass'] = false;
 
-        $app->on('test', function (Event $e) use ($app) {
-            $app['pass'] = true;
-        });
+		$callback = $this->getCallback($app);
+		$app->on('test', $callback);
 
         $app['dispatcher']->dispatch(new Event(), 'test');
 
         $this->assertTrue($app['pass']);
     }
+
+	/**
+	 * @param $app
+	 *
+	 * @return callable
+	 */
+	protected function getCallback($app): callable
+	{
+		if (class_exists(Event::class)) {
+			return function (Event $e) use ($app) {
+				$app['pass'] = true;
+			};
+		}
+
+		return function (\Symfony\Contracts\EventDispatcher\Event $e) use ($app) {
+			$app['pass'] = true;
+		};
+	}
 
     public function testAbort()
     {

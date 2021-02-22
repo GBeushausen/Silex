@@ -12,7 +12,9 @@
 namespace PrestoPHP;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\BrowserKit\AbstractBrowser;
 use Symfony\Component\HttpKernel\Client;
+use Symfony\Component\HttpKernel\HttpKernelBrowser;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
@@ -52,7 +54,7 @@ abstract class WebTestCase extends TestCase
      *
      * @param array $server Server parameters
      *
-     * @return Client A Client instance
+     * @return AbstractBrowser A Client instance
      */
     public function createClient(array $server = [])
     {
@@ -60,6 +62,10 @@ abstract class WebTestCase extends TestCase
             throw new \LogicException('Component "symfony/browser-kit" is required by WebTestCase.'.PHP_EOL.'Run composer require symfony/browser-kit');
         }
 
-        return new Client($this->app, $server);
+		if (class_exists(Client::class)) {
+			return new Client($this->app, $server);
+		}
+
+		return new HttpKernelBrowser($this->app, $server);
     }
 }

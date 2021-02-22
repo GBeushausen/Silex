@@ -16,6 +16,8 @@ use PrestoPHP\WebTestCase;
 use PrestoPHP\Provider\SecurityServiceProvider;
 use PrestoPHP\Provider\SessionServiceProvider;
 use PrestoPHP\Provider\ValidatorServiceProvider;
+use Symfony\Component\BrowserKit\AbstractBrowser;
+use Symfony\Component\HttpKernel\HttpKernelBrowser;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\HttpKernel\Client;
@@ -45,11 +47,25 @@ class SecurityServiceProviderTest extends WebTestCase
         $app->handle(Request::create('/'));
     }
 
-    public function testFormAuthentication()
+	/**
+	 * @param Application $app
+	 *
+	 * @return AbstractBrowser
+	 */
+	protected function getClient(Application $app): AbstractBrowser
+	{
+		if (class_exists(Client::class)) {
+			return new Client($app);
+		}
+
+		return new HttpKernelBrowser($app);
+	}
+
+	public function testFormAuthentication()
     {
         $app = $this->createApplication('form');
 
-        $client = new Client($app);
+        $client = $this->getClient($app);
 
         $client->request('get', '/');
         $this->assertEquals('ANONYMOUS', $client->getResponse()->getContent());
@@ -97,7 +113,7 @@ class SecurityServiceProviderTest extends WebTestCase
     {
         $app = $this->createApplication('http');
 
-        $client = new Client($app);
+        $client = $this->getClient($app);
 
         $client->request('get', '/');
         $this->assertEquals(401, $client->getResponse()->getStatusCode());
@@ -124,7 +140,7 @@ class SecurityServiceProviderTest extends WebTestCase
     {
         $app = $this->createApplication('guard');
 
-        $client = new Client($app);
+        $client = $this->getClient($app);
 
         $client->request('get', '/');
         $this->assertEquals(401, $client->getResponse()->getStatusCode(), 'The entry point is configured');
@@ -169,7 +185,7 @@ class SecurityServiceProviderTest extends WebTestCase
         $app = $this->createApplication('form');
         $app['security.hide_user_not_found'] = false;
 
-        $client = new Client($app);
+        $client = $this->getClient($app);
 
         $client->request('get', '/');
         $this->assertEquals('ANONYMOUS', $client->getResponse()->getContent());
