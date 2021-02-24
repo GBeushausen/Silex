@@ -40,5 +40,7 @@ class RuntimeLoader implements RuntimeLoaderInterface
         if (isset($this->mapping[$class])) {
             return $this->container[$this->mapping[$class]];
         }
+
+        return null;
     }
 }

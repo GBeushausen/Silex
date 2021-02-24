@@ -1,18 +1,30 @@
 Changelog
 =========
 
-2.4.1 (2021-XX-XX)
+2.4.3 (2021-XX-XX)
 ------------------
 
  * n/a
+
+2.4.2 (2021-02-24)
+------------------
+
+ * fixed LocaleListener PHP8 deprecation warning
+ * fixed Runtimeloader expecting a return statement
+
+2.4.1 (2021-02-23)
+------------------
+
+ * updated code to remove deprecation warnings
+ * updated documentation
 
 2.4.0 (2021-02-22)
 ------------------
 
  * dropped support for PHP < 7.4
- * Dropped Support for Symfony 4
- * Added support for Symfony 5
- * Added PHPStan for internal development
+ * dropped Support for Symfony 4
+ * added support for Symfony 5
+ * added PHPStan for internal development
 
 2.3.4 (2020-07-18)
 ------------------

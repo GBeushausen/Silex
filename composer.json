@@ -70,7 +70,7 @@
         "psr-4": { "PrestoPHP\\Tests\\" : "tests/PrestoPHP/Tests" }
     },
     "scripts": {
-        "phpstan": "phpstan analyse -c phpstan.neon -l 5 src/"
+        "phpstan": "phpstan analyse -c phpstan.neon -l 5 src/ --memory-limit=2G"
     },
     "extra": {
         "branch-alias": {

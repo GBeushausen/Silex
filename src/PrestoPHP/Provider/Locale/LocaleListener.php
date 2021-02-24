@@ -30,15 +30,15 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class LocaleListener implements EventSubscriberInterface
 {
-    private $app;
-    private $defaultLocale;
-    private $requestStack;
-    private $requestContext;
+    private Container $app;
+    private string $defaultLocale;
+    private RequestStack $requestStack;
+    private ?RequestContext $requestContext;
 
-    public function __construct(Container $app, $defaultLocale = 'en', RequestStack $requestStack, RequestContext $requestContext = null)
+    public function __construct(Container $app, ?string $defaultLocale, RequestStack $requestStack, RequestContext $requestContext = null)
     {
         $this->app = $app;
-        $this->defaultLocale = $defaultLocale;
+        $this->defaultLocale = (!empty($defaultLocale)) ? $defaultLocale : 'en';
         $this->requestStack = $requestStack;
         $this->requestContext = $requestContext;
     }
