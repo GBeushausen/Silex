@@ -162,7 +162,7 @@ request:</p>
 <span class="k">use</span> <span class="nx">PrestoPHP\Api\EventListenerProviderInterface</span><span class="p">;</span>
 <span class="k">use</span> <span class="nx">Symfony\Component\EventDispatcher\EventDispatcherInterface</span><span class="p">;</span>
 <span class="k">use</span> <span class="nx">Symfony\Component\HttpKernel\KernelEvents</span><span class="p">;</span>
-<span class="k">use</span> <span class="nx">Symfony\Component\HttpKernel\Event\FilterResponseEvent</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\HttpKernel\Event\ResponseEvent</span><span class="p">;</span>
 
 <span class="k">class</span> <span class="nc">HelloServiceProvider</span> <span class="k">implements</span> <span class="nx">ServiceProviderInterface</span><span class="p">,</span> <span class="nx">BootableProviderInterface</span><span class="p">,</span> <span class="nx">EventListenerProviderInterface</span>
 <span class="p">{</span>
@@ -183,7 +183,7 @@ request:</p>
 
     <span class="k">public</span> <span class="k">function</span> <span class="nf">subscribe</span><span class="p">(</span><span class="nx">Container</span> <span class="nv">$app</span><span class="p">,</span> <span class="nx">EventDispatcherInterface</span> <span class="nv">$dispatcher</span><span class="p">)</span>
     <span class="p">{</span>
-        <span class="nv">$dispatcher</span><span class="o">-&gt;</span><span class="na">addListener</span><span class="p">(</span><span class="nx">KernelEvents</span><span class="o">::</span><span class="na">REQUEST</span><span class="p">,</span> <span class="k">function</span><span class="p">(</span><span class="nx">FilterResponseEvent</span> <span class="nv">$event</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$dispatcher</span><span class="o">-&gt;</span><span class="na">addListener</span><span class="p">(</span><span class="nx">KernelEvents</span><span class="o">::</span><span class="na">REQUEST</span><span class="p">,</span> <span class="k">function</span><span class="p">(</span><span class="nx">ResponseEvent</span> <span class="nv">$event</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
             <span class="c1">// do something</span>
         <span class="p">});</span>
     <span class="p">}</span>

@@ -536,17 +536,17 @@ good reason, set the <code class="docutils literal notranslate"><span class="pre
 <div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">return</span> <span class="k">new</span> <span class="nx">Response</span><span class="p">(</span><span class="s1">&#39;Error&#39;</span><span class="p">,</span> <span class="mi">404</span> <span class="cm">/* ignored */</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;X-Status-Code&#39;</span> <span class="o">=&gt;</span> <span class="mi">200</span><span class="p">));</span>
 </pre></div>
 </div>
-<p>As of Symfony 3.3, call
-<code class="docutils literal notranslate"><span class="pre">GetResponseForExceptionEvent::allowCustomResponseCode()</span></code> first and then
+<p>As of Symfony 5.0, call
+<code class="docutils literal notranslate"><span class="pre">ExceptionEvent::allowCustomResponseCode()</span></code> first and then
 then set the status code on the response as normal. The kernel will now use
 your status code when sending the response to the client. The
-<code class="docutils literal notranslate"><span class="pre">GetResponseForExceptionEvent</span></code> is passed to the error callback as a 4th
+<code class="docutils literal notranslate"><span class="pre">ExceptionEvent</span></code> is passed to the error callback as a 4th
 parameter:</p>
 <div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Response</span><span class="p">;</span>
 <span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Request</span><span class="p">;</span>
-<span class="k">use</span> <span class="nx">Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\HttpKernel\Event\ExceptionEvent</span><span class="p">;</span>
 
-<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">error</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nx">\Exception</span> <span class="nv">$e</span><span class="p">,</span> <span class="nx">Request</span> <span class="nv">$request</span><span class="p">,</span> <span class="nv">$code</span><span class="p">,</span> <span class="nx">GetResponseForExceptionEvent</span> <span class="nv">$event</span><span class="p">)</span> <span class="p">{</span>
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">error</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nx">\Exception</span> <span class="nv">$e</span><span class="p">,</span> <span class="nx">Request</span> <span class="nv">$request</span><span class="p">,</span> <span class="nv">$code</span><span class="p">,</span> <span class="nx">ExceptionEvent</span> <span class="nv">$event</span><span class="p">)</span> <span class="p">{</span>
     <span class="nv">$event</span><span class="o">-&gt;</span><span class="na">allowCustomResponseCode</span><span class="p">();</span>
     <span class="nv">$response</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Response</span><span class="p">(</span><span class="s1">&#39;No Content&#39;</span><span class="p">,</span> <span class="mi">204</span><span class="p">);</span>
 

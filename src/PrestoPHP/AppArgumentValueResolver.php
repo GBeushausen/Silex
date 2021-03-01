@@ -35,7 +35,7 @@ class AppArgumentValueResolver implements ArgumentValueResolverInterface
      */
     public function supports(Request $request, ArgumentMetadata $argument)
     {
-        return null !== $argument->getType() && (Application::class === $argument->getType() || is_subclass_of($argument->getType(), Application::class));
+        return $argument->getType() !== null && (Application::class === $argument->getType() || is_subclass_of($argument->getType(), Application::class));
     }
 
     /**

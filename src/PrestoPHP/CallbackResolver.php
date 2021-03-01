@@ -32,7 +32,7 @@ class CallbackResolver
      *
      * @return bool
      */
-    public function isValid($name)
+    public function isValid($name): bool
     {
         return is_string($name) && (preg_match(static::SERVICE_PATTERN, $name) || isset($this->app[$name]));
     }
@@ -46,7 +46,7 @@ class CallbackResolver
      *
      * @throws \InvalidArgumentException in case the method does not exist
      */
-    public function convertCallback($name)
+    public function convertCallback(string $name)
     {
         if (preg_match(static::SERVICE_PATTERN, $name)) {
             list($service, $method) = explode(':', $name, 2);
