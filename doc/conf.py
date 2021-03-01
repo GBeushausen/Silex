@@ -9,9 +9,10 @@ master_doc = 'index'
 highlight_language = 'php'
 
 project = u'PrestoPHP'
-copyright = u'2010 Fabien Potencier'
+copyright = u'2010-2021 Fabien Potencier, Gunnar Beushausen'
+html_theme = "bizstyle"
 
-version = '0'
-release = '0.0.0'
+version = '2.4'
+release = '2.4.2'
 
 lexers['php'] = PhpLexer(startinline=True)
